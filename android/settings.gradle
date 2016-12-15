@@ -1,0 +1,3 @@
+rootProject.name = 'einstein'
+
+include ':app'
