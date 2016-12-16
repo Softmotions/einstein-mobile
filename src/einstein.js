@@ -1,3 +1,5 @@
+'use strict';
+
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -14,6 +16,9 @@ import {
 import {ruleFactory} from './rules';
 import {Field, GameController} from './field';
 import {Solver} from './solver';
+
+const Dimensions = require('Dimensions');
+
 
 const items = [];
 const size = 6;
@@ -37,7 +42,6 @@ const styleCfg = {
 const ruleRows = 5;
 const ruleRowsV = 7;
 
-const Dimensions = require('Dimensions');
 
 export class GameField extends Component {
 
@@ -205,14 +209,47 @@ export class GameField extends Component {
   };
 
   render() {
+    // TODO: calculate popup position
+
+    let astyles;
+    if (this.state.popup) {
+      const {height, width} = Dimensions.get('window');
+
+      const boxSize = styleCfg.group * size + styleCfg.space * (size + 1) + styleCfg.border * 2;
+
+      let left = (styleCfg.group * (size - 3 ) + styleCfg.space * (size - 1)) / 5 * this.state.popup.j;
+      let top = (styleCfg.group * (size - 3) + styleCfg.space * (size - 1)) / 5 * this.state.popup.i;
+
+      if (width > height) {
+        top += (height - boxSize) / 2 - 11 /* todo remove hardcode */;
+      } else {
+        left += (width - boxSize) / 2;
+      }
+
+
+      astyles = StyleSheet.create({
+        popupPosition: {
+          left: Math.floor(left),
+          top: Math.floor(top),
+          position: 'absolute',
+        }
+      });
+    } else {
+      astyles = StyleSheet.create({
+        popupPosition: {}
+      });
+    }
+
     return (
       <View style={styles.field}>
         <Modal visible={this.state.popup != null}
                transparent={true}
                onRequestClose={() => {}}>
           <TouchableWithoutFeedback onPress={this._hidePopup}>
-            <View style={styles.groupItemPopup}>
-              {this.renderPopupGroupItem()}
+            <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.75)'}}>
+              <View style={[styles.groupItemPopup, astyles.popupPosition]}>
+                {this.renderPopupGroupItem()}
+              </View>
             </View>
           </TouchableWithoutFeedback>
         </Modal>
@@ -232,7 +269,7 @@ class Rule3 extends Component {
 
   toggle = () => {
     this.setState({visible: !this.state.visible});
-  }
+  };
 
   render() {
     let opacity = this.state.visible ? 1 : 0.15;
@@ -353,6 +390,7 @@ class Rules extends Component {
       (hrb[j] = hrb[j] || []).push(r);
     });
 
+    // todo: extract styles
     return (
       <ScrollView contentContainerStyle={styles.rules} style={{alignSelf: 'flex-start'}} horizontal={true}>
         <View style={{flexDirection: 'row', }}>
@@ -376,15 +414,11 @@ export default class Einstein extends Component {
     this.newGame(true);
   }
 
-  // state = {
-  //   field: null,
-  //   game: null,
-  //   rules: null,
-  // };
-
   newGame(init) {
     let field = new Field(size);
     let game = new GameController(field);
+
+    // TODO: move rules generation to method/class. ruleFactory?
 
     let solver = new Solver(new GameController(field));
     do {
@@ -457,7 +491,7 @@ const styles = StyleSheet.create({
   },
 
   field: {
-    height: styleCfg.group * size + styleCfg.space * (size + 1),
+    height: styleCfg.group * size + styleCfg.space * (size + 1) + styleCfg.border * 2,
     width: styleCfg.group * size + styleCfg.space * (size + 1) + styleCfg.border * 2,
     borderWidth: styleCfg.border,
     borderColor: '#000',
@@ -535,20 +569,20 @@ const styles = StyleSheet.create({
 
   groupItemPopup: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    // alignItems: 'center',
+    // justifyContent: 'center'
   },
 
   popupGroupItemBox: {
-    height: styleCfg.group * 2 + styleCfg.border * 2 + styleCfg.space * 20,
-    width: styleCfg.group * 3 + styleCfg.border * 2 + styleCfg.space * 20,
+    height: styleCfg.group * 3 + styleCfg.border * 2 + styleCfg.space * 2,
+    width: styleCfg.group * 3 + styleCfg.border * 2 + styleCfg.space * 2,
     backgroundColor: '#fff',
     borderWidth: styleCfg.border,
     borderColor: '#000',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: styleCfg.space * 10
+    // padding: styleCfg.space * 10
   },
 
   popupGroupItemsRow: {
