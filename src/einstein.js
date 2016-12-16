@@ -4,7 +4,8 @@ import {
   Text,
   View,
   ScrollView,
-  Image
+  Image,
+  TouchableWithoutFeedback
 } from 'react-native';
 
 import {Rule, ruleFactory} from './rules';
@@ -103,20 +104,60 @@ export class GameField extends Component {
   }
 }
 
-class Rules extends Component {
-  ruleState: {
-  };
+class Rule3 extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {visible: true};
+  }
 
+  toggle() {
+    this.setState({visible: !this.state.visible});
+  }
+
+  render() {
+    let opacity = this.state.visible ? 1 : 0.15;
+    return (
+      <TouchableWithoutFeedback onPress={() => {this.toggle()}}>
+        <View style={[styles.rule3, {opacity: opacity}]}>
+          <Image style={styles.ruleItem} source={{uri: this.props.img1}}/>
+          <Image style={styles.ruleItem} source={{uri: this.props.img2}}/>
+          <Image style={styles.ruleItem} source={{uri: this.props.img3}}/>
+        </View>
+      </TouchableWithoutFeedback>
+    )
+  }
+}
+
+class Rule2 extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {visible: true};
+  }
+
+  toggle() {
+    this.setState({visible: !this.state.visible});
+  }
+
+  render() {
+    let opacity = this.state.visible ? 1 : 0.15;
+    return (
+      <TouchableWithoutFeedback onPress={() => {this.toggle()}}>
+        <View style={[styles.rule2, {opacity: opacity}]}>
+          <Image style={styles.ruleItem} source={{uri: this.props.img1}}/>
+          <Image style={styles.ruleItem} source={{uri: this.props.img2}}/>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
+}
+
+class Rules extends Component {
   renderNearRule(rule) {
     const src1 = 'item' + (rule.row1 + 1) + (rule.value1 + 1);
     const src2 = 'item' + (rule.row2 + 1) + (rule.value2 + 1);
 
     return (
-      <View style={styles.rule3}>
-        <Image style={styles.ruleItem} source={{uri: src1}}/>
-        <Image style={styles.ruleItem} source={{uri: 'near'}}/>
-        <Image style={styles.ruleItem} source={{uri: src2}}/>
-      </View>
+      <Rule3 img1={src1} img2="near" img3={src2}/>
     );
   }
 
@@ -125,11 +166,7 @@ class Rules extends Component {
     const src2 = 'item' + (rule.row2 + 1) + (rule.value2 + 1);
 
     return (
-      <View style={styles.rule3}>
-        <Image style={styles.ruleItem} source={{uri: src1}}/>
-        <Image style={styles.ruleItem} source={{uri: 'direction'}}/>
-        <Image style={styles.ruleItem} source={{uri: src2}}/>
-      </View>
+      <Rule3 img1={src1} img2="direction" img3={src2}/>
     );
   }
 
@@ -139,11 +176,7 @@ class Rules extends Component {
     const src3 = 'item' + (rule.row3 + 1) + (rule.value3 + 1);
 
     return (
-      <View style={styles.rule3}>
-        <Image style={styles.ruleItem} source={{uri: src1}}/>
-        <Image style={styles.ruleItem} source={{uri: src2}}/>
-        <Image style={styles.ruleItem} source={{uri: src3}}/>
-      </View>
+      <Rule3 img1={src1} img2={src2} img3={src3}/>
     );
   }
 
@@ -154,11 +187,8 @@ class Rules extends Component {
     const src2 = 'item' + (rule.row2 + 1) + (rule.value2 + 1);
 
     return (
-      <View key={key} style={styles.rule2}>
-        <Image style={styles.ruleItem} source={{uri: src1}}/>
-        <Image style={styles.ruleItem} source={{uri: src2}}/>
-      </View>
-    )
+      <Rule2 key={key} img1={src1} img2={src2}/>
+    );
   }
 
   renderHorizontalRule(i, j, rule) {
@@ -218,8 +248,8 @@ class Rules extends Component {
 
 export default class Einstein extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.newGame();
   }
 
