@@ -246,7 +246,7 @@ export class GameField extends Component {
                transparent={true}
                onRequestClose={() => {}}>
           <TouchableWithoutFeedback onPress={this._hidePopup}>
-            <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.75)'}}>
+            <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
               <View style={[styles.groupItemPopup, astyles.popupPosition]}>
                 {this.renderPopupGroupItem()}
               </View>
