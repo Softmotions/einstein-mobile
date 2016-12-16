@@ -125,7 +125,7 @@ class GameController {
     }
 
     if (this._field.value(row, col) === val) {
-      //this.stop();
+      this.stop();
       return;
     }
 

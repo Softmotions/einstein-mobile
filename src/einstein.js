@@ -5,7 +5,10 @@ import {
   View,
   ScrollView,
   Image,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Modal,
+  Alert
 } from 'react-native';
 
 import {Rule, ruleFactory} from './rules';
@@ -38,6 +41,10 @@ const {height, width} = Dimensions.get('window');
 
 export class GameField extends Component {
 
+  state = {
+    popup: null,
+  };
+
   renderItem(i, j, k) {
     const game = this.props.game;
 
@@ -63,22 +70,24 @@ export class GameField extends Component {
   }
 
   renderGroupItem(i, j) {
-    const field = this.props.field;
     const game = this.props.game;
 
     const key = 'group_' + i + '_' + j;
     const src = 'item' + (i + 1 ) + (game.get(i, j) + 1);
 
     return (
-      <View key={key}>
-        {!game.isSet(i, j) ?
-          <View style={styles.groupItem}>
-            {this.renderGroupItemsLine(i, j, 0)}
-            {this.renderGroupItemsLine(i, j, 1)}
-          </View> :
-          <Image style={styles.groupItem} source={{uri : src}}/>
-        }
-      </View>
+      <TouchableWithoutFeedback key={key}
+                                onPress={() => {if (!game.isSet(i, j)) { this.setState({popup: {i: i, j: j}})}}}>
+        <View>
+          {!game.isSet(i, j) ?
+            <View style={styles.groupItem}>
+              {this.renderGroupItemsLine(i, j, 0)}
+              {this.renderGroupItemsLine(i, j, 1)}
+            </View> :
+            <Image style={styles.groupItem} source={{uri : src}}/>
+          }
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 
@@ -93,9 +102,66 @@ export class GameField extends Component {
     )
   }
 
+  renderPopupItem(i, j, k) {
+    const game = this.props.game;
+
+    const key = 'item_' + i + '_' + j + '_' + k;
+    const src = 'item' + (i + 1) + (k + 1);
+    return (
+      <TouchableOpacity key={key} onPress={() => {
+        game.set(i, j, k);
+        if (!game.active) {
+          Alert.alert("Fail");
+        }
+        this.setState({popup: null})
+      }}>
+        <View style={styles.popupItemBox}>
+          { game.possible(i, j, k) ? <Image style={styles.popupItem} source={{uri: src}}/> : null }
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  renderPopupGroupItemsLine(i, j, n) {
+    return (
+      <View style={styles.popupGroupItemsRow}>
+        {items.filter((t) => {
+          return t >= n * (size / 2) && t < (n + 1) * (size / 2)
+        }).map((k) => {
+          return this.renderPopupItem(i, j, k)
+        })}
+      </View>
+    );
+  }
+
+
+  renderPopupGroupItem() {
+    let popup = this.state.popup;
+    return (
+      <TouchableWithoutFeedback onPress={() => {}}>
+        { popup ?
+          <View style={styles.popupGroupItemBox}>
+            {this.renderPopupGroupItemsLine(popup.i, popup.j, 0)}
+            {this.renderPopupGroupItemsLine(popup.i, popup.j, 1)}
+          </View> :
+          null
+        }
+      </TouchableWithoutFeedback>
+    )
+  }
+
   render() {
     return (
       <View style={styles.field}>
+        <Modal visible={this.state.popup != null}
+               transparent={true}
+               onRequestClose={() => {}}>
+          <TouchableWithoutFeedback onPress={() => {this.setState({popup: null})}}>
+            <View style={styles.groupItemPopup}>
+              {this.renderPopupGroupItem()}
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
         {items.map((i) => {
           return this.renderRow(i);
         })}
@@ -260,7 +326,7 @@ export default class Einstein extends Component {
     let solver = new Solver(new GameController(this.field));
     do {
       solver.addRule(ruleFactory.newRule(this.field));
-    } while (!solver.solve())
+    } while (!solver.solve());
 
     let rules = solver.rules;
 
@@ -386,5 +452,39 @@ const styles = StyleSheet.create({
     height: styleCfg.ruleItem,
     width: styleCfg.ruleItem,
     borderWidth: styleCfg.ruleBorder,
-  }
+  },
+
+  groupItemPopup: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  popupGroupItemBox: {
+    height: styleCfg.group * 2 + styleCfg.border * 2 + styleCfg.space * 20,
+    width: styleCfg.group * 3 + styleCfg.border * 2 + styleCfg.space * 20,
+    backgroundColor: '#fff',
+    borderWidth: styleCfg.border,
+    borderColor: '#000',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: styleCfg.space * 10
+  },
+
+  popupGroupItemsRow: {
+    flexDirection: 'row',
+  },
+
+  popupItemBox: {
+    height: styleCfg.group,
+    width: styleCfg.group,
+  },
+
+  popupItem: {
+    height: styleCfg.group,
+    width: styleCfg.group,
+    borderWidth: styleCfg.border,
+    borderColor: '#000',
+  },
 });
