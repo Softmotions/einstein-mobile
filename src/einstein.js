@@ -37,7 +37,6 @@ const styleCfg = {
 const ruleRows = 5;
 
 const Dimensions = require('Dimensions');
-const {height, width} = Dimensions.get('window');
 
 export class GameField extends Component {
 
@@ -103,25 +102,59 @@ export class GameField extends Component {
     )
   }
 
+  _onPressPopupItem(i, j, k) {
+    const game = this.props.game;
+
+    return () => {
+      game.set(i, j, k);
+      this.setState({popup: null});
+      if (!game.active) {
+        Alert.alert(game.solved ? 'Solved' : 'Fail', '', [
+          {
+            text: 'New',
+            onPress: () => {
+              if (this.props.onNewGame) {
+                this.props.onNewGame();
+              }
+            }
+          }
+        ]);
+      }
+    }
+  };
+
+  _onLongPressPopupItem(i, j, k) {
+    return () => {
+      const game = this.props.game;
+      game.exclude(i, j, k);
+      this.forceUpdate();
+      if (!game.active) {
+        this.setState({popup: null});
+        Alert.alert(game.solved ? 'Solved' : 'Fail', '', [
+          {
+            text: 'New',
+            onPress: () => {
+              if (this.props.onNewGame) {
+                this.props.onNewGame();
+              }
+            }
+          }
+        ]);
+      }
+    }
+  };
+
   renderPopupItem(i, j, k) {
     const game = this.props.game;
 
     const key = 'item_' + i + '_' + j + '_' + k;
     const src = 'item' + (i + 1) + (k + 1);
+    // todo: online update items
+    // TODO: disable hidden
     return (
-      <TouchableOpacity key={key} onPress={() => {
-        game.set(i, j, k);
-        if (!game.active) {
-          Alert.alert("Fail", "Fail", [
-            {text: 'New', onPress: () => {
-              if (this.props.onNewGame) {
-                this.props.onNewGame();
-              }
-            }}
-          ]);
-        }
-        this.setState({popup: null})
-      }}>
+      <TouchableOpacity key={key}
+                        onPress={this._onPressPopupItem(i, j, k)}
+                        onLongPress={this._onLongPressPopupItem(i, j, k)}>
         <View style={styles.popupItemBox}>
           { game.possible(i, j, k) ? <Image style={styles.popupItem} source={{uri: src}}/> : null }
         </View>
@@ -302,9 +335,12 @@ class Rules extends Component {
       (hrb[j] = hrb[j] || []).push(r);
     });
 
+    const {height, width} = Dimensions.get('window');
+    const direction = height > width ? 'row' : 'column';
+
     return (
-      <ScrollView contentContainerStyle={styles.rules} horizontal={true}>
-        <View style={{flexDirection: 'row'}}>
+      <ScrollView contentContainerStyle={styles.rules} style={{alignSelf: 'flex-start'}} horizontal={height > width}>
+        <View style={{flexDirection: 'row', }}>
           {hrb.map((rs, i) => {
             return this.renderHorizontalRuleGroup(i, rs);
           })}
@@ -384,8 +420,11 @@ export default class Einstein extends Component {
   }
 
   render() {
+    let {height, width} = Dimensions.get('window');
+    let direction = height > width ? 'column' : 'row';
+
     return (
-      <View style={styles.container}>
+      <View onLayout={() => {this.forceUpdate()}} style={[styles.container, {flexDirection: direction}]}>
         {this.state.game && this.state.field ?
           <GameField game={this.state.game}
                      field={this.state.field}
@@ -448,9 +487,6 @@ const styles = StyleSheet.create({
   },
 
   rules: {
-    // flex: 1,
-    // borderWidth: styleCfg.ruleBorder,
-    // height: height - (styleCfg.group * size + styleCfg.space * (size + 1)),
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     flexDirection: 'column'
