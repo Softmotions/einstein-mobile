@@ -1,8 +1,6 @@
 'use strict';
 
 class Field {
-  //int _size;
-  //int[][] _data;
 
   constructor(size) {
     this._size = Math.min(6, Math.max(3, size));
@@ -32,10 +30,6 @@ class Field {
 }
 
 class GameController {
-  //Field _field
-  //int _count
-  //?[]?[] _data
-  //boolean _active;
 
   constructor(field) {
     this._field = field;
@@ -49,13 +43,13 @@ class GameController {
   _init() {
     this._count = this.size * this.size;
     this._data = [];
-    for (var i = 0; i < this.size; ++i) {
+    for (let i = 0; i < this.size; ++i) {
       this._data[i] = {
         cols: [],
         values: []
       };
-      for (var j = 0; j < this.size; ++j) {
-        var cols, values;
+      for (let j = 0; j < this.size; ++j) {
+        let cols, values;
         this._data[i].values[j] = {
           possible: this.size,
           cols: cols = {}
@@ -65,7 +59,7 @@ class GameController {
           values: values = {},
           defined: null
         };
-        for (var k = 0; k < this.size; ++k) {
+        for (let k = 0; k < this.size; ++k) {
           cols[k] = true;
           values[k] = true;
         }
@@ -103,12 +97,12 @@ class GameController {
     this._data[row].cols[col].possible = 0;
     this._data[row].values[val].possible = 0;
     this._data[row].cols[col].defined = val;
-    for (var n = 0; n < this.size; ++n) {
+    for (let n = 0; n < this.size; ++n) {
       this._data[row].values[val].cols[n] = (n === col);
       this._data[row].values[n].possible -= (n !== val && this._data[row].cols[col].values[n] ? 1 : 0);
       this._data[row].values[n].cols[col] = (n === val);
     }
-    for (var h = 0; h < this.size; ++h) {
+    for (let h = 0; h < this.size; ++h) {
       this.exclude(row, h, val);
     }
 
@@ -139,7 +133,7 @@ class GameController {
 
   checkSingle(row, col) {
     if (this._data[row].cols[col].possible == 1) {
-      for (var h = 0; h < this.size; ++h) {
+      for (let h = 0; h < this.size; ++h) {
         if (this._data[row].cols[col].values[h]) {
           this.set(row, col, h);
           break;
@@ -147,9 +141,9 @@ class GameController {
       }
     }
 
-    for (var t = 0; t < this.size; ++t) {
+    for (let t = 0; t < this.size; ++t) {
       if (this._data[row].values[t].possible == 1) {
-        for (var n = 0; n < this.size; ++n) {
+        for (let n = 0; n < this.size; ++n) {
           if (this._data[row].values[t].cols[n]) {
             this.set(row, n, t);
             break;

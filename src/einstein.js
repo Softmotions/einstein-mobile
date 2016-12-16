@@ -11,7 +11,7 @@ import {
   Alert
 } from 'react-native';
 
-import {Rule, ruleFactory} from './rules';
+import {ruleFactory} from './rules';
 import {Field, GameController} from './field';
 import {Solver} from './solver';
 
@@ -35,6 +35,7 @@ const styleCfg = {
 
 // todo: calculate
 const ruleRows = 5;
+const ruleRowsV = 7;
 
 const Dimensions = require('Dimensions');
 
@@ -106,9 +107,14 @@ export class GameField extends Component {
     const game = this.props.game;
 
     return () => {
+      if (!game.possible(i, j, k)) {
+        return;
+      }
+
       game.set(i, j, k);
-      this.setState({popup: null});
+      this._hidePopup();
       if (!game.active) {
+        // TODO: end game alert
         Alert.alert(game.solved ? 'Solved' : 'Fail', '', [
           {
             text: 'New',
@@ -124,12 +130,18 @@ export class GameField extends Component {
   };
 
   _onLongPressPopupItem(i, j, k) {
+    const game = this.props.game;
+
     return () => {
-      const game = this.props.game;
+      if (!game.possible(i, j, k)) {
+        return;
+      }
+
       game.exclude(i, j, k);
       this.forceUpdate();
       if (!game.active) {
-        this.setState({popup: null});
+        this._hidePopup();
+        // TODO: end game alert
         Alert.alert(game.solved ? 'Solved' : 'Fail', '', [
           {
             text: 'New',
@@ -149,7 +161,6 @@ export class GameField extends Component {
 
     const key = 'item_' + i + '_' + j + '_' + k;
     const src = 'item' + (i + 1) + (k + 1);
-    // todo: online update items
     // TODO: disable hidden
     return (
       <TouchableOpacity key={key}
@@ -174,7 +185,6 @@ export class GameField extends Component {
     );
   }
 
-
   renderPopupGroupItem() {
     let popup = this.state.popup;
     return (
@@ -190,13 +200,17 @@ export class GameField extends Component {
     )
   }
 
+  _hidePopup = () => {
+    this.setState({popup: null});
+  };
+
   render() {
     return (
       <View style={styles.field}>
         <Modal visible={this.state.popup != null}
                transparent={true}
                onRequestClose={() => {}}>
-          <TouchableWithoutFeedback onPress={() => {this.setState({popup: null})}}>
+          <TouchableWithoutFeedback onPress={this._hidePopup}>
             <View style={styles.groupItemPopup}>
               {this.renderPopupGroupItem()}
             </View>
@@ -216,14 +230,14 @@ class Rule3 extends Component {
     this.state = {visible: true};
   }
 
-  toggle() {
+  toggle = () => {
     this.setState({visible: !this.state.visible});
   }
 
   render() {
     let opacity = this.state.visible ? 1 : 0.15;
     return (
-      <TouchableWithoutFeedback onPress={() => {this.toggle()}}>
+      <TouchableWithoutFeedback onPress={this.toggle}>
         <View style={[styles.rule3, {opacity: opacity}]}>
           <Image style={styles.ruleItem} source={{uri: this.props.img1}}/>
           <Image style={styles.ruleItem} source={{uri: this.props.img2}}/>
@@ -328,18 +342,19 @@ class Rules extends Component {
       return ['under'].indexOf(r.type) > -1;
     });
 
-    const rr = vrules.length > 0 ? ruleRows : ruleRows + 2;
-    const hrb = [];
+    const {height, width} = Dimensions.get('window');
+    const direction = height > width ? 'row' : 'column';
+
+    let rrows = height > width ? ruleRows : ruleRowsV;
+    let rr = vrules.length > 0 ? rrows : rrows + 2;
+    let hrb = [];
     hrules.forEach((r, i) => {
       let j = Math.floor(i / rr);
       (hrb[j] = hrb[j] || []).push(r);
     });
 
-    const {height, width} = Dimensions.get('window');
-    const direction = height > width ? 'row' : 'column';
-
     return (
-      <ScrollView contentContainerStyle={styles.rules} style={{alignSelf: 'flex-start'}} horizontal={height > width}>
+      <ScrollView contentContainerStyle={styles.rules} style={{alignSelf: 'flex-start'}} horizontal={true}>
         <View style={{flexDirection: 'row', }}>
           {hrb.map((rs, i) => {
             return this.renderHorizontalRuleGroup(i, rs);
@@ -356,17 +371,16 @@ class Rules extends Component {
 }
 
 export default class Einstein extends Component {
-
   constructor(props) {
     super(props);
     this.newGame(true);
   }
 
-  state = {
-    field: null,
-    game: null,
-    rules: null,
-  };
+  // state = {
+  //   field: null,
+  //   game: null,
+  //   rules: null,
+  // };
 
   newGame(init) {
     let field = new Field(size);
@@ -487,6 +501,7 @@ const styles = StyleSheet.create({
   },
 
   rules: {
+    flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     flexDirection: 'column'

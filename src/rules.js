@@ -1,7 +1,5 @@
 'use strict';
 
-// import Field from './field';
-
 class Rule {
   constructor(field) {
     this.generate(field);
@@ -21,15 +19,9 @@ class Rule {
 
   generate(data) {
   }
-
-  //draw();
 }
 
 class OpenRule extends Rule {
-  //int _row;
-  //int _col;
-  //int _val;
-
   get type() {
     return 'open';
   }
@@ -54,19 +46,15 @@ class OpenRule extends Rule {
 }
 
 class UnderRule extends Rule {
-  //int _row1;
-  //int _row2;
-  //int _val1;
-  //int _val2;
 
   get type() {
     return 'under';
   }
 
   apply(game) {
-    var changed = false;
+    let changed = false;
 
-    for (var i = 0; i < game.size; ++i) {
+    for (let i = 0; i < game.size; ++i) {
       if ((!game.possible(this._row1, i, this._val1)) && game.possible(this._row2, i, this._val2)) {
         game.exclude(this._row2, i, this._val2);
         changed = true;
@@ -85,7 +73,7 @@ class UnderRule extends Rule {
   }
 
   generate(field) {
-    var col = Math.floor(Math.random() * field.size) % field.size;
+    const col = Math.floor(Math.random() * field.size) % field.size;
     this._row1 = Math.floor(Math.random() * field.size) % field.size;
     do {
       this._row2 = Math.floor(Math.random() * field.size) % field.size;
@@ -118,19 +106,15 @@ class UnderRule extends Rule {
 }
 
 class NearRule extends Rule {
-  //int _row1;
-  //int _row2;
-  //int _val1;
-  //int _val2;
 
   get type() {
     return 'near';
   }
 
   apply(game) {
-    var changed = false;
-    var iapply = function (game, j, i1, i2, v1, v2) {
-      var left, right;
+    let changed = false;
+    const iapply = function (game, j, i1, i2, v1, v2) {
+      let left, right;
       left = j === 0 ? false : game.possible(i2, j - 1, v2);
       right = j === game.size - 1 ? false : game.possible(i2, j + 1, v2);
 
@@ -141,7 +125,7 @@ class NearRule extends Rule {
         return false;
       }
     };
-    for (var i = 0; i < game.size; ++i) {
+    for (let i = 0; i < game.size; ++i) {
       changed |= iapply(game, i, this._row1, this._row2, this._val1, this._val2);
       changed |= iapply(game, i, this._row2, this._row1, this._val2, this._val1);
     }
@@ -158,8 +142,8 @@ class NearRule extends Rule {
     this._row1 = Math.floor(Math.random() * field.size) % field.size;
     this._row2 = Math.floor(Math.random() * field.size) % field.size;
 
-    var col1 = Math.floor(Math.random() * field.size) % field.size;
-    var col2 = col1 === 0 ? 1 : (col1 === field.size - 1 ? field.size - 2 : col1 + (Math.random() < 0.5 ? -1 : +1));
+    const col1 = Math.floor(Math.random() * field.size) % field.size;
+    const col2 = col1 === 0 ? 1 : (col1 === field.size - 1 ? field.size - 2 : col1 + (Math.random() < 0.5 ? -1 : +1));
 
     this._val1 = field.value(this._row1, col1);
     this._val2 = field.value(this._row2, col2);
@@ -183,19 +167,15 @@ class NearRule extends Rule {
 }
 
 class DirectionRule extends Rule {
-  //int _row1;
-  //int _row2;
-  //int _val1;
-  //int _val2;
 
   get type() {
     return 'direction';
   }
 
   apply(game) {
-    var changed = false;
+    let changed = false;
 
-    var i;
+    let i;
     for (i = 0; i < game.size; ++i) {
       if (game.possible(this._row2, i, this._val2)) {
         game.exclude(this._row2, i, this._val2);
@@ -227,8 +207,8 @@ class DirectionRule extends Rule {
     this._row1 = Math.floor(Math.random() * field.size) % field.size;
     this._row2 = Math.floor(Math.random() * field.size) % field.size;
 
-    var col1 = Math.floor(Math.random() * field.size) % field.size;
-    var col2;
+    let col1 = Math.floor(Math.random() * field.size) % field.size;
+    let col2;
     do {
       col2 = Math.floor(Math.random() * field.size) % field.size;
     } while (col2 === col1);
@@ -260,19 +240,13 @@ class DirectionRule extends Rule {
 }
 
 class BetweenRule extends Rule {
-  //int _row;
-  //int _row1;
-  //int _row2;
-  //int _val;
-  //int _val1;
-  //int _val2;
 
   get type() {
     return 'between';
   }
 
   apply(game) {
-    var changed = false;
+    let changed = false;
 
     if (game.possible(this._row, 0, this._val)) {
       game.exclude(this._row, 0, this._val);
@@ -284,7 +258,7 @@ class BetweenRule extends Rule {
       changed = true;
     }
 
-    var loop, i;
+    let loop, i;
     do {
       loop = false;
 
@@ -299,7 +273,7 @@ class BetweenRule extends Rule {
       }
 
       for (i = 0; i < game.size; ++i) {
-        var left, right;
+        let left, right;
 
         if (game.possible(this._row2, i, this._val2)) {
           left = i < 2 ? false : (game.possible(this._row, i - 1, this._val) && game.possible(this._row1, i - 2, this._val1));
@@ -337,8 +311,8 @@ class BetweenRule extends Rule {
     this._row1 = Math.floor(Math.random() * field.size) % field.size;
     this._row2 = Math.floor(Math.random() * field.size) % field.size;
 
-    var col = 1 + Math.floor(Math.random() * (field.size - 2)) % (field.size - 2);
-    var delta = Math.random() < 0.5 ? 1 : -1;
+    const col = 1 + Math.floor(Math.random() * (field.size - 2)) % (field.size - 2);
+    const delta = Math.random() < 0.5 ? 1 : -1;
 
     this._val = field.value(this._row, col);
     this._val1 = field.value(this._row1, col - delta);
@@ -390,7 +364,6 @@ class RuleFactory {
 
   // config is not null array!
   applyConfig(config) {
-    // TODO: check config
     this._config = config;
     this._factory = [];
     for (let rule of config) {

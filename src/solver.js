@@ -1,8 +1,6 @@
 'use strict';
 
 export class Solver {
-  //GameController _game
-  //Rule[] _rules
 
   constructor(game) {
     this._game = game;
