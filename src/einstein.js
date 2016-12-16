@@ -41,9 +41,10 @@ const {height, width} = Dimensions.get('window');
 
 export class GameField extends Component {
 
-  state = {
-    popup: null,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {popup: null};
+  }
 
   renderItem(i, j, k) {
     const game = this.props.game;
@@ -111,7 +112,13 @@ export class GameField extends Component {
       <TouchableOpacity key={key} onPress={() => {
         game.set(i, j, k);
         if (!game.active) {
-          Alert.alert("Fail");
+          Alert.alert("Fail", "Fail", [
+            {text: 'New', onPress: () => {
+              if (this.props.onNewGame) {
+                this.props.onNewGame();
+              }
+            }}
+          ]);
         }
         this.setState({popup: null})
       }}>
@@ -316,16 +323,22 @@ export default class Einstein extends Component {
 
   constructor(props) {
     super(props);
-    this.newGame();
+    this.newGame(true);
   }
 
-  newGame() {
-    this.field = new Field(size);
-    this.game = new GameController(this.field);
+  state = {
+    field: null,
+    game: null,
+    rules: null,
+  };
 
-    let solver = new Solver(new GameController(this.field));
+  newGame(init) {
+    let field = new Field(size);
+    let game = new GameController(field);
+
+    let solver = new Solver(new GameController(field));
     do {
-      solver.addRule(ruleFactory.newRule(this.field));
+      solver.addRule(ruleFactory.newRule(field));
     } while (!solver.solve());
 
     let rules = solver.rules;
@@ -334,7 +347,7 @@ export default class Einstein extends Component {
     do {
       solved = false;
       for (let n = 0; n < rules.length; ++n) {
-        solver = new Solver(new GameController(this.field));
+        solver = new Solver(new GameController(field));
         let trules = [].concat(rules);
         trules.splice(n, 1);
         solver.rules = trules;
@@ -346,23 +359,38 @@ export default class Einstein extends Component {
       }
     } while (solved);
 
-    this.rules = rules;
-
-    for (let i = 0; i < this.rules.length; ++i) {
-      const rule = this.rules[i];
+    for (let i = 0; i < rules.length; ++i) {
+      const rule = rules[i];
       if ('open' === rule.type) {
-        rule.apply(this.game);
+        rule.apply(game);
       }
     }
 
-    this.game.start();
+    game.start();
+
+    if (init) {
+      this.state = {
+        field: field,
+        game: game,
+        rules: rules
+      }
+    } else {
+      this.setState({
+        field: field,
+        game: game,
+        rules: rules
+      });
+    }
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <GameField game={this.game} field={this.field}/>
-        <Rules rules={this.rules}/>
+        {this.state.game && this.state.field ?
+          <GameField game={this.state.game}
+                     field={this.state.field}
+                     onNewGame={() => {this.newGame()}}/> : null}
+        {this.state.rules ? <Rules rules={this.state.rules}/> : null}
       </View>
     );
   }
