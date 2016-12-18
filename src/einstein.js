@@ -16,9 +16,11 @@ import {
 import {ruleFactory} from './rules';
 import {Field, GameController} from './field';
 import {Solver} from './solver';
+import {SizeConfig, SizeUtils} from './utils';
+
+const styleCfg = SizeUtils.build();
 
 const Dimensions = require('Dimensions');
-
 
 const items = [];
 const size = 6;
@@ -27,21 +29,20 @@ for (let i = 0; i < 6; ++i) {
   items.push(i);
 }
 
-// todo: calculate from dimension & ratio
-const styleCfg = {
-  group: 50,
-  item: 16,
-  space: 1,
-  border: 0.5,
-  ruleSpace: 1,
-  ruleItem: 30,
-  ruleBorder: 1,
-};
+// // todo: calculate from dimension & ratio
+// const styleCfg = {
+//   group: 50,
+//   item: 16,
+//   space: 1,
+//   border: 0.5,
+//   ruleSpace: 1,
+//   ruleItem: 30,
+//   ruleBorder: 1,
+// };
 
 // todo: calculate
-const ruleRows = 5;
+const ruleRows = 4;
 const ruleRowsV = 7;
-
 
 export class GameField extends Component {
 
