@@ -429,7 +429,7 @@ export default class Einstein extends Component {
     this.newGame(true);
   }
 
-  newGame(init) {
+  newGame = (init) => {
     let field = new Field(size);
     let game = new GameController(field);
 
@@ -497,7 +497,7 @@ export default class Einstein extends Component {
           <GameField game={this.state.game}
                      field={this.state.field}
                      styles={this.state.styles}
-                     onNewGame={() => {this.newGame()}}/> : null}
+                     onNewGame={this.newGame}/> : null}
         {this.state.rules ? <Rules rules={this.state.rules} styles={this.state.styles}/> : null}
       </View>
     );
