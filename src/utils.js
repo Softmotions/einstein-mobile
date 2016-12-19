@@ -9,9 +9,8 @@ class StyleConfig {
   constructor(size) {
     const {height, width} = Dimensions.get('window');
     // todo: hardcoded!!!
-    const statusHeight = 12;
+    const statusHeight = 22;
 
-    // TODO: orientation!
     // TODO: extract additional size calculations??
     this._size = size;
     this._width = width;
@@ -35,7 +34,7 @@ class StyleConfig {
     const ruleBox = Math.floor((rulesWidth - this.ruleSpace * 2 * (this.rule3Columns - 1)) / this.rule3Columns);
     this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 2) / 3);
 
-    this._rule3Rows = Math.floor((rulesHeight - this.rule2Height) / (this.rule3Height));
+    this._rule3Rows = Math.floor((rulesHeight - this.rule2Height - this.ruleSpace) / (this.rule3Height + this.ruleSpace * 2));
 
     this._buildStyles();
   }
@@ -291,8 +290,6 @@ class StyleConfig {
 
 class StyleUtils {
   static build(size) {
-    // let {height, width} = Dimensions.get('window');
-
     return new StyleConfig(size);
   }
 }

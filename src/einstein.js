@@ -16,7 +16,7 @@ import {
 import {ruleFactory} from './rules';
 import {Field, GameController} from './field';
 import {Solver} from './solver';
-import {StyleConfig, StyleUtils} from './utils';
+import {StyleConfig} from './utils';
 
 const size = 6;
 const Dimensions = require('Dimensions');
@@ -442,7 +442,7 @@ export default class Einstein extends Component {
         field: field,
         game: game,
         rules: rules,
-        styles: StyleUtils.build(size),
+        styles: new StyleConfig(size),
       }
     } else {
       this.setState({
@@ -455,7 +455,7 @@ export default class Einstein extends Component {
 
   _updateStyles = () => {
     this.setState({
-      styles: StyleUtils.build(6)
+      styles: new StyleConfig(size)
     });
   };
 
@@ -473,5 +473,3 @@ export default class Einstein extends Component {
     );
   }
 }
-
-/// TODO: style colors to config
