@@ -3,7 +3,6 @@
 import React, {Component} from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   ScrollView,
   Image,
@@ -19,8 +18,6 @@ import {Solver} from './solver';
 import {StyleConfig} from './utils';
 
 const size = 6;
-const Dimensions = require('Dimensions');
-
 const items = [];
 for (let i = 0; i < 6; ++i) {
   items.push(i);
