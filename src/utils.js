@@ -20,7 +20,7 @@ export class StyleConfig {
     this._space = 1;
 
     const dimension = this.direction == 'row' ? this.height - this.statusHeight : this.width;
-    const box = dimension - this.space * 2 - this.border * 2;
+    const box = dimension /*- this.space * 2*/ - this.border * 2;
     this._groupSize = Math.floor((box - this.space * 7) / 6);
     this._itemSize = Math.floor(this.groupSize / 3);
 
@@ -169,6 +169,13 @@ export class StyleConfig {
     this._styles = StyleSheet.create({
       container: {
         flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+      },
+
+      fieldContainer: {
+        width: this.direction == 'row' ? this.fieldSize + this.space * 2 : this.width,
+        height: this.fieldSize + this.space * 2,
         justifyContent: 'center',
         alignItems: 'center',
       },
@@ -181,7 +188,6 @@ export class StyleConfig {
         flexDirection: 'column',
         justifyContent: 'space-between',
         padding: this.space,
-        margin: this.space,
       },
 
       row: {
@@ -220,7 +226,7 @@ export class StyleConfig {
       rules: {
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
-        flexDirection: 'column'
+        flexDirection: 'column',
       },
 
       rule3: {
@@ -298,11 +304,11 @@ export class StyleConfig {
       let left = (this.fieldSize - this.popupBoxWidth) / (this.size - 1) * popup.j;
 
       if (this.direction == 'row') {
-        top += (this.height - this.fieldSize - this.statusHeight - this.space) / 2;
+        top += (this.height - this.fieldSize - this.statusHeight ) / 2 - this.space;
         // add margins
         left += this.space;
       } else {
-        left += (this.width - this.fieldSize - this.space) / 2;
+        left += (this.width - this.fieldSize) / 2;
         // add margins
         top += this.space;
       }

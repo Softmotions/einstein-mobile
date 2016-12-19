@@ -481,7 +481,7 @@ export default class Einstein extends Component {
         rules: rules
       });
     }
-  }
+  };
 
   _updateStyles = () => {
     this.setState({
@@ -492,12 +492,17 @@ export default class Einstein extends Component {
   render() {
     return (
       <View onLayout={this._updateStyles}
-            style={[this.state.styles.container, {flexDirection: this.state.styles.direction}]}>
-        {this.state.game && this.state.field ?
-          <GameField game={this.state.game}
-                     field={this.state.field}
-                     styles={this.state.styles}
-                     onNewGame={this.newGame}/> : null}
+            style={[this.state.styles.styles.container, {flexDirection: this.state.styles.direction}]}>
+        <View style={this.state.styles.styles.fieldContainer}>
+          {this.state.game && this.state.field ?
+
+
+            <GameField game={this.state.game}
+                       field={this.state.field}
+                       styles={this.state.styles}
+                       onNewGame={this.newGame}/>
+            : null}
+        </View>
         {this.state.rules ? <Rules rules={this.state.rules} styles={this.state.styles}/> : null}
       </View>
     );
