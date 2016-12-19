@@ -493,8 +493,8 @@ const styles = StyleSheet.create({
   },
 
   field: {
-    height: styleCfg.group * size + styleCfg.space * (size + 1) + styleCfg.border * 2,
-    width: styleCfg.group * size + styleCfg.space * (size + 1) + styleCfg.border * 2,
+    height: styleCfg.fieldSize,
+    width: styleCfg.fieldSize,
     borderWidth: styleCfg.border,
     borderColor: '#000',
     flexDirection: 'column',
@@ -504,8 +504,8 @@ const styles = StyleSheet.create({
   },
 
   row: {
-    height: styleCfg.groupSize,
-    width: styleCfg.groupSize * size + styleCfg.space * (size - 1),
+    height: styleCfg.fieldRowHeight,
+    width: styleCfg.fieldRowWidth,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 0
@@ -537,15 +537,14 @@ const styles = StyleSheet.create({
   },
 
   rules: {
-    // flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     flexDirection: 'column'
   },
 
   rule3: {
-    height: styleCfg.ruleItemSize + styleCfg.ruleSpace * 2 + styleCfg.ruleBorder * 2,
-    width: styleCfg.ruleItemSize * 3 + styleCfg.ruleSpace * 4 + styleCfg.ruleBorder * 2,
+    height: styleCfg.rule3Height,
+    width: styleCfg.rule3Width,
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderWidth: styleCfg.ruleBorder,
@@ -554,8 +553,8 @@ const styles = StyleSheet.create({
   },
 
   rule2: {
-    height: styleCfg.ruleItemSize * 2 + styleCfg.ruleSpace * 3 + styleCfg.ruleBorder * 2,
-    width: styleCfg.ruleItemSize + styleCfg.ruleSpace * 2 + styleCfg.ruleBorder * 2,
+    height: styleCfg.rule2Height,
+    width: styleCfg.rule2Width,
     flexDirection: 'column',
     justifyContent: 'space-between',
     borderWidth: styleCfg.ruleBorder,
@@ -582,7 +581,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    // padding: styleCfg.space * 10
   },
 
   popupGroupItemsRow: {

@@ -39,9 +39,17 @@ class StyleConfig {
     return this._space;
   }
 
-  // get fieldSize() {
-  //   return this._groupSize * this._size + this._space * (this._size + 1) + this._border * 2
-  // }
+  get fieldSize() {
+    return this._groupSize * this._size + this._space * (this._size + 1) + this._border * 2
+  }
+
+  get fieldRowWidth() {
+    return this._groupSize * this._size + this._space * (this._size - 1);
+  }
+
+  get fieldRowHeight() {
+    return this._groupSize;
+  }
 
   get groupSize() {
     return this._groupSize;
@@ -57,6 +65,22 @@ class StyleConfig {
 
   get ruleSpace() {
     return this._ruleSpace;
+  }
+
+  get rule3Width() {
+    return this._ruleItemSize * 3 + this._ruleSpace * 4 + this._ruleBorder * 2;
+  }
+
+  get rule3Height() {
+    return this._ruleItemSize + this._ruleSpace * 2 + this._ruleBorder * 2;
+  }
+
+  get rule2Width() {
+    return this._ruleItemSize + this._ruleSpace * 2 + this._ruleBorder * 2;
+  }
+
+  get rule2Height() {
+    return this._ruleItemSize * 2 + this._ruleSpace * 3 + this._ruleBorder * 2;
   }
 
   get ruleItemSize() {
