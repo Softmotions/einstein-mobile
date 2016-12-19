@@ -27,7 +27,7 @@ export class StyleConfig {
     this._ruleBorder = 1;
     this._ruleSpace = 1;
 
-    this._rule3Columns = this.direction == 'row' ? 3 : 4; // todo calculate
+    this._rule3Columns = this.direction == 'row' ? 3 : 5; // todo calculate
     const rulesWidth = this.direction == 'row' ? this.width - box : this.width;
     const rulesHeight = (this.direction == 'row' ? this.height : this.height - box) - this.statusHeight;
 

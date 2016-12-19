@@ -395,9 +395,10 @@ class Rules extends Component {
     });
 
     let rr = vrules.length > 0 ? this.styles.rule3Rows : this.styles.rule3Rows + 2;
+    let rc = Math.max(Math.ceil(hrules.length / rr), this.styles.rule3Columns);
     let hrb = [];
     hrules.forEach((r, i) => {
-      let j = Math.floor(i / rr);
+      let j = i % rc;
       (hrb[j] = hrb[j] || []).push(r);
     });
 
