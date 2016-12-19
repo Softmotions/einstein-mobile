@@ -215,17 +215,18 @@ export class GameField extends Component {
 
     let astyles;
     if (this.state.popup) {
-      const {height, width} = Dimensions.get('window');
+      let left = (styleCfg.fieldSize - styleCfg.popupBoxWidth) / 5 * this.state.popup.j;
+      let top = (styleCfg.fieldSize - styleCfg.popupBoxHeight) / 5 * this.state.popup.i;
 
-      const boxSize = styleCfg.groupSize * size + styleCfg.space * (size + 1) + styleCfg.border * 2;
-
-      let left = (styleCfg.groupSize * (size - 3 ) + styleCfg.space * (size - 1)) / 5 * this.state.popup.j;
-      let top = (styleCfg.groupSize * (size - 3) + styleCfg.space * (size - 1)) / 5 * this.state.popup.i;
-
-      if (width > height) {
-        top += (height - boxSize) / 2 - 11 /* todo remove hardcode */;
+      // TODO: style - orientation
+      if (styleCfg.width > styleCfg.height) {
+        top += (styleCfg.height - styleCfg.fieldSize) / 2 - 11 /* todo remove hardcode */;
+        // add margins
+        left += styleCfg.space;
       } else {
-        left += (width - boxSize) / 2;
+        left += (styleCfg.width - styleCfg.fieldSize) / 2;
+        // add margins
+        top += styleCfg.space;
       }
 
 
@@ -576,8 +577,8 @@ const styles = StyleSheet.create({
   },
 
   popupGroupItemBox: {
-    height: styleCfg.groupSize * 3 + styleCfg.border * 2 + styleCfg.space * 2,
-    width: styleCfg.groupSize * 3 + styleCfg.border * 2 + styleCfg.space * 2,
+    height: styleCfg.popupBoxHeight,
+    width: styleCfg.popupBoxWidth,
     backgroundColor: '#fff',
     borderWidth: styleCfg.border,
     borderColor: '#000',
@@ -591,13 +592,13 @@ const styles = StyleSheet.create({
   },
 
   popupItemBox: {
-    height: styleCfg.groupSize,
-    width: styleCfg.groupSize,
+    height: styleCfg.popupItemBoxHeight,
+    width: styleCfg.popupItemBoxWidth,
   },
 
   popupItem: {
-    height: styleCfg.groupSize,
-    width: styleCfg.groupSize,
+    height: styleCfg.popupItemHeight,
+    width: styleCfg.popupItemWidth,
     borderWidth: styleCfg.border,
     borderColor: '#000',
   },
