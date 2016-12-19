@@ -381,7 +381,7 @@ class Rules extends Component {
     // todo: extract styles
     return (
       <ScrollView contentContainerStyle={styles.rules} style={{alignSelf: 'flex-start'}} horizontal={true}>
-        <View style={{fle xDirection: 'row', }}>
+        <View style={{flexDirection: 'row', }}>
           {hrb.map((rs, i) => {
             return this.renderHorizontalRuleGroup(i, rs);
           })}
