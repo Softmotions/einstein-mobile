@@ -2,89 +2,79 @@
 
 const Dimensions = require('Dimensions');
 
-class SizeConfig {
+class StyleConfig {
 
-  constructor(group) {
+  constructor(size, width, height) {
+    this._size = size;
     this._border = 0.5;
     this._space = 1;
-    this._group = group - this._border * 2 - this._space;
-    this._item = Math.floor(this._group / 3);
+
+    // box
+    let box = width - this._space * 2 - this._border * 2;
+    this._groupSize = Math.floor((box - this._space * 7) / 6);
+    this._itemSize = Math.floor(this._groupSize / 3);
+
+    this._ruleBorder = 1;
+    this._ruleSpace = 1;
+
+    let ruleBox = Math.floor((width - this._ruleSpace * 3) / 4);
+    this._ruleItemSize = Math.floor((ruleBox - this._ruleSpace * 4 - this._ruleBorder * 2) / 3);
+
+    // TODO: build additional sizes
   }
 
-  _ruleSpace = 1;
-  _ruleItem = 30;
-  _ruleBorder = 1;
+  _border;
+  _space;
+  _groupSize;
+  _itemSize;
+  _ruleBorder;
+  _ruleSpace;
+  _ruleItemSize;
 
-  get group() {
-    return this._group;
-  }
-
-  get item() {
-    return this._item;
+  get border() {
+    return this._border;
   }
 
   get space() {
     return this._space;
   }
 
-  get border() {
-    return this._border;
+  // get fieldSize() {
+  //   return this._groupSize * this._size + this._space * (this._size + 1) + this._border * 2
+  // }
+
+  get groupSize() {
+    return this._groupSize;
   }
 
-  get ruleSpace() {
-    return this._ruleSpace;
-  }
-
-  get ruleItem() {
-    return this._ruleItem;
+  get itemSize() {
+    return this._itemSize;
   }
 
   get ruleBorder() {
     return this._ruleBorder;
   }
 
-// get group() {
-  //   return 50;
-  // }
-  //
-  // get item() {
-  //   return 16;
-  // }
-  //
-  // get space() {
-  //   return 1;
-  // }
-  //
-  // get border() {
-  //   return 0.5;
-  // }
-  //
-  // get ruleSpace() {
-  //   return 1;
-  // }
-  //
-  // get ruleItem() {
-  //   return 30;
-  // }
-  //
-  // get ruleBorder() {
-  //   return 1;
-  // }
+  get ruleSpace() {
+    return this._ruleSpace;
+  }
+
+  get ruleItemSize() {
+    return this._ruleItemSize;
+  }
 }
 
-class SizeUtils {
-  static build() {
+class StyleUtils {
+  static build(size) {
     let {height, width} = Dimensions.get('window');
 
-    // TODO landscape
+    // TODO orientation: landscape
 
-    let group = Math.floor(width / 6);
-
-    return new SizeConfig(group);
+    return new StyleConfig(size, width, height);
   }
 }
 
 export {
-  SizeConfig,
-  SizeUtils
+  StyleConfig,
+  StyleUtils
 }

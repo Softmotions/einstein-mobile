@@ -16,14 +16,15 @@ import {
 import {ruleFactory} from './rules';
 import {Field, GameController} from './field';
 import {Solver} from './solver';
-import {SizeConfig, SizeUtils} from './utils';
+import {StyleConfig, StyleUtils} from './utils';
 
-const styleCfg = SizeUtils.build();
+const size = 6;
+
+const styleCfg = StyleUtils.build(size);
 
 const Dimensions = require('Dimensions');
 
 const items = [];
-const size = 6;
 
 for (let i = 0; i < 6; ++i) {
   items.push(i);
@@ -31,12 +32,12 @@ for (let i = 0; i < 6; ++i) {
 
 // // todo: calculate from dimension & ratio
 // const styleCfg = {
-//   group: 50,
-//   item: 16,
+//   groupSize: 50,
+//   itemSize: 16,
 //   space: 1,
 //   border: 0.5,
 //   ruleSpace: 1,
-//   ruleItem: 30,
+//   ruleItemSize: 30,
 //   ruleBorder: 1,
 // };
 
@@ -216,10 +217,10 @@ export class GameField extends Component {
     if (this.state.popup) {
       const {height, width} = Dimensions.get('window');
 
-      const boxSize = styleCfg.group * size + styleCfg.space * (size + 1) + styleCfg.border * 2;
+      const boxSize = styleCfg.groupSize * size + styleCfg.space * (size + 1) + styleCfg.border * 2;
 
-      let left = (styleCfg.group * (size - 3 ) + styleCfg.space * (size - 1)) / 5 * this.state.popup.j;
-      let top = (styleCfg.group * (size - 3) + styleCfg.space * (size - 1)) / 5 * this.state.popup.i;
+      let left = (styleCfg.groupSize * (size - 3 ) + styleCfg.space * (size - 1)) / 5 * this.state.popup.j;
+      let top = (styleCfg.groupSize * (size - 3) + styleCfg.space * (size - 1)) / 5 * this.state.popup.i;
 
       if (width > height) {
         top += (height - boxSize) / 2 - 11 /* todo remove hardcode */;
@@ -499,21 +500,20 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     padding: styleCfg.space,
+    margin: styleCfg.space,
   },
 
   row: {
-    height: styleCfg.group,
-    width: styleCfg.group * size + styleCfg.space * (size - 1),
+    height: styleCfg.groupSize,
+    width: styleCfg.groupSize * size + styleCfg.space * (size - 1),
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 0
   },
 
   groupItem: {
-    height: styleCfg.group,
-    width: styleCfg.group,
-    borderWidth: styleCfg.border,
-    borderColor: '#000',
+    height: styleCfg.groupSize,
+    width: styleCfg.groupSize,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -521,30 +521,31 @@ const styles = StyleSheet.create({
 
   groupItemsRow: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   itemBox: {
-    height: styleCfg.item,
-    width: styleCfg.item,
+    height: styleCfg.itemSize,
+    width: styleCfg.itemSize,
   },
 
   item: {
-    height: styleCfg.item,
-    width: styleCfg.item,
+    height: styleCfg.itemSize,
+    width: styleCfg.itemSize,
     borderWidth: styleCfg.border,
     borderColor: '#000',
   },
 
   rules: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     flexDirection: 'column'
   },
 
   rule3: {
-    height: styleCfg.ruleItem + styleCfg.ruleSpace * 2 + styleCfg.ruleBorder * 2,
-    width: styleCfg.ruleItem * 3 + styleCfg.ruleSpace * 4 + styleCfg.ruleBorder * 2,
+    height: styleCfg.ruleItemSize + styleCfg.ruleSpace * 2 + styleCfg.ruleBorder * 2,
+    width: styleCfg.ruleItemSize * 3 + styleCfg.ruleSpace * 4 + styleCfg.ruleBorder * 2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderWidth: styleCfg.ruleBorder,
@@ -553,8 +554,8 @@ const styles = StyleSheet.create({
   },
 
   rule2: {
-    height: styleCfg.ruleItem * 2 + styleCfg.ruleSpace * 3 + styleCfg.ruleBorder * 2,
-    width: styleCfg.ruleItem + styleCfg.ruleSpace * 2 + styleCfg.ruleBorder * 2,
+    height: styleCfg.ruleItemSize * 2 + styleCfg.ruleSpace * 3 + styleCfg.ruleBorder * 2,
+    width: styleCfg.ruleItemSize + styleCfg.ruleSpace * 2 + styleCfg.ruleBorder * 2,
     flexDirection: 'column',
     justifyContent: 'space-between',
     borderWidth: styleCfg.ruleBorder,
@@ -563,20 +564,18 @@ const styles = StyleSheet.create({
   },
 
   ruleItem: {
-    height: styleCfg.ruleItem,
-    width: styleCfg.ruleItem,
+    height: styleCfg.ruleItemSize,
+    width: styleCfg.ruleItemSize,
     borderWidth: styleCfg.ruleBorder,
   },
 
   groupItemPopup: {
     flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center'
   },
 
   popupGroupItemBox: {
-    height: styleCfg.group * 3 + styleCfg.border * 2 + styleCfg.space * 2,
-    width: styleCfg.group * 3 + styleCfg.border * 2 + styleCfg.space * 2,
+    height: styleCfg.groupSize * 3 + styleCfg.border * 2 + styleCfg.space * 2,
+    width: styleCfg.groupSize * 3 + styleCfg.border * 2 + styleCfg.space * 2,
     backgroundColor: '#fff',
     borderWidth: styleCfg.border,
     borderColor: '#000',
@@ -591,13 +590,13 @@ const styles = StyleSheet.create({
   },
 
   popupItemBox: {
-    height: styleCfg.group,
-    width: styleCfg.group,
+    height: styleCfg.groupSize,
+    width: styleCfg.groupSize,
   },
 
   popupItem: {
-    height: styleCfg.group,
-    width: styleCfg.group,
+    height: styleCfg.groupSize,
+    width: styleCfg.groupSize,
     borderWidth: styleCfg.border,
     borderColor: '#000',
   },
