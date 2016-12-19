@@ -4,12 +4,12 @@ import {StyleSheet} from 'react-native';
 
 const Dimensions = require('Dimensions');
 
-class StyleConfig {
+export class StyleConfig {
 
   constructor(size) {
     const {height, width} = Dimensions.get('window');
     // todo: hardcoded!!!
-    this._statusHeight = 22;
+    this._statusHeight = 24;
 
     // TODO: extract additional size calculations??
     this._size = size;
@@ -291,15 +291,31 @@ class StyleConfig {
   get styles() {
     return this._styles;
   }
-}
 
-class StyleUtils {
-  static build(size) {
-    return new StyleConfig(size);
+  popupPosition(popup) {
+    if (popup) {
+      let top = (this.fieldSize - this.popupBoxHeight) / (this.size - 1) * popup.i;
+      let left = (this.fieldSize - this.popupBoxWidth) / (this.size - 1) * popup.j;
+
+      if (this.direction == 'row') {
+        top += (this.height - this.fieldSize - this.statusHeight - this.space) / 2;
+        // add margins
+        left += this.space;
+      } else {
+        left += (this.width - this.fieldSize - this.space) / 2;
+        // add margins
+        top += this.space;
+      }
+
+      return StyleSheet.create({
+        popupPosition: {
+          top: Math.floor(top),
+          left: Math.floor(left),
+          position: 'absolute',
+        }
+      }).popupPosition;
+    } else {
+      return StyleSheet.create({popupPosition: {}}).popupPosition;
+    }
   }
-}
-
-export {
-  StyleConfig,
-  StyleUtils
 }

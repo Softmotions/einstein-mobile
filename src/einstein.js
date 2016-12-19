@@ -76,7 +76,6 @@ class GameField extends Component {
     };
   }
 
-
   renderGroupItem(i, j) {
     const game = this.props.game;
     const key = 'group_' + i + '_' + j;
@@ -210,35 +209,6 @@ class GameField extends Component {
   render() {
     const styles = this.props.styles;
 
-    let positionStyle;
-    if (this.state.popup) {
-      let left = (styles.fieldSize - styles.popupBoxWidth) / 5 * this.state.popup.j;
-      let top = (styles.fieldSize - styles.popupBoxHeight) / 5 * this.state.popup.i;
-
-      if (styles.direction == 'row') {
-        top += (styles.height - styles.fieldSize - styles.statusHeight) / 2;
-        // add margins
-        left += styles.space;
-      } else {
-        left += (styles.width - styles.fieldSize) / 2;
-        // add margins
-        top += styles.space;
-      }
-
-
-      positionStyle = StyleSheet.create({
-        popupPosition: {
-          left: Math.floor(left),
-          top: Math.floor(top),
-          position: 'absolute',
-        }
-      });
-    } else {
-      positionStyle = StyleSheet.create({
-        popupPosition: {}
-      });
-    }
-
     return (
       <View style={styles.styles.field}>
         <Modal visible={this.state.popup != null}
@@ -246,7 +216,7 @@ class GameField extends Component {
                onRequestClose={() => {}}>
           <TouchableWithoutFeedback onPress={this._hidePopup}>
             <View style={styles.styles.modalContainer}>
-              <View style={[styles.styles.groupItemPopup, positionStyle.popupPosition]}>
+              <View style={[styles.styles.groupItemPopup, styles.popupPosition(this.state.popup)]}>
                 {this.renderPopupGroupItem()}
               </View>
             </View>
