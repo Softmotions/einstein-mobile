@@ -81,7 +81,7 @@ class GameField extends Component {
     const key = 'group_' + i + '_' + j;
 
     return (
-      <TouchableWithoutFeedback key={key} onPress={this._openPopup(i, j)}>
+      <TouchableWithoutFeedback key={key} disabled={game.finished} onPress={this._openPopup(i, j)}>
         <View>
           {!game.isSet(i, j) ?
             <View style={this.props.styles.styles.groupItem}>
@@ -127,7 +127,9 @@ class GameField extends Component {
               }
             }
           }
-        ]);
+        ], {
+          // cancelable: false
+        });
       }
     }
   };
@@ -154,18 +156,21 @@ class GameField extends Component {
               }
             }
           }
-        ]);
+        ], {
+          // cancelable: false
+        });
       }
     }
   };
 
   renderPopupItem(i, j, k) {
     const game = this.props.game;
-    const key = 'item_' + i + '_' + j + '_' + k;
+    const key = 'popup_item_' + i + '_' + j + '_' + k;
 
     // TODO: disable hidden
     return (
       <TouchableOpacity key={key}
+                        disabled={game.finished}
                         onPress={this._onPressPopupItem(i, j, k)}
                         onLongPress={this._onLongPressPopupItem(i, j, k)}>
         <View style={this.props.styles.styles.popupItemBox}>
