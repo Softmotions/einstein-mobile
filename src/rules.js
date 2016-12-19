@@ -9,6 +9,10 @@ class Rule {
     return 'abstract';
   }
 
+  get viewType() {
+    return 'abstract';
+  }
+
   apply(game) {
     return false;
   }
@@ -24,6 +28,10 @@ class Rule {
 class OpenRule extends Rule {
   get type() {
     return 'open';
+  }
+
+  get viewType() {
+    return 'hidden';
   }
 
   apply(game) {
@@ -49,6 +57,10 @@ class UnderRule extends Rule {
 
   get type() {
     return 'under';
+  }
+
+  get viewType() {
+    return 'column';
   }
 
   apply(game) {
@@ -111,6 +123,10 @@ class NearRule extends Rule {
     return 'near';
   }
 
+  get viewType() {
+    return 'row';
+  }
+
   apply(game) {
     let changed = false;
     const iapply = function (game, j, i1, i2, v1, v2) {
@@ -170,6 +186,10 @@ class DirectionRule extends Rule {
 
   get type() {
     return 'direction';
+  }
+
+  get viewType() {
+    return 'row';
   }
 
   apply(game) {
@@ -243,6 +263,10 @@ class BetweenRule extends Rule {
 
   get type() {
     return 'between';
+  }
+
+  get viewType() {
+    return 'row';
   }
 
   apply(game) {

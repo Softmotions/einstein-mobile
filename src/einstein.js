@@ -362,14 +362,14 @@ class Rules extends Component {
     // TODO: refactor
     const rules = this.props.rules;
     const hrules = rules.filter((r) => {
-      return ['near', 'direction', 'between'].indexOf(r.type) > -1;
+      return 'row' == r.viewType;
     });
     const vrules = rules.filter((r) => {
-      return ['under'].indexOf(r.type) > -1;
+      return 'column' == r.viewType;
     });
 
     const {height, width} = Dimensions.get('window');
-    const direction = height > width ? 'row' : 'column';
+    // const direction = height > width ? 'row' : 'column';
 
     let rr = vrules.length > 0 ? styleCfg.rule3Rows : styleCfg.rule3Rows + 2;
     let hrb = [];

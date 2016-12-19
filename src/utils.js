@@ -22,7 +22,7 @@ class StyleConfig {
     this._ruleSpace = 1;
 
     this._rule3Columns = 4;
-    const ruleBox = Math.floor((this.width - this.ruleSpace * (this.rule3Columns - 1)) / this.rule3Columns);
+    const ruleBox = Math.floor((this.width - this.ruleSpace * 2 * (this.rule3Columns - 1)) / this.rule3Columns);
     this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 2) / 3);
   }
 
