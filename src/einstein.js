@@ -19,13 +19,9 @@ import {Solver} from './solver';
 import {StyleConfig, StyleUtils} from './utils';
 
 const size = 6;
-
-const styleCfg = StyleUtils.build(size);
-
 const Dimensions = require('Dimensions');
 
 const items = [];
-
 for (let i = 0; i < 6; ++i) {
   items.push(i);
 }
@@ -43,15 +39,15 @@ export class GameField extends Component {
     const key = 'item_' + i + '_' + j + '_' + k;
     const src = 'item' + (i + 1) + (k + 1);
     return (
-      <View key={key} style={styles.itemBox}>
-        { game.possible(i, j, k) ? <Image style={styles.item} source={{uri: src}}/> : null }
+      <View key={key} style={this.props.styles.styles.itemBox}>
+        { game.possible(i, j, k) ? <Image style={this.props.styles.styles.item} source={{uri: src}}/> : null }
       </View>
     );
   };
 
   renderGroupItemsLine(i, j, n) {
     return (
-      <View style={styles.groupItemsRow}>
+      <View style={this.props.styles.styles.groupItemsRow}>
         {items.filter((t) => {
           return t >= n * (size / 2) && t < (n + 1) * (size / 2)
         }).map((k) => {
@@ -72,11 +68,11 @@ export class GameField extends Component {
                                 onPress={() => {if (!game.isSet(i, j)) { this.setState({popup: {i: i, j: j}})}}}>
         <View>
           {!game.isSet(i, j) ?
-            <View style={styles.groupItem}>
+            <View style={this.props.styles.styles.groupItem}>
               {this.renderGroupItemsLine(i, j, 0)}
               {this.renderGroupItemsLine(i, j, 1)}
             </View> :
-            <Image style={styles.groupItem} source={{uri : src}}/>
+            <Image style={this.props.styles.styles.groupItem} source={{uri : src}}/>
           }
         </View>
       </TouchableWithoutFeedback>
@@ -86,7 +82,7 @@ export class GameField extends Component {
   renderRow(i) {
     const key = 'row_' + i;
     return (
-      <View key={key} style={styles.row}>
+      <View key={key} style={this.props.styles.styles.row}>
         {items.map((j) => {
           return this.renderGroupItem(i, j);
         })}
@@ -157,8 +153,8 @@ export class GameField extends Component {
       <TouchableOpacity key={key}
                         onPress={this._onPressPopupItem(i, j, k)}
                         onLongPress={this._onLongPressPopupItem(i, j, k)}>
-        <View style={styles.popupItemBox}>
-          { game.possible(i, j, k) ? <Image style={styles.popupItem} source={{uri: src}}/> : null }
+        <View style={this.props.styles.styles.popupItemBox}>
+          { game.possible(i, j, k) ? <Image style={this.props.styles.styles.popupItem} source={{uri: src}}/> : null }
         </View>
       </TouchableOpacity>
     );
@@ -166,7 +162,7 @@ export class GameField extends Component {
 
   renderPopupGroupItemsLine(i, j, n) {
     return (
-      <View style={styles.popupGroupItemsRow}>
+      <View style={this.props.styles.styles.popupGroupItemsRow}>
         {items.filter((t) => {
           return t >= n * (size / 2) && t < (n + 1) * (size / 2)
         }).map((k) => {
@@ -181,7 +177,7 @@ export class GameField extends Component {
     return (
       <TouchableWithoutFeedback onPress={() => {}}>
         { popup ?
-          <View style={styles.popupGroupItemBox}>
+          <View style={this.props.styles.styles.popupGroupItemBox}>
             {this.renderPopupGroupItemsLine(popup.i, popup.j, 0)}
             {this.renderPopupGroupItemsLine(popup.i, popup.j, 1)}
           </View> :
@@ -200,18 +196,18 @@ export class GameField extends Component {
 
     let astyles;
     if (this.state.popup) {
-      let left = (styleCfg.fieldSize - styleCfg.popupBoxWidth) / 5 * this.state.popup.j;
-      let top = (styleCfg.fieldSize - styleCfg.popupBoxHeight) / 5 * this.state.popup.i;
+      let left = (this.props.styles.fieldSize - this.props.styles.popupBoxWidth) / 5 * this.state.popup.j;
+      let top = (this.props.styles.fieldSize - this.props.styles.popupBoxHeight) / 5 * this.state.popup.i;
 
       // TODO: style - orientation
-      if (styleCfg.width > styleCfg.height) {
-        top += (styleCfg.height - styleCfg.fieldSize) / 2 - 11 /* todo remove hardcode */;
+      if (this.props.styles.width > this.props.styles.height) {
+        top += (this.props.styles.height - this.props.styles.fieldSize) / 2 - 11 /* todo remove hardcode */;
         // add margins
-        left += styleCfg.space;
+        left += this.props.styles.space;
       } else {
-        left += (styleCfg.width - styleCfg.fieldSize) / 2;
+        left += (this.props.styles.width - this.props.styles.fieldSize) / 2;
         // add margins
-        top += styleCfg.space;
+        top += this.props.styles.space;
       }
 
 
@@ -229,13 +225,13 @@ export class GameField extends Component {
     }
 
     return (
-      <View style={styles.field}>
+      <View style={this.props.styles.styles.field}>
         <Modal visible={this.state.popup != null}
                transparent={true}
                onRequestClose={() => {}}>
           <TouchableWithoutFeedback onPress={this._hidePopup}>
-            <View style={styles.modalContainer}>
-              <View style={[styles.groupItemPopup, astyles.popupPosition]}>
+            <View style={this.props.styles.styles.modalContainer}>
+              <View style={[this.props.styles.styles.groupItemPopup, astyles.popupPosition]}>
                 {this.renderPopupGroupItem()}
               </View>
             </View>
@@ -263,10 +259,10 @@ class Rule3 extends Component {
     let opacity = this.state.visible ? 1 : 0.15;
     return (
       <TouchableWithoutFeedback onPress={this.toggle}>
-        <View style={[styles.rule3, {opacity: opacity}]}>
-          <Image style={styles.ruleItem} source={{uri: this.props.img1}}/>
-          <Image style={styles.ruleItem} source={{uri: this.props.img2}}/>
-          <Image style={styles.ruleItem} source={{uri: this.props.img3}}/>
+        <View style={[this.props.styles.styles.rule3, {opacity: opacity}]}>
+          <Image style={this.props.styles.styles.ruleItem} source={{uri: this.props.img1}}/>
+          <Image style={this.props.styles.styles.ruleItem} source={{uri: this.props.img2}}/>
+          <Image style={this.props.styles.styles.ruleItem} source={{uri: this.props.img3}}/>
         </View>
       </TouchableWithoutFeedback>
     )
@@ -287,9 +283,9 @@ class Rule2 extends Component {
     let opacity = this.state.visible ? 1 : 0.15;
     return (
       <TouchableWithoutFeedback onPress={() => {this.toggle()}}>
-        <View style={[styles.rule2, {opacity: opacity}]}>
-          <Image style={styles.ruleItem} source={{uri: this.props.img1}}/>
-          <Image style={styles.ruleItem} source={{uri: this.props.img2}}/>
+        <View style={[this.props.styles.styles.rule2, {opacity: opacity}]}>
+          <Image style={this.props.styles.styles.ruleItem} source={{uri: this.props.img1}}/>
+          <Image style={this.props.styles.styles.ruleItem} source={{uri: this.props.img2}}/>
         </View>
       </TouchableWithoutFeedback>
     );
@@ -302,7 +298,7 @@ class Rules extends Component {
     const src2 = 'item' + (rule.row2 + 1) + (rule.value2 + 1);
 
     return (
-      <Rule3 img1={src1} img2="near" img3={src2}/>
+      <Rule3 img1={src1} img2="near" img3={src2} styles={this.styles}/>
     );
   }
 
@@ -311,7 +307,7 @@ class Rules extends Component {
     const src2 = 'item' + (rule.row2 + 1) + (rule.value2 + 1);
 
     return (
-      <Rule3 img1={src1} img2="direction" img3={src2}/>
+      <Rule3 img1={src1} img2="direction" img3={src2} styles={this.styles}/>
     );
   }
 
@@ -321,7 +317,7 @@ class Rules extends Component {
     const src3 = 'item' + (rule.row3 + 1) + (rule.value3 + 1);
 
     return (
-      <Rule3 img1={src1} img2={src2} img3={src3}/>
+      <Rule3 img1={src1} img2={src2} img3={src3} styles={this.styles}/>
     );
   }
 
@@ -332,7 +328,7 @@ class Rules extends Component {
     const src2 = 'item' + (rule.row2 + 1) + (rule.value2 + 1);
 
     return (
-      <Rule2 key={key} img1={src1} img2={src2}/>
+      <Rule2 key={key} img1={src1} img2={src2} styles={this.styles}/>
     );
   }
 
@@ -368,10 +364,7 @@ class Rules extends Component {
       return 'column' == r.viewType;
     });
 
-    const {height, width} = Dimensions.get('window');
-    // const direction = height > width ? 'row' : 'column';
-
-    let rr = vrules.length > 0 ? styleCfg.rule3Rows : styleCfg.rule3Rows + 2;
+    let rr = vrules.length > 0 ? this.styles.rule3Rows : this.styles.rule3Rows + 2;
     let hrb = [];
     hrules.forEach((r, i) => {
       let j = Math.floor(i / rr);
@@ -380,7 +373,7 @@ class Rules extends Component {
 
     // todo: extract styles
     return (
-      <ScrollView contentContainerStyle={styles.rules} style={{alignSelf: 'flex-start'}} horizontal={true}>
+      <ScrollView contentContainerStyle={this.styles.styles.rules} style={{alignSelf: 'flex-start'}} horizontal={true}>
         <View style={{flexDirection: 'row', }}>
           {hrb.map((rs, i) => {
             return this.renderHorizontalRuleGroup(i, rs);
@@ -393,6 +386,10 @@ class Rules extends Component {
         </View>
       </ScrollView>
     )
+  }
+
+  get styles() {
+    return this.props.styles;
   }
 }
 
@@ -444,7 +441,8 @@ export default class Einstein extends Component {
       this.state = {
         field: field,
         game: game,
-        rules: rules
+        rules: rules,
+        styles: StyleUtils.build(size),
       }
     } else {
       this.setState({
@@ -455,142 +453,25 @@ export default class Einstein extends Component {
     }
   }
 
-  render() {
-    let {height, width} = Dimensions.get('window');
-    let direction = height > width ? 'column' : 'row';
+  _updateStyles = () => {
+    this.setState({
+      styles: StyleUtils.build(6)
+    });
+  };
 
+  render() {
     return (
-      <View onLayout={() => {this.forceUpdate()}} style={[styles.container, {flexDirection: direction}]}>
+      <View onLayout={this._updateStyles}
+            style={[this.state.styles.container, {flexDirection: this.state.styles.direction}]}>
         {this.state.game && this.state.field ?
           <GameField game={this.state.game}
                      field={this.state.field}
+                     styles={this.state.styles}
                      onNewGame={() => {this.newGame()}}/> : null}
-        {this.state.rules ? <Rules rules={this.state.rules}/> : null}
+        {this.state.rules ? <Rules rules={this.state.rules} styles={this.state.styles}/> : null}
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  field: {
-    height: styleCfg.fieldSize,
-    width: styleCfg.fieldSize,
-    borderWidth: styleCfg.border,
-    borderColor: '#000',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: styleCfg.space,
-    margin: styleCfg.space,
-  },
-
-  row: {
-    height: styleCfg.fieldRowHeight,
-    width: styleCfg.fieldRowWidth,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 0
-  },
-
-  groupItem: {
-    height: styleCfg.groupSize,
-    width: styleCfg.groupSize,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  groupItemsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-
-  itemBox: {
-    height: styleCfg.itemSize,
-    width: styleCfg.itemSize,
-  },
-
-  item: {
-    height: styleCfg.itemSize,
-    width: styleCfg.itemSize,
-    borderWidth: styleCfg.border,
-    borderColor: '#000',
-  },
-
-  rules: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    flexDirection: 'column'
-  },
-
-  rule3: {
-    height: styleCfg.rule3Height,
-    width: styleCfg.rule3Width,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderWidth: styleCfg.ruleBorder,
-    borderColor: '#000',
-    padding: styleCfg.ruleSpace,
-    margin: styleCfg.ruleSpace,
-  },
-
-  rule2: {
-    height: styleCfg.rule2Height,
-    width: styleCfg.rule2Width,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    borderWidth: styleCfg.ruleBorder,
-    borderColor: '#000',
-    padding: styleCfg.ruleSpace,
-    margin: styleCfg.ruleSpace,
-  },
-
-  ruleItem: {
-    height: styleCfg.ruleItemSize,
-    width: styleCfg.ruleItemSize,
-  },
-
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.25)'
-  },
-
-  groupItemPopup: {
-    flex: 1,
-  },
-
-  popupGroupItemBox: {
-    height: styleCfg.popupBoxHeight,
-    width: styleCfg.popupBoxWidth,
-    backgroundColor: '#fff',
-    borderWidth: styleCfg.border,
-    borderColor: '#000',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  popupGroupItemsRow: {
-    flexDirection: 'row',
-  },
-
-  popupItemBox: {
-    height: styleCfg.popupItemBoxHeight,
-    width: styleCfg.popupItemBoxWidth,
-  },
-
-  popupItem: {
-    height: styleCfg.popupItemHeight,
-    width: styleCfg.popupItemWidth,
-    borderWidth: styleCfg.border,
-    borderColor: '#000',
-  },
-});
-
 
 /// TODO: style colors to config

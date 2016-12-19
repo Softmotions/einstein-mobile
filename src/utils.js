@@ -1,10 +1,16 @@
 'use strict';
 
+import {StyleSheet} from 'react-native';
+
 const Dimensions = require('Dimensions');
 
 class StyleConfig {
 
-  constructor(size, width, height) {
+  constructor(size) {
+    const {height, width} = Dimensions.get('window');
+    // todo: hardcoded!!!
+    const statusHeight = 12;
+
     // TODO: orientation!
     // TODO: extract additional size calculations??
     this._size = size;
@@ -14,16 +20,24 @@ class StyleConfig {
     this._border = 0.5;
     this._space = 1;
 
-    const box = this.width - this.space * 2 - this.border * 2;
+    const dimension = this.direction == 'row' ? this.height - statusHeight : this.width;
+    const box = dimension - this.space * 2 - this.border * 2;
     this._groupSize = Math.floor((box - this.space * 7) / 6);
     this._itemSize = Math.floor(this.groupSize / 3);
 
     this._ruleBorder = 1;
     this._ruleSpace = 1;
 
-    this._rule3Columns = 4;
-    const ruleBox = Math.floor((this.width - this.ruleSpace * 2 * (this.rule3Columns - 1)) / this.rule3Columns);
+    this._rule3Columns = this.direction == 'row' ? 3 : 4; // todo calculate
+    const rulesWidth = this.direction == 'row' ? this.width - box : this.width;
+    const rulesHeight = (this.direction == 'row' ? this.height : this.height - box) - statusHeight;
+
+    const ruleBox = Math.floor((rulesWidth - this.ruleSpace * 2 * (this.rule3Columns - 1)) / this.rule3Columns);
     this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 2) / 3);
+
+    this._rule3Rows = Math.floor((rulesHeight - this.rule2Height) / (this.rule3Height));
+
+    this._buildStyles();
   }
 
   _width;
@@ -39,6 +53,9 @@ class StyleConfig {
   _ruleItemSize;
 
   _rule3Columns;
+  _rule3Rows;
+
+  _styles; // compiled styles
 
   get size() {
     return this._size;
@@ -50,6 +67,10 @@ class StyleConfig {
 
   get height() {
     return this._height;
+  }
+
+  get direction() {
+    return this.width > this.height ? 'row' : 'column';
   }
 
   get border() {
@@ -93,7 +114,7 @@ class StyleConfig {
   }
 
   get rule3Rows() {
-    return 4; // todo: calculate
+    return this._rule3Rows;
   }
 
   get rule3Width() {
@@ -139,15 +160,140 @@ class StyleConfig {
   get popupItemHeight() {
     return this.groupSize;
   }
+
+  _buildStyles() {
+    this._styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+
+      field: {
+        height: this.fieldSize,
+        width: this.fieldSize,
+        borderWidth: this.border,
+        borderColor: '#000',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: this.space,
+        margin: this.space,
+      },
+
+      row: {
+        height: this.fieldRowHeight,
+        width: this.fieldRowWidth,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 0
+      },
+
+      groupItem: {
+        height: this.groupSize,
+        width: this.groupSize,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+
+      groupItemsRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      },
+
+      itemBox: {
+        height: this.itemSize,
+        width: this.itemSize,
+      },
+
+      item: {
+        height: this.itemSize,
+        width: this.itemSize,
+        borderWidth: this.border,
+        borderColor: '#000',
+      },
+
+      rules: {
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        flexDirection: 'column'
+      },
+
+      rule3: {
+        height: this.rule3Height,
+        width: this.rule3Width,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderWidth: this.ruleBorder,
+        borderColor: '#000',
+        padding: this.ruleSpace,
+        margin: this.ruleSpace,
+      },
+
+      rule2: {
+        height: this.rule2Height,
+        width: this.rule2Width,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        borderWidth: this.ruleBorder,
+        borderColor: '#000',
+        padding: this.ruleSpace,
+        margin: this.ruleSpace,
+      },
+
+      ruleItem: {
+        height: this.ruleItemSize,
+        width: this.ruleItemSize,
+      },
+
+      modalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.25)'
+      },
+
+      groupItemPopup: {
+        flex: 1,
+      },
+
+      popupGroupItemBox: {
+        height: this.popupBoxHeight,
+        width: this.popupBoxWidth,
+        backgroundColor: '#fff',
+        borderWidth: this.border,
+        borderColor: '#000',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+
+      popupGroupItemsRow: {
+        flexDirection: 'row',
+      },
+
+      popupItemBox: {
+        height: this.popupItemBoxHeight,
+        width: this.popupItemBoxWidth,
+      },
+
+      popupItem: {
+        height: this.popupItemHeight,
+        width: this.popupItemWidth,
+        borderWidth: this.border,
+        borderColor: '#000',
+      },
+    });
+  }
+
+  get styles() {
+    return this._styles;
+  }
 }
 
 class StyleUtils {
   static build(size) {
-    let {height, width} = Dimensions.get('window');
+    // let {height, width} = Dimensions.get('window');
 
-    // TODO orientation: landscape
-
-    return new StyleConfig(size, width, height);
+    return new StyleConfig(size);
   }
 }
 
