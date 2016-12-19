@@ -9,7 +9,7 @@ class StyleConfig {
   constructor(size) {
     const {height, width} = Dimensions.get('window');
     // todo: hardcoded!!!
-    const statusHeight = 22;
+    this._statusHeight = 22;
 
     // TODO: extract additional size calculations??
     this._size = size;
@@ -19,7 +19,7 @@ class StyleConfig {
     this._border = 0.5;
     this._space = 1;
 
-    const dimension = this.direction == 'row' ? this.height - statusHeight : this.width;
+    const dimension = this.direction == 'row' ? this.height - this.statusHeight : this.width;
     const box = dimension - this.space * 2 - this.border * 2;
     this._groupSize = Math.floor((box - this.space * 7) / 6);
     this._itemSize = Math.floor(this.groupSize / 3);
@@ -29,7 +29,7 @@ class StyleConfig {
 
     this._rule3Columns = this.direction == 'row' ? 3 : 4; // todo calculate
     const rulesWidth = this.direction == 'row' ? this.width - box : this.width;
-    const rulesHeight = (this.direction == 'row' ? this.height : this.height - box) - statusHeight;
+    const rulesHeight = (this.direction == 'row' ? this.height : this.height - box) - this.statusHeight;
 
     const ruleBox = Math.floor((rulesWidth - this.ruleSpace * 2 * (this.rule3Columns - 1)) / this.rule3Columns);
     this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 2) / 3);
@@ -41,6 +41,7 @@ class StyleConfig {
 
   _width;
   _height;
+  _statusHeight;
 
   _size;
   _border;
@@ -66,6 +67,10 @@ class StyleConfig {
 
   get height() {
     return this._height;
+  }
+
+  get statusHeight() {
+    return this._statusHeight;
   }
 
   get direction() {
@@ -208,8 +213,8 @@ class StyleConfig {
       item: {
         height: this.itemSize,
         width: this.itemSize,
-        borderWidth: this.border,
-        borderColor: '#000',
+        // borderWidth: this.border,
+        // borderColor: '#000',
       },
 
       rules: {
@@ -277,8 +282,8 @@ class StyleConfig {
       popupItem: {
         height: this.popupItemHeight,
         width: this.popupItemWidth,
-        borderWidth: this.border,
-        borderColor: '#000',
+        // borderWidth: this.border,
+        // borderColor: '#000',
       },
     });
   }

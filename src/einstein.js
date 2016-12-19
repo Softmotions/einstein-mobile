@@ -26,7 +26,20 @@ for (let i = 0; i < 6; ++i) {
   items.push(i);
 }
 
-export class GameField extends Component {
+class ItemImage extends Component {
+  static src(row, value) {
+    return 'item' + (row + 1) + (value + 1);
+  }
+
+  render() {
+    const src = !this.props.type ? ItemImage.src(this.props.row, this.props.value) : this.props.type;
+    return (
+      <Image style={this.props.style} source={{uri: src}}/>
+    )
+  }
+}
+
+class GameField extends Component {
 
   constructor(props) {
     super(props);
@@ -35,12 +48,10 @@ export class GameField extends Component {
 
   renderItem(i, j, k) {
     const game = this.props.game;
-
     const key = 'item_' + i + '_' + j + '_' + k;
-    const src = 'item' + (i + 1) + (k + 1);
     return (
       <View key={key} style={this.props.styles.styles.itemBox}>
-        { game.possible(i, j, k) ? <Image style={this.props.styles.styles.item} source={{uri: src}}/> : null }
+        { game.possible(i, j, k) ? <ItemImage style={this.props.styles.styles.item} row={i} value={k}/> : null }
       </View>
     );
   };
@@ -57,22 +68,28 @@ export class GameField extends Component {
     );
   }
 
+  _openPopup(i, j) {
+    return () => {
+      if (!this.props.game.isSet(i, j)) {
+        this.setState({popup: {i: i, j: j}})
+      }
+    };
+  }
+
+
   renderGroupItem(i, j) {
     const game = this.props.game;
-
     const key = 'group_' + i + '_' + j;
-    const src = 'item' + (i + 1 ) + (game.get(i, j) + 1);
 
     return (
-      <TouchableWithoutFeedback key={key}
-                                onPress={() => {if (!game.isSet(i, j)) { this.setState({popup: {i: i, j: j}})}}}>
+      <TouchableWithoutFeedback key={key} onPress={this._openPopup(i, j)}>
         <View>
           {!game.isSet(i, j) ?
             <View style={this.props.styles.styles.groupItem}>
               {this.renderGroupItemsLine(i, j, 0)}
               {this.renderGroupItemsLine(i, j, 1)}
             </View> :
-            <Image style={this.props.styles.styles.groupItem} source={{uri : src}}/>
+            <ItemImage style={this.props.styles.styles.groupItem} row={i} value={game.get(i, j)}/>
           }
         </View>
       </TouchableWithoutFeedback>
@@ -145,16 +162,15 @@ export class GameField extends Component {
 
   renderPopupItem(i, j, k) {
     const game = this.props.game;
-
     const key = 'item_' + i + '_' + j + '_' + k;
-    const src = 'item' + (i + 1) + (k + 1);
+
     // TODO: disable hidden
     return (
       <TouchableOpacity key={key}
                         onPress={this._onPressPopupItem(i, j, k)}
                         onLongPress={this._onLongPressPopupItem(i, j, k)}>
         <View style={this.props.styles.styles.popupItemBox}>
-          { game.possible(i, j, k) ? <Image style={this.props.styles.styles.popupItem} source={{uri: src}}/> : null }
+          { game.possible(i, j, k) ? <ItemImage style={this.props.styles.styles.popupItem} row={i} value={k}/> : null }
         </View>
       </TouchableOpacity>
     );
@@ -192,26 +208,25 @@ export class GameField extends Component {
   };
 
   render() {
-    // TODO: calculate popup position
+    const styles = this.props.styles;
 
-    let astyles;
+    let positionStyle;
     if (this.state.popup) {
-      let left = (this.props.styles.fieldSize - this.props.styles.popupBoxWidth) / 5 * this.state.popup.j;
-      let top = (this.props.styles.fieldSize - this.props.styles.popupBoxHeight) / 5 * this.state.popup.i;
+      let left = (styles.fieldSize - styles.popupBoxWidth) / 5 * this.state.popup.j;
+      let top = (styles.fieldSize - styles.popupBoxHeight) / 5 * this.state.popup.i;
 
-      // TODO: style - orientation
-      if (this.props.styles.width > this.props.styles.height) {
-        top += (this.props.styles.height - this.props.styles.fieldSize) / 2 - 11 /* todo remove hardcode */;
+      if (styles.direction == 'row') {
+        top += (styles.height - styles.fieldSize - styles.statusHeight) / 2;
         // add margins
-        left += this.props.styles.space;
+        left += styles.space;
       } else {
-        left += (this.props.styles.width - this.props.styles.fieldSize) / 2;
+        left += (styles.width - styles.fieldSize) / 2;
         // add margins
-        top += this.props.styles.space;
+        top += styles.space;
       }
 
 
-      astyles = StyleSheet.create({
+      positionStyle = StyleSheet.create({
         popupPosition: {
           left: Math.floor(left),
           top: Math.floor(top),
@@ -219,19 +234,19 @@ export class GameField extends Component {
         }
       });
     } else {
-      astyles = StyleSheet.create({
+      positionStyle = StyleSheet.create({
         popupPosition: {}
       });
     }
 
     return (
-      <View style={this.props.styles.styles.field}>
+      <View style={styles.styles.field}>
         <Modal visible={this.state.popup != null}
                transparent={true}
                onRequestClose={() => {}}>
           <TouchableWithoutFeedback onPress={this._hidePopup}>
-            <View style={this.props.styles.styles.modalContainer}>
-              <View style={[this.props.styles.styles.groupItemPopup, astyles.popupPosition]}>
+            <View style={styles.styles.modalContainer}>
+              <View style={[styles.styles.groupItemPopup, positionStyle.popupPosition]}>
                 {this.renderPopupGroupItem()}
               </View>
             </View>
@@ -245,47 +260,109 @@ export class GameField extends Component {
   }
 }
 
-class Rule3 extends Component {
+class AbstractRule extends Component {
   constructor(props) {
     super(props);
-    this.state = {visible: true};
+    this.state = {visible: true}
   }
 
   toggle = () => {
     this.setState({visible: !this.state.visible});
   };
 
+  get visibilityStyle() {
+    return {opacity: this.state.visible ? 1 : 0.15};
+  }
+}
+
+class Rule3 extends AbstractRule {
+  constructor(props) {
+    super(props);
+  }
+
+  get _type1() {
+    return '';
+  }
+
+  get _type2() {
+    return '';
+  }
+
+  get _type3() {
+    return '';
+  }
+
   render() {
-    let opacity = this.state.visible ? 1 : 0.15;
     return (
       <TouchableWithoutFeedback onPress={this.toggle}>
-        <View style={[this.props.styles.styles.rule3, {opacity: opacity}]}>
-          <Image style={this.props.styles.styles.ruleItem} source={{uri: this.props.img1}}/>
-          <Image style={this.props.styles.styles.ruleItem} source={{uri: this.props.img2}}/>
-          <Image style={this.props.styles.styles.ruleItem} source={{uri: this.props.img3}}/>
+        <View style={[this.props.styles.styles.rule3, this.visibilityStyle]}>
+          <ItemImage style={this.props.styles.styles.ruleItem} type={this._type1}/>
+          <ItemImage style={this.props.styles.styles.ruleItem} type={this._type2}/>
+          <ItemImage style={this.props.styles.styles.ruleItem} type={this._type3}/>
         </View>
       </TouchableWithoutFeedback>
     )
   }
 }
 
-class Rule2 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {visible: true};
+class NearRule extends Rule3 {
+  get _type1() {
+    return ItemImage.src(this.props.rule.row1, this.props.rule.value1);
   }
 
-  toggle() {
-    this.setState({visible: !this.state.visible});
+  get _type2() {
+    return 'near';
+  }
+
+  get _type3() {
+    return ItemImage.src(this.props.rule.row2, this.props.rule.value2);
+  }
+}
+
+class DirectionRule extends Rule3 {
+  get _type1() {
+    return ItemImage.src(this.props.rule.row1, this.props.rule.value1);
+  }
+
+  get _type2() {
+    return 'direction';
+  }
+
+  get _type3() {
+    return ItemImage.src(this.props.rule.row2, this.props.rule.value2);
+  }
+}
+
+class BetweenRule extends Rule3 {
+  get _type1() {
+    return ItemImage.src(this.props.rule.row1, this.props.rule.value1);
+  }
+
+  get _type2() {
+    return ItemImage.src(this.props.rule.row2, this.props.rule.value2);
+  }
+
+  get _type3() {
+    return ItemImage.src(this.props.rule.row3, this.props.rule.value3);
+  }
+
+}
+
+class Rule2 extends AbstractRule {
+  constructor(props) {
+    super(props);
   }
 
   render() {
-    let opacity = this.state.visible ? 1 : 0.15;
     return (
-      <TouchableWithoutFeedback onPress={() => {this.toggle()}}>
-        <View style={[this.props.styles.styles.rule2, {opacity: opacity}]}>
-          <Image style={this.props.styles.styles.ruleItem} source={{uri: this.props.img1}}/>
-          <Image style={this.props.styles.styles.ruleItem} source={{uri: this.props.img2}}/>
+      <TouchableWithoutFeedback onPress={this.toggle}>
+        <View style={[this.props.styles.styles.rule2, this.visibilityStyle]}>
+          <ItemImage style={this.props.styles.styles.ruleItem}
+                     row={this.props.rule.row1}
+                     value={this.props.rule.value1}/>
+          <ItemImage style={this.props.styles.styles.ruleItem}
+                     row={this.props.rule.row2}
+                     value={this.props.rule.value2}/>
         </View>
       </TouchableWithoutFeedback>
     );
@@ -293,54 +370,35 @@ class Rule2 extends Component {
 }
 
 class Rules extends Component {
-  renderNearRule(rule) {
-    const src1 = 'item' + (rule.row1 + 1) + (rule.value1 + 1);
-    const src2 = 'item' + (rule.row2 + 1) + (rule.value2 + 1);
-
-    return (
-      <Rule3 img1={src1} img2="near" img3={src2} styles={this.styles}/>
-    );
-  }
-
-  renderDirectionRule(rule) {
-    const src1 = 'item' + (rule.row1 + 1) + (rule.value1 + 1);
-    const src2 = 'item' + (rule.row2 + 1) + (rule.value2 + 1);
-
-    return (
-      <Rule3 img1={src1} img2="direction" img3={src2} styles={this.styles}/>
-    );
-  }
-
-  renderBetweenRule(rule) {
-    const src1 = 'item' + (rule.row1 + 1) + (rule.value1 + 1);
-    const src2 = 'item' + (rule.row2 + 1) + (rule.value2 + 1);
-    const src3 = 'item' + (rule.row3 + 1) + (rule.value3 + 1);
-
-    return (
-      <Rule3 img1={src1} img2={src2} img3={src3} styles={this.styles}/>
-    );
-  }
 
   renderUnderRule(i, rule) {
     const key = 'urule_' + i;
 
-    const src1 = 'item' + (rule.row1 + 1) + (rule.value1 + 1);
-    const src2 = 'item' + (rule.row2 + 1) + (rule.value2 + 1);
-
     return (
-      <Rule2 key={key} img1={src1} img2={src2} styles={this.styles}/>
+      <Rule2 key={key} rule={rule} styles={this.styles}/>
     );
   }
 
   renderHorizontalRule(i, j, rule) {
     const key = 'rule_' + i + '_' + j;
-    return (
-      <View key={key}>{
-        rule.type == 'near' ? this.renderNearRule(rule) :
-          rule.type == 'direction' ? this.renderDirectionRule(rule) :
-            rule.type == 'between' ? this.renderBetweenRule(rule) : null
-      }</View>
-    )
+    switch (rule.type) {
+      case 'near':
+        return (
+          <NearRule key={key} rule={rule} styles={this.styles}/>
+        );
+      case 'direction':
+        return (
+          <DirectionRule key={key} rule={rule} styles={this.styles}/>
+        );
+      case 'between':
+        return (
+          <BetweenRule key={key} rule={rule} styles={this.styles}/>
+        );
+      default:
+        return (
+          <View key={key}/>
+        );
+    }
   }
 
   renderHorizontalRuleGroup(i, rules) {
