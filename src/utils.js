@@ -21,7 +21,8 @@ class StyleConfig {
     this._ruleBorder = 1;
     this._ruleSpace = 1;
 
-    const ruleBox = Math.floor((this.width - this.ruleSpace * 3) / 4);
+    this._rule3Columns = 4;
+    const ruleBox = Math.floor((this.width - this.ruleSpace * (this.rule3Columns - 1)) / this.rule3Columns);
     this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 2) / 3);
   }
 
@@ -36,6 +37,8 @@ class StyleConfig {
   _ruleBorder;
   _ruleSpace;
   _ruleItemSize;
+
+  _rule3Columns;
 
   get size() {
     return this._size;
@@ -83,6 +86,14 @@ class StyleConfig {
 
   get ruleSpace() {
     return this._ruleSpace;
+  }
+
+  get rule3Columns() {
+    return this._rule3Columns;
+  }
+
+  get rule3Rows() {
+    return 4; // todo: calculate
   }
 
   get rule3Width() {

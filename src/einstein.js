@@ -30,21 +30,6 @@ for (let i = 0; i < 6; ++i) {
   items.push(i);
 }
 
-// // todo: calculate from dimension & ratio
-// const styleCfg = {
-//   groupSize: 50,
-//   itemSize: 16,
-//   space: 1,
-//   border: 0.5,
-//   ruleSpace: 1,
-//   ruleItemSize: 30,
-//   ruleBorder: 1,
-// };
-
-// todo: calculate
-const ruleRows = 4;
-const ruleRowsV = 7;
-
 export class GameField extends Component {
 
   constructor(props) {
@@ -374,6 +359,7 @@ class Rules extends Component {
   }
 
   render() {
+    // TODO: refactor
     const rules = this.props.rules;
     const hrules = rules.filter((r) => {
       return ['near', 'direction', 'between'].indexOf(r.type) > -1;
@@ -385,8 +371,7 @@ class Rules extends Component {
     const {height, width} = Dimensions.get('window');
     const direction = height > width ? 'row' : 'column';
 
-    let rrows = height > width ? ruleRows : ruleRowsV;
-    let rr = vrules.length > 0 ? rrows : rrows + 2;
+    let rr = vrules.length > 0 ? styleCfg.rule3Rows : styleCfg.rule3Rows + 2;
     let hrb = [];
     hrules.forEach((r, i) => {
       let j = Math.floor(i / rr);
@@ -396,7 +381,7 @@ class Rules extends Component {
     // todo: extract styles
     return (
       <ScrollView contentContainerStyle={styles.rules} style={{alignSelf: 'flex-start'}} horizontal={true}>
-        <View style={{flexDirection: 'row', }}>
+        <View style={{fle xDirection: 'row', }}>
           {hrb.map((rs, i) => {
             return this.renderHorizontalRuleGroup(i, rs);
           })}
