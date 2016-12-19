@@ -548,6 +548,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderWidth: styleCfg.ruleBorder,
+    borderColor: '#000',
     padding: styleCfg.ruleSpace,
     margin: styleCfg.ruleSpace,
   },
@@ -558,6 +559,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     borderWidth: styleCfg.ruleBorder,
+    borderColor: '#000',
     padding: styleCfg.ruleSpace,
     margin: styleCfg.ruleSpace,
   },
@@ -566,6 +568,7 @@ const styles = StyleSheet.create({
     height: styleCfg.ruleItemSize,
     width: styleCfg.ruleItemSize,
     borderWidth: styleCfg.ruleBorder,
+    borderColor: '#000',
   },
 
   groupItemPopup: {
@@ -599,3 +602,6 @@ const styles = StyleSheet.create({
     borderColor: '#000',
   },
 });
+
+
+/// TODO: style colors to config
