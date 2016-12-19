@@ -249,7 +249,7 @@ export class GameField extends Component {
                transparent={true}
                onRequestClose={() => {}}>
           <TouchableWithoutFeedback onPress={this._hidePopup}>
-            <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
+            <View style={styles.modalContainer}>
               <View style={[styles.groupItemPopup, astyles.popupPosition]}>
                 {this.renderPopupGroupItem()}
               </View>
@@ -568,8 +568,11 @@ const styles = StyleSheet.create({
   ruleItem: {
     height: styleCfg.ruleItemSize,
     width: styleCfg.ruleItemSize,
-    borderWidth: styleCfg.ruleBorder,
-    borderColor: '#000',
+  },
+
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.25)'
   },
 
   groupItemPopup: {
