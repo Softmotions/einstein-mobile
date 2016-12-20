@@ -424,7 +424,7 @@ class Rules extends Component {
   }
 }
 
-export default class Einstein extends Component {
+export default class Game extends Component {
   constructor(props) {
     super(props);
     this.newGame(true);
