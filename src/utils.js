@@ -20,9 +20,13 @@ export class StyleConfig {
     this._space = 1;
 
     const dimension = this.direction == 'row' ? this.height - this.statusHeight : this.width;
-    const box = dimension /*- this.space * 2*/ - this.border * 2;
+    const box = dimension - this.border * 2;
     this._groupSize = Math.floor((box - this.space * 7) / 6);
     this._itemSize = Math.floor(this.groupSize / 3);
+
+    this._fieldSize = this.groupSize * this.size + this.space * (this.size + 1) + this.border * 2;
+    this._fieldRowWidth = this.groupSize * this.size + this.space * (this.size - 1);
+    this._fieldRowHeight = this.groupSize;
 
     this._ruleBorder = 1;
     this._ruleSpace = 1;
@@ -34,7 +38,19 @@ export class StyleConfig {
     const ruleBox = Math.floor((rulesWidth - this.ruleSpace * 2 * (this.rule3Columns - 1)) / this.rule3Columns);
     this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 2) / 3);
 
+    this._rule3Width = this.ruleItemSize * 3 + this.ruleSpace * 4 + this.ruleBorder * 2;
+    this._rule3Height = this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 2;
+    this._rule2Width = this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 2;
+    this._rule2Height = this.ruleItemSize * 2 + this.ruleSpace * 3 + this.ruleBorder * 2;
+
     this._rule3Rows = Math.floor((rulesHeight - this.rule2Height - this.ruleSpace) / (this.rule3Height + this.ruleSpace * 2));
+
+    this._popupBoxWidth = this.groupSize * 3 + this.border * 2 + this.space * 2;
+    this._popupBoxHeight = this.groupSize * 3 + this.border * 2 + this.space * 2;
+    this._popupItemBoxWidth = this.groupSize;
+    this._popupItemBoxHeight = this.groupSize;
+    this._popupItemWidth = this.groupSize;
+    this._popupItemHeight = this.groupSize;
 
     this._buildStyles();
   }
@@ -55,7 +71,26 @@ export class StyleConfig {
   _rule3Columns;
   _rule3Rows;
 
-  _styles; // compiled styles
+  // calculation cache
+  _fieldSize;
+  _fieldRowWidth;
+  _fieldRowHeight;
+
+  _rule3Width;
+  _rule3Height;
+  _rule2Width;
+  _rule2Height;
+
+  _popupBoxWidth;
+  _popupBoxHeight;
+
+  _popupItemBoxWidth;
+  _popupItemBoxHeight;
+  _popupItemWidth;
+  _popupItemHeight;
+
+  // compiled styles
+  _styles;
 
   get size() {
     return this._size;
@@ -86,15 +121,14 @@ export class StyleConfig {
   }
 
   get fieldSize() {
-    return this.groupSize * this.size + this.space * (this.size + 1) + this.border * 2
+    return this._fieldSize;
   }
 
   get fieldRowWidth() {
-    return this.groupSize * this.size + this.space * (this.size - 1);
+    return this._fieldRowWidth;
   }
-
   get fieldRowHeight() {
-    return this.groupSize;
+    return this._fieldRowHeight;
   }
 
   get groupSize() {
@@ -122,19 +156,18 @@ export class StyleConfig {
   }
 
   get rule3Width() {
-    return this.ruleItemSize * 3 + this.ruleSpace * 4 + this.ruleBorder * 2;
+    return this._rule3Width;
   }
 
   get rule3Height() {
-    return this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 2;
+    return this._rule3Height;
   }
 
   get rule2Width() {
-    return this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 2;
+    return this._rule2Width;
   }
-
   get rule2Height() {
-    return this.ruleItemSize * 2 + this.ruleSpace * 3 + this.ruleBorder * 2;
+    return this._rule2Height;
   }
 
   get ruleItemSize() {
@@ -142,27 +175,26 @@ export class StyleConfig {
   }
 
   get popupBoxWidth() {
-    return this.groupSize * 3 + this.border * 2 + this.space * 2;
+    return this._popupBoxWidth;
   }
 
   get popupBoxHeight() {
-    return this.groupSize * 3 + this.border * 2 + this.space * 2;
+    return this._popupBoxHeight;
   }
 
   get popupItemBoxWidth() {
-    return this.groupSize;
+    return this._popupItemBoxWidth;
   }
 
   get popupItemBoxHeight() {
-    return this.groupSize;
+    return this._popupItemBoxHeight;
   }
 
   get popupItemWidth() {
-    return this.groupSize;
+    return this._popupItemWidth;
   }
-
   get popupItemHeight() {
-    return this.groupSize;
+    return this._popupItemHeight;
   }
 
   _buildStyles() {
