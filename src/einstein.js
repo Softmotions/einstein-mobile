@@ -36,19 +36,23 @@ class GameField extends Component {
     this.state = {popup: null};
   }
 
+  get styles() {
+    return this.props.styles.styles;
+  }
+
   renderItem(i, j, k) {
     const game = this.props.game;
     const key = 'item_' + i + '_' + j + '_' + k;
     return (
-      <View key={key} style={this.props.styles.styles.itemBox}>
-        { game.possible(i, j, k) ? <ItemImage style={this.props.styles.styles.item} row={i} value={k}/> : null }
+      <View key={key} style={this.styles.itemBox}>
+        { game.possible(i, j, k) ? <ItemImage style={this.styles.item} row={i} value={k}/> : null }
       </View>
     );
   };
 
   renderGroupItemsLine(i, j, n) {
     return (
-      <View style={this.props.styles.styles.groupItemsRow}>
+      <View style={this.styles.groupItemsRow}>
         {items.filter((t) => t >= n * (size / 2) && t < (n + 1) * (size / 2)).map((k) => this.renderItem(i, j, k))}
       </View>
     );
@@ -70,11 +74,11 @@ class GameField extends Component {
       <TouchableWithoutFeedback key={key} disabled={game.finished} onPress={this._openPopup(i, j)}>
         <View>
           {!game.isSet(i, j) ?
-            <View style={this.props.styles.styles.groupItem}>
+            <View style={this.styles.groupItem}>
               {this.renderGroupItemsLine(i, j, 0)}
               {this.renderGroupItemsLine(i, j, 1)}
             </View> :
-            <ItemImage style={this.props.styles.styles.groupItem} row={i} value={game.get(i, j)}/>
+            <ItemImage style={this.styles.groupItem} row={i} value={game.get(i, j)}/>
           }
         </View>
       </TouchableWithoutFeedback>
@@ -84,7 +88,7 @@ class GameField extends Component {
   renderRow(i) {
     const key = 'row_' + i;
     return (
-      <View key={key} style={this.props.styles.styles.row}>
+      <View key={key} style={this.styles.row}>
         {items.map((j) => this.renderGroupItem(i, j))}
       </View>
     )
@@ -157,8 +161,8 @@ class GameField extends Component {
                         disabled={game.finished}
                         onPress={this._onPressPopupItem(i, j, k)}
                         onLongPress={this._onLongPressPopupItem(i, j, k)}>
-        <View style={this.props.styles.styles.popupItemBox}>
-          { game.possible(i, j, k) ? <ItemImage style={this.props.styles.styles.popupItem} row={i} value={k}/> : null }
+        <View style={this.styles.popupItemBox}>
+          { game.possible(i, j, k) ? <ItemImage style={this.styles.popupItem} row={i} value={k}/> : null }
         </View>
       </TouchableOpacity>
     );
@@ -166,7 +170,7 @@ class GameField extends Component {
 
   renderPopupGroupItemsLine(i, j, n) {
     return (
-      <View style={this.props.styles.styles.popupGroupItemsRow}>
+      <View style={this.styles.popupGroupItemsRow}>
         {items.filter((t) => t >= n * (size / 2) && t < (n + 1) * (size / 2)).map((k) => this.renderPopupItem(i, j, k))}
       </View>
     );
@@ -177,7 +181,7 @@ class GameField extends Component {
     return (
       <TouchableWithoutFeedback onPress={() => {}}>
         { popup ?
-          <View style={this.props.styles.styles.popupGroupItemBox}>
+          <View style={this.styles.popupGroupItemBox}>
             {this.renderPopupGroupItemsLine(popup.i, popup.j, 0)}
             {this.renderPopupGroupItemsLine(popup.i, popup.j, 1)}
           </View> :
@@ -190,39 +194,21 @@ class GameField extends Component {
   _hidePopup = () => this.setState({popup: null});
 
   render() {
-    const styles = this.props.styles;
-
-    /*
-     <Modal visible={this.state.popup != null}
-     transparent={true}
-     onRequestClose={() => {}}>
-     <TouchableWithoutFeedback onPress={this._hidePopup}>
-     <View style={styles.styles.modalContainer}>
-     <View style={[styles.styles.groupItemPopup, styles.popupPosition(this.state.popup)]}>
-     {this.renderPopupGroupItem()}
-     </View>
-     </View>
-     </TouchableWithoutFeedback>
-     </Modal>
-     */
-
-    // TODO: extract styles
     return (
-      <View style={styles.styles.field}>
+      <View>
         {this.state.popup !== null ?
-          <View
-            style={{zIndex: 1, position: 'absolute', top: 0,  bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(1, 1, 1, 0.05)'}}>
+          <View style={[this.styles.modalContainerOuter, {zIndex: 1}]}>
             <TouchableWithoutFeedback onPress={this._hidePopup}>
-              <View style={styles.styles.modalContainer}>
-                <View style={[styles.styles.groupItemPopup, styles.popupPosition(this.state.popup)]}>
+              <View style={this.styles.modalContainerInner}>
+                <View style={[this.styles.groupItemPopup, this.props.styles.popupPosition(this.state.popup)]}>
                   {this.renderPopupGroupItem()}
                 </View>
               </View>
             </TouchableWithoutFeedback>
           </View> :
-          <View style={{zIndex: -1, position: 'absolute', height: 0}}/>
+          <View style={[this.styles.modalContainerOuter, {zIndex: -1}]}/>
         }
-        <View style={{zIndex: 0}}>
+        <View style={[this.styles.field, {zIndex: 0}]}>
           {items.map((i) => this.renderRow(i))}
         </View>
       </View>
@@ -234,6 +220,10 @@ class AbstractRule extends Component {
   constructor(props) {
     super(props);
     this.state = {visible: true}
+  }
+
+  get styles() {
+    return this.props.styles.styles;
   }
 
   toggle = () => this.setState({visible: !this.state.visible});
@@ -264,10 +254,10 @@ class Rule3 extends AbstractRule {
   render() {
     return (
       <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.toggle}>
-        <View style={[this.props.styles.styles.rule3, this.visibilityStyle]}>
-          <ItemImage style={this.props.styles.styles.ruleItem} type={this._type1}/>
-          <ItemImage style={this.props.styles.styles.ruleItem} type={this._type2}/>
-          <ItemImage style={this.props.styles.styles.ruleItem} type={this._type3}/>
+        <View style={[this.styles.rule3, this.visibilityStyle]}>
+          <ItemImage style={this.styles.ruleItem} type={this._type1}/>
+          <ItemImage style={this.styles.ruleItem} type={this._type2}/>
+          <ItemImage style={this.styles.ruleItem} type={this._type3}/>
         </View>
       </TouchableWithoutFeedback>
     )
@@ -325,13 +315,9 @@ class Rule2 extends AbstractRule {
   render() {
     return (
       <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.toggle}>
-        <View style={[this.props.styles.styles.rule2, this.visibilityStyle]}>
-          <ItemImage style={this.props.styles.styles.ruleItem}
-                     row={this.props.rule.row1}
-                     value={this.props.rule.value1}/>
-          <ItemImage style={this.props.styles.styles.ruleItem}
-                     row={this.props.rule.row2}
-                     value={this.props.rule.value2}/>
+        <View style={[this.styles.rule2, this.visibilityStyle]}>
+          <ItemImage style={this.styles.ruleItem} row={this.props.rule.row1} value={this.props.rule.value1}/>
+          <ItemImage style={this.styles.ruleItem} row={this.props.rule.row2} value={this.props.rule.value2}/>
         </View>
       </TouchableWithoutFeedback>
     );
@@ -344,7 +330,7 @@ class Rules extends Component {
     const key = 'urule_' + i;
 
     return (
-      <Rule2 key={key} rule={rule} disabled={!this.props.game.active} styles={this.styles}/>
+      <Rule2 key={key} rule={rule} disabled={!this.props.game.active} styles={this.props.styles}/>
     );
   }
 
@@ -353,15 +339,15 @@ class Rules extends Component {
     switch (rule.type) {
       case 'near':
         return (
-          <NearRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.styles}/>
+          <NearRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.props.styles}/>
         );
       case 'direction':
         return (
-          <DirectionRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.styles}/>
+          <DirectionRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.props.styles}/>
         );
       case 'between':
         return (
-          <BetweenRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.styles}/>
+          <BetweenRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.props.styles}/>
         );
       default:
         return (
@@ -380,23 +366,22 @@ class Rules extends Component {
   }
 
   render() {
-    // TODO: refactor ?
     const rules = this.props.rules;
     const hrules = rules.filter((r) => 'row' == r.viewType);
     const vrules = rules.filter((r) => 'column' == r.viewType);
 
-    const rr = vrules.length > 0 ? this.styles.rule3Rows : this.styles.rule3Rows + 2;
-    const rc = Math.max(Math.ceil(hrules.length / rr), this.styles.rule3Columns);
+    // TODO: extract to utility method
+    const rr = vrules.length > 0 ? this.props.styles.rule3Rows : this.props.styles.rule3Rows + 2;
+    const rc = Math.max(Math.ceil(hrules.length / rr), this.props.styles.rule3Columns);
     const hrb = Array.from({length: rc}, (v, i) => []);
     hrules.forEach((r, i) => hrb[(i % rc)].push(r));
 
-    // todo: extract styles
     return (
-      <ScrollView contentContainerStyle={this.styles.styles.rules} style={{alignSelf: 'flex-start'}} horizontal={true}>
-        <View style={{flexDirection: 'row', }}>
+      <ScrollView contentContainerStyle={this.styles.rules} horizontal={true}>
+        <View style={this.styles.rulesGroup}>
           {hrb.map((rs, i) => this.renderHorizontalRuleGroup(i, rs))}
         </View>
-        <View style={{flexDirection: 'row'}}>
+        <View style={this.styles.rulesGroup}>
           {vrules.map((r, i) => this.renderUnderRule(i, r))}
         </View>
       </ScrollView>
@@ -404,7 +389,7 @@ class Rules extends Component {
   }
 
   get styles() {
-    return this.props.styles;
+    return this.props.styles.styles;
   }
 }
 
@@ -416,6 +401,10 @@ export default class Game extends Component {
     };
   }
 
+  get styles() {
+    return this.state.styles.styles;
+  }
+
   _updateStyles = () => this.setState({
     styles: new StyleConfig(this.props.game.size)
   });
@@ -425,10 +414,11 @@ export default class Game extends Component {
     game.resume();
     size = game.size;
     items = Array.from({length: size}, (v, k) => k);
+
     return (
       <View onLayout={this._updateStyles}
-            style={[this.state.styles.styles.container, {flexDirection: this.state.styles.direction}]}>
-        <View style={this.state.styles.styles.fieldContainer}>
+            style={[this.styles.container, {flexDirection: this.state.styles.direction}]}>
+        <View style={this.styles.fieldContainer}>
           <GameField game={game}
                      field={game.field}
                      styles={this.state.styles}/>

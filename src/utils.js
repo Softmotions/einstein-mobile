@@ -262,6 +262,10 @@ export class StyleConfig {
         flexDirection: 'column',
       },
 
+      rulesGroup : {
+        flexDirection: 'row'
+      },
+
       rule3: {
         height: this.rule3Height,
         width: this.rule3Width,
@@ -289,9 +293,17 @@ export class StyleConfig {
         width: this.ruleItemSize,
       },
 
-      modalContainer: {
+      modalContainerOuter: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
+      },
+
+      modalContainerInner: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.25)'
+        backgroundColor: 'rgba(0, 0, 0, 0.15)'
       },
 
       groupItemPopup: {
@@ -331,8 +343,8 @@ export class StyleConfig {
 
   popupPosition(popup) {
     if (popup) {
-      const top = (this.fieldSize - this.popupBoxHeight) / (this.size - 1) * popup.i - this.border;
-      const left = (this.fieldSize - this.popupBoxWidth) / (this.size - 1) * popup.j - this.border;
+      const top = (this.fieldSize - this.popupBoxHeight) / (this.size - 1) * popup.i;
+      const left = (this.fieldSize - this.popupBoxWidth) / (this.size - 1) * popup.j;
 
       return StyleSheet.create({
         popupPosition: {
