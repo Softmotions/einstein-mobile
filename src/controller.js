@@ -38,6 +38,9 @@ class GameController {
   _active;
   _started;
 
+  _time;
+  _start;
+
   constructor(field) {
     this._field = field;
     this._init();
@@ -169,24 +172,36 @@ class GameController {
   }
 
   start() {
-    // todo: time!
+    if (this._started) {
+      return;
+    }
     this._started = true;
+    this._active = true;
+    this._time = 0;
+    this._start = new Date().getTime();
   }
 
   stop() {
-    // todo: time!
     this._started = false;
+    this._time += (new Date().getTime() - this._start);
   }
 
   pause() {
-    // todo: time!
     this._active = false;
+    this._time += (new Date().getTime() - this._start);
   }
 
   resume() {
-    // todo: time!
+    if (this._active) {
+      return;
+    }
     this._active = true;
+    this._start = new Date().getTime();
+  }
 
+  get time() {
+    const time = !this.active ? this._time : this._time + (new Date().getTime() - this._start);
+    return Math.floor(time / 1000);
   }
 
   get active() {

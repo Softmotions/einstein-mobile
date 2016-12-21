@@ -8,7 +8,8 @@ import {
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Alert
+  Alert,
+  Text
 } from 'react-native';
 
 import {StyleConfig} from './utils';
@@ -395,12 +396,40 @@ class Rules extends Component {
   }
 }
 
+class TimeInfo extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      time : this.props.game.time
+    };
+  }
+
+  componentDidMount() {
+    this._timer = setInterval(() => this.setState({time: this.props.game.time}), 500);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._timer);
+  }
+
+  render() {
+    return (
+      <View style={{position: 'absolute', backgroundColor: '#fff', height: 15, width: 45, top: 0, right: 0, zIndex: 5, alignItems: 'flex-end'}}>
+        <Text>{this.state.time}</Text>
+      </View>
+    );
+  }
+}
+
 export default class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
       styles: new StyleConfig(props.game.size)
     };
+
+    size = props.game.size;
+    items = Array.from({length: size}, (v, k) => k);
   }
 
   get styles() {
@@ -415,12 +444,9 @@ export default class Game extends Component {
     let {game} = this.props;
     let {styles} = this.state;
 
-    game.resume();
-    size = game.size;
-    items = Array.from({length: size}, (v, k) => k);
-
     return (
       <View onLayout={this._updateStyles} style={[this.styles.container, {flexDirection: styles.direction}]}>
+        {/*<TimeInfo game={game} styles={styles}/>*/}
         <GameField game={game} field={game.field} styles={styles}/>
         <Rules game={game} rules={game.rules} styles={styles}/>
       </View>

@@ -63,6 +63,7 @@ export default class Application extends Component {
       case 'continue':
         if (game && !game.finished) {
           navigationState = NavigationStateUtils.jumpTo(navigationState, 'game');
+          game.resume();
           break;
         }
 
