@@ -35,12 +35,16 @@ export default class Application extends Component {
   constructor(props) {
     super(props);
 
+    // TODO: debug
+    let game = GameFactory.generateGame(6);
+    game.start();
+
     this.state = {
       navigationState: {
         index: 0,
-        routes: [{key: 'welcome'}]
+        routes: [{key: 'game'}]
       },
-      game: null
+      game: game
     };
 
     this._onNavigationChange = this._onNavigationChange.bind(this);
@@ -50,7 +54,7 @@ export default class Application extends Component {
     this._onContinueGame = this._onNavigationChange.bind(null, 'continue');
   }
 
-  componentWillMount() {
+  componentDidMount() {
     BackAndroid.addEventListener('hardwareBackPress', this._onNavigateBack);
   }
 
@@ -65,7 +69,7 @@ export default class Application extends Component {
 
     switch (type) {
       case 'continue':
-        if (game) {
+        if (game && !game.finished) {
           navigationState = NavigationStateUtils.jumpTo(navigationState, 'game');
           break;
         }
@@ -101,7 +105,6 @@ export default class Application extends Component {
   render() {
     return (
       <NavigationCardStack
-        onExit={() => {return false;}}
         onNavigateBack={this._onNavigateBack}
         navigationState={this.state.navigationState}
         renderScene={(scene) => {

@@ -8,7 +8,6 @@ import {
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Modal,
   Alert
 } from 'react-native';
 
@@ -57,6 +56,7 @@ class GameField extends Component {
 
   _openPopup(i, j) {
     return () => {
+      console.log('open popup');
       if (!this.props.game.isSet(i, j)) {
         this.setState({popup: {i: i, j: j}})
       }
@@ -193,20 +193,39 @@ class GameField extends Component {
   render() {
     const styles = this.props.styles;
 
+    /*
+     <Modal visible={this.state.popup != null}
+     transparent={true}
+     onRequestClose={() => {}}>
+     <TouchableWithoutFeedback onPress={this._hidePopup}>
+     <View style={styles.styles.modalContainer}>
+     <View style={[styles.styles.groupItemPopup, styles.popupPosition(this.state.popup)]}>
+     {this.renderPopupGroupItem()}
+     </View>
+     </View>
+     </TouchableWithoutFeedback>
+     </Modal>
+     */
+
+    // TODO: extract styles
     return (
       <View style={styles.styles.field}>
-        <Modal visible={this.state.popup != null}
-               transparent={true}
-               onRequestClose={() => {}}>
-          <TouchableWithoutFeedback onPress={this._hidePopup}>
-            <View style={styles.styles.modalContainer}>
-              <View style={[styles.styles.groupItemPopup, styles.popupPosition(this.state.popup)]}>
-                {this.renderPopupGroupItem()}
+        {this.state.popup !== null ?
+          <View
+            style={{zIndex: 1, position: 'absolute', top: 0,  bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(1, 1, 1, 0.05)'}}>
+            <TouchableWithoutFeedback onPress={this._hidePopup}>
+              <View style={styles.styles.modalContainer}>
+                <View style={[styles.styles.groupItemPopup, styles.popupPosition(this.state.popup)]}>
+                  {this.renderPopupGroupItem()}
+                </View>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-        {items.map((i) => this.renderRow(i))}
+            </TouchableWithoutFeedback>
+          </View> :
+          <View style={{zIndex: -1, position: 'absolute', height: 0}}/>
+        }
+        <View style={{zIndex: 0}}>
+          {items.map((i) => this.renderRow(i))}
+        </View>
       </View>
     );
   }

@@ -127,6 +127,7 @@ export class StyleConfig {
   get fieldRowWidth() {
     return this._fieldRowWidth;
   }
+
   get fieldRowHeight() {
     return this._fieldRowHeight;
   }
@@ -166,6 +167,7 @@ export class StyleConfig {
   get rule2Width() {
     return this._rule2Width;
   }
+
   get rule2Height() {
     return this._rule2Height;
   }
@@ -193,6 +195,7 @@ export class StyleConfig {
   get popupItemWidth() {
     return this._popupItemWidth;
   }
+
   get popupItemHeight() {
     return this._popupItemHeight;
   }
@@ -251,8 +254,6 @@ export class StyleConfig {
       item: {
         height: this.itemSize,
         width: this.itemSize,
-        // borderWidth: this.border,
-        // borderColor: '#000',
       },
 
       rules: {
@@ -320,8 +321,6 @@ export class StyleConfig {
       popupItem: {
         height: this.popupItemHeight,
         width: this.popupItemWidth,
-        // borderWidth: this.border,
-        // borderColor: '#000',
       },
     });
   }
@@ -332,18 +331,8 @@ export class StyleConfig {
 
   popupPosition(popup) {
     if (popup) {
-      let top = (this.fieldSize - this.popupBoxHeight) / (this.size - 1) * popup.i;
-      let left = (this.fieldSize - this.popupBoxWidth) / (this.size - 1) * popup.j;
-
-      if (this.direction == 'row') {
-        top += (this.height - this.fieldSize - this.statusHeight ) / 2 - this.space;
-        // add margins
-        left += this.space;
-      } else {
-        left += (this.width - this.fieldSize) / 2;
-        // add margins
-        top += this.space;
-      }
+      const top = (this.fieldSize - this.popupBoxHeight) / (this.size - 1) * popup.i;
+      const left = (this.fieldSize - this.popupBoxWidth) / (this.size - 1) * popup.j;
 
       return StyleSheet.create({
         popupPosition: {
