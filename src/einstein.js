@@ -195,21 +195,23 @@ class GameField extends Component {
 
   render() {
     return (
-      <View>
-        {this.state.popup !== null ?
-          <View style={[this.styles.modalContainerOuter, {zIndex: 1}]}>
-            <TouchableWithoutFeedback onPress={this._hidePopup}>
-              <View style={this.styles.modalContainerInner}>
-                <View style={[this.styles.groupItemPopup, this.props.styles.popupPosition(this.state.popup)]}>
-                  {this.renderPopupGroupItem()}
+      <View style={this.styles.fieldContainer}>
+        <View>
+          {this.state.popup !== null ?
+            <View style={[this.styles.modalContainerOuter, {zIndex: 1}]}>
+              <TouchableWithoutFeedback onPress={this._hidePopup}>
+                <View style={this.styles.modalContainerInner}>
+                  <View style={[this.styles.groupItemPopup, this.props.styles.popupPosition(this.state.popup)]}>
+                    {this.renderPopupGroupItem()}
+                  </View>
                 </View>
-              </View>
-            </TouchableWithoutFeedback>
-          </View> :
-          <View style={[this.styles.modalContainerOuter, {zIndex: -1}]}/>
-        }
-        <View style={[this.styles.field, {zIndex: 0}]}>
-          {items.map((i) => this.renderRow(i))}
+              </TouchableWithoutFeedback>
+            </View> :
+            <View style={[this.styles.modalContainerOuter, {zIndex: -1}]}/>
+          }
+          <View style={[this.styles.field, {zIndex: 0}]}>
+            {items.map((i) => this.renderRow(i))}
+          </View>
         </View>
       </View>
     );
@@ -410,20 +412,17 @@ export default class Game extends Component {
   });
 
   render() {
-    let game = this.props.game;
+    let {game} = this.props;
+    let {styles} = this.state;
+
     game.resume();
     size = game.size;
     items = Array.from({length: size}, (v, k) => k);
 
     return (
-      <View onLayout={this._updateStyles}
-            style={[this.styles.container, {flexDirection: this.state.styles.direction}]}>
-        <View style={this.styles.fieldContainer}>
-          <GameField game={game}
-                     field={game.field}
-                     styles={this.state.styles}/>
-        </View>
-        <Rules game={game} rules={game.rules} styles={this.state.styles}/>
+      <View onLayout={this._updateStyles} style={[this.styles.container, {flexDirection: styles.direction}]}>
+        <GameField game={game} field={game.field} styles={styles}/>
+        <Rules game={game} rules={game.rules} styles={styles}/>
       </View>
     );
   }
