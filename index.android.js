@@ -69,20 +69,27 @@ export default class Application extends Component {
       case 'new':
         const route = {key: 'game'};
 
-        if (game) {
+        game = GameFactory.generateGame(6);
+        game.start();
+
+        if (NavigationStateUtils.has(navigationState, route.key)) {
           navigationState = NavigationStateUtils.replaceAt(navigationState, route.key, route);
         } else {
           navigationState = NavigationStateUtils.push(navigationState, route);
         }
-        game = GameFactory.generateGame(6);
-        game.start();
         break;
 
       case 'back':
-        navigationState = NavigationStateUtils.back(navigationState);
+        if (game && game.finished) {
+          navigationState = NavigationStateUtils.pop(navigationState);
+        } else {
+          navigationState = NavigationStateUtils.back(navigationState);
+        }
+
         if (game) {
           game.pause();
         }
+
         break;
     }
 
