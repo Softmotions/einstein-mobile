@@ -56,7 +56,6 @@ class GameField extends Component {
 
   _openPopup(i, j) {
     return () => {
-      console.log('open popup');
       if (!this.props.game.isSet(i, j)) {
         this.setState({popup: {i: i, j: j}})
       }

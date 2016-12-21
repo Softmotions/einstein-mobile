@@ -331,8 +331,8 @@ export class StyleConfig {
 
   popupPosition(popup) {
     if (popup) {
-      const top = (this.fieldSize - this.popupBoxHeight) / (this.size - 1) * popup.i;
-      const left = (this.fieldSize - this.popupBoxWidth) / (this.size - 1) * popup.j;
+      const top = (this.fieldSize - this.popupBoxHeight) / (this.size - 1) * popup.i - this.border;
+      const left = (this.fieldSize - this.popupBoxWidth) / (this.size - 1) * popup.j - this.border;
 
       return StyleSheet.create({
         popupPosition: {

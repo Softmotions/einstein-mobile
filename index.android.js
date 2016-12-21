@@ -11,40 +11,32 @@ const {
 } = NavigationExperimental;
 
 import Game from './src/einstein';
+import Welcome from './src/welcome';
 import {GameFactory} from './src/controller';
-
-class HelloView extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  // todo
-  render() {
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <View style={{margin: 5}}><Button title="New game" onPress={this.props.onNewGame}/></View>
-        {this.props.game && !this.props.game.finished ?
-          <View style={{margin: 5}}><Button title="Continue" onPress={this.props.onContinueGame} style={{margin: 10}}/></View> :
-          null }
-      </View>
-    );
-  }
-}
 
 export default class Application extends Component {
   constructor(props) {
     super(props);
 
-    // TODO: debug
-    let game = GameFactory.generateGame(6);
-    game.start();
+    // // TODO: debug
+    // let game = GameFactory.generateGame(6);
+    // game.start();
+    //
+    // this.state = {
+    //   navigationState: {
+    //     index: 0,
+    //     routes: [{key: 'game'}]
+    //   },
+    //   game: game
+    // };
 
+    // release:
     this.state = {
       navigationState: {
         index: 0,
-        routes: [{key: 'game'}]
+        routes: [{key: 'welcome'}]
       },
-      game: game
+      game: null
     };
 
     this._onNavigationChange = this._onNavigationChange.bind(this);
@@ -114,23 +106,15 @@ export default class Application extends Component {
 
             default:
               return (
-                <HelloView onNewGame={this._onNewGame}
-                           onContinueGame={this._onContinueGame}
-                           game={this.state.game}
-                           navigationState={this.state.navigationState}/>
+                <Welcome onNewGame={this._onNewGame}
+                         onContinueGame={this._onContinueGame}
+                         game={this.state.game}
+                         navigationState={this.state.navigationState}/>
               )
           }
         }}/>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  main: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-});
 
 AppRegistry.registerComponent('Einstein', () => Application);
