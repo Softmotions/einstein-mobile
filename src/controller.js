@@ -35,6 +35,9 @@ class GameController {
   _count;
   _data;
 
+  _active;
+  _started;
+
   constructor(field) {
     this._field = field;
     this._init();
@@ -166,27 +169,32 @@ class GameController {
   }
 
   start() {
-    this._active = true;
+    // todo: time!
+    this._started = true;
   }
 
   stop() {
-    this._active = false;
+    // todo: time!
+    this._started = false;
   }
 
   pause() {
-
+    // todo: time!
+    this._active = false;
   }
 
   resume() {
+    // todo: time!
+    this._active = true;
 
   }
 
   get active() {
-    return this._active;
+    return this._started && this._active;
   }
 
   get finished() {
-    return !this.active;
+    return !this._started;
   }
 
   get solved() {
@@ -194,11 +202,11 @@ class GameController {
   }
 
   get failed() {
-    return !this.active && !this.solved;
+    return this.finished && !this.solved;
   }
 
   get success() {
-    return !this.active && this.solved;
+    return this.finished && this.solved;
   }
 }
 

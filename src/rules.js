@@ -26,6 +26,10 @@ class Rule {
 }
 
 class OpenRule extends Rule {
+  _row;
+  _col;
+  _val;
+
   get type() {
     return 'open';
   }
@@ -54,6 +58,10 @@ class OpenRule extends Rule {
 }
 
 class UnderRule extends Rule {
+  _row1;
+  _row2;
+  _val1;
+  _val2;
 
   get type() {
     return 'under';
@@ -118,6 +126,10 @@ class UnderRule extends Rule {
 }
 
 class NearRule extends Rule {
+  _row1;
+  _row2;
+  _val1;
+  _val2;
 
   get type() {
     return 'near';
@@ -129,7 +141,7 @@ class NearRule extends Rule {
 
   apply(game) {
     let changed = false;
-    const iapply = function (game, j, i1, i2, v1, v2) {
+    const iapply = (game, j, i1, i2, v1, v2) => {
       let left, right;
       left = j === 0 ? false : game.possible(i2, j - 1, v2);
       right = j === game.size - 1 ? false : game.possible(i2, j + 1, v2);
@@ -183,6 +195,10 @@ class NearRule extends Rule {
 }
 
 class DirectionRule extends Rule {
+  _row1;
+  _row2;
+  _val1;
+  _val2;
 
   get type() {
     return 'direction';
@@ -260,6 +276,12 @@ class DirectionRule extends Rule {
 }
 
 class BetweenRule extends Rule {
+  _row;
+  _row1;
+  _row2;
+  _val;
+  _val1;
+  _val2;
 
   get type() {
     return 'between';
@@ -369,15 +391,17 @@ class BetweenRule extends Rule {
 }
 
 const RULE_WEIGHTS = [
-  {'rule': OpenRule, weight: 1},
-  {'rule': UnderRule, weight: 2},
-  {'rule': BetweenRule, weight: 3},
-  {'rule': DirectionRule, weight: 4},
-  {'rule': NearRule, weight: 4}
+  {rule: OpenRule, weight: 1},
+  {rule: UnderRule, weight: 2},
+  {rule: BetweenRule, weight: 3},
+  {rule: DirectionRule, weight: 4},
+  {rule: NearRule, weight: 4}
 ];
 
 class RuleFactory {
-  //function[] _factory
+  _config;
+  _factory;
+
   constructor(config) {
     this.applyConfig(config || RULE_WEIGHTS);
   }
@@ -390,24 +414,20 @@ class RuleFactory {
   applyConfig(config) {
     this._config = config;
     this._factory = [];
-    for (let rule of config) {
-      //noinspection JSUnfilteredForInLoop
-      const size = this._factory.length + rule.weight;
-      while (size > this._factory.length) {
-        //noinspection JSUnfilteredForInLoop
-        this._factory.push(rule.rule);
-      }
-    }
+    config.forEach((rule) => {
+      Array.from({length: rule.weight}).forEach(() => this._factory.push(rule.rule));
+    });
   }
 
   newRule(field) {
-    const i = Math.floor(Math.random() * this._factory.length);
-    return new (this._factory[i])(field);
+    return new (this._factory[Math.floor(Math.random() * this._factory.length)])(field);
   }
 }
 
 const ruleFactory = new RuleFactory();
 
 export {
-  Rule, OpenRule, UnderRule, NearRule, DirectionRule, BetweenRule, ruleFactory
+  ruleFactory,
+  RuleFactory,
+  Rule,
 }

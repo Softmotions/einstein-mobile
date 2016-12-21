@@ -101,16 +101,16 @@ class GameField extends Component {
 
       game.set(i, j, k);
       this._hidePopup();
-      if (!game.active) {
+      if (game.finished) {
         // TODO: end game alert
         Alert.alert(game.solved ? 'Solved' : 'Fail', '', [
           {
-            text: 'New',
-            onPress: () => {
-              if (this.props.onNewGame) {
-                this.props.onNewGame();
-              }
-            }
+            // text: 'New',
+            // onPress: () => {
+            //   if (this.props.onNewGame) {
+            //     this.props.onNewGame();
+            //   }
+            // }
           }
         ], {
           // cancelable: false
@@ -129,17 +129,17 @@ class GameField extends Component {
 
       game.exclude(i, j, k);
       this.forceUpdate();
-      if (!game.active) {
+      if (game.finished) {
         this._hidePopup();
         // TODO: end game alert
         Alert.alert(game.solved ? 'Solved' : 'Fail', '', [
           {
-            text: 'New',
-            onPress: () => {
-              if (this.props.onNewGame) {
-                this.props.onNewGame();
-              }
-            }
+            // text: 'New',
+            // onPress: () => {
+            //   if (this.props.onNewGame) {
+            //     this.props.onNewGame();
+            //   }
+            // }
           }
         ], {
           // cancelable: false
@@ -245,7 +245,7 @@ class Rule3 extends AbstractRule {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={this.toggle}>
+      <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.toggle}>
         <View style={[this.props.styles.styles.rule3, this.visibilityStyle]}>
           <ItemImage style={this.props.styles.styles.ruleItem} type={this._type1}/>
           <ItemImage style={this.props.styles.styles.ruleItem} type={this._type2}/>
@@ -306,7 +306,7 @@ class Rule2 extends AbstractRule {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={this.toggle}>
+      <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.toggle}>
         <View style={[this.props.styles.styles.rule2, this.visibilityStyle]}>
           <ItemImage style={this.props.styles.styles.ruleItem}
                      row={this.props.rule.row1}
@@ -326,7 +326,7 @@ class Rules extends Component {
     const key = 'urule_' + i;
 
     return (
-      <Rule2 key={key} rule={rule} styles={this.styles}/>
+      <Rule2 key={key} rule={rule} disabled={!this.props.game.active} styles={this.styles}/>
     );
   }
 
@@ -335,15 +335,15 @@ class Rules extends Component {
     switch (rule.type) {
       case 'near':
         return (
-          <NearRule key={key} rule={rule} styles={this.styles}/>
+          <NearRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.styles}/>
         );
       case 'direction':
         return (
-          <DirectionRule key={key} rule={rule} styles={this.styles}/>
+          <DirectionRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.styles}/>
         );
       case 'between':
         return (
-          <BetweenRule key={key} rule={rule} styles={this.styles}/>
+          <BetweenRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.styles}/>
         );
       default:
         return (
@@ -403,20 +403,20 @@ export default class Game extends Component {
   });
 
   render() {
-    size = this.props.game.size;
+    let game = this.props.game;
+    game.resume();
+    size = game.size;
     items = Array.from({length: size}, (v, k) => k);
     return (
       <View onLayout={this._updateStyles}
             style={[this.state.styles.styles.container, {flexDirection: this.state.styles.direction}]}>
         <View style={this.state.styles.styles.fieldContainer}>
-          <GameField game={this.props.game}
-                     field={this.props.game.field}
+          <GameField game={game}
+                     field={game.field}
                      styles={this.state.styles}/>
         </View>
-        <Rules rules={this.props.game.rules} styles={this.state.styles}/>
+        <Rules game={game} rules={game.rules} styles={this.state.styles}/>
       </View>
     );
   }
 }
-
-// Props

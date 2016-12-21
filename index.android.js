@@ -23,7 +23,7 @@ class HelloView extends Component {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <View style={{margin: 5}}><Button title="New game" onPress={this.props.onNewGame}/></View>
-        {NavigationStateUtils.has(this.props.navigationState, 'game') ?
+        {this.props.game && !this.props.game.finished ?
           <View style={{margin: 5}}><Button title="Continue" onPress={this.props.onContinueGame} style={{margin: 10}}/></View> :
           null }
       </View>
@@ -74,16 +74,19 @@ export default class Application extends Component {
         const route = {key: 'game'};
 
         if (game) {
-          game = GameFactory.generateGame(6);
           navigationState = NavigationStateUtils.replaceAt(navigationState, route.key, route);
         } else {
-          game = GameFactory.generateGame(6);
           navigationState = NavigationStateUtils.push(navigationState, route);
         }
+        game = GameFactory.generateGame(6);
+        game.start();
         break;
 
       case 'back':
         navigationState = NavigationStateUtils.back(navigationState);
+        if (game) {
+          game.pause();
+        }
         break;
     }
 
@@ -110,6 +113,7 @@ export default class Application extends Component {
               return (
                 <HelloView onNewGame={this._onNewGame}
                            onContinueGame={this._onContinueGame}
+                           game={this.state.game}
                            navigationState={this.state.navigationState}/>
               )
           }
