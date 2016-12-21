@@ -107,7 +107,7 @@ class GameField extends Component {
       this._hidePopup();
       if (game.finished) {
         // TODO: end game alert
-        Alert.alert(game.solved ? 'Solved' : 'Fail', '', [
+        Alert.alert(game.solved ? 'Solved' : 'Fail', 'Your time: ' + game.time + 's', [
           {
             // text: 'New',
             // onPress: () => {
@@ -136,7 +136,7 @@ class GameField extends Component {
       if (game.finished) {
         this._hidePopup();
         // TODO: end game alert
-        Alert.alert(game.solved ? 'Solved' : 'Fail', '', [
+        Alert.alert(game.solved ? 'Solved' : 'Fail', 'Your time: ' + game.time + 's', [
           {
             // text: 'New',
             // onPress: () => {
