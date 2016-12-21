@@ -107,16 +107,7 @@ class GameField extends Component {
       this._hidePopup();
       if (game.finished) {
         // TODO: end game alert
-        Alert.alert(game.solved ? 'Solved' : 'Fail', 'Your time: ' + game.time + 's', [
-          {
-            // text: 'New',
-            // onPress: () => {
-            //   if (this.props.onNewGame) {
-            //     this.props.onNewGame();
-            //   }
-            // }
-          }
-        ], {
+        Alert.alert(game.solved ? 'Solved' : 'Fail', 'Your time: ' + game.time + 's', null, {
           // cancelable: false
         });
       }
@@ -136,16 +127,7 @@ class GameField extends Component {
       if (game.finished) {
         this._hidePopup();
         // TODO: end game alert
-        Alert.alert(game.solved ? 'Solved' : 'Fail', 'Your time: ' + game.time + 's', [
-          {
-            // text: 'New',
-            // onPress: () => {
-            //   if (this.props.onNewGame) {
-            //     this.props.onNewGame();
-            //   }
-            // }
-          }
-        ], {
+        Alert.alert(game.solved ? 'Solved' : 'Fail', 'Your time: ' + game.time + 's', null, {
           // cancelable: false
         });
       }
@@ -400,7 +382,7 @@ class TimeInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time : this.props.game.time
+      time: this.props.game.time
     };
   }
 
@@ -414,7 +396,8 @@ class TimeInfo extends Component {
 
   render() {
     return (
-      <View style={{position: 'absolute', backgroundColor: '#fff', height: 15, width: 45, top: 0, right: 0, zIndex: 5, alignItems: 'flex-end'}}>
+      <View
+        style={{position: 'absolute', backgroundColor: '#fff', height: 15, width: 45, top: 0, right: 0, zIndex: 5, alignItems: 'flex-end'}}>
         <Text>{this.state.time}</Text>
       </View>
     );
