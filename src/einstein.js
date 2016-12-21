@@ -12,16 +12,10 @@ import {
   Alert
 } from 'react-native';
 
-import {ruleFactory} from './rules';
-import {Field, GameController} from './field';
-import {Solver} from './solver';
 import {StyleConfig} from './utils';
 
-const size = 6;
-const items = [];
-for (let i = 0; i < 6; ++i) {
-  items.push(i);
-}
+// todo: global ?
+let size, items;
 
 class ItemImage extends Component {
   static src(row, value) {
@@ -56,11 +50,7 @@ class GameField extends Component {
   renderGroupItemsLine(i, j, n) {
     return (
       <View style={this.props.styles.styles.groupItemsRow}>
-        {items.filter((t) => {
-          return t >= n * (size / 2) && t < (n + 1) * (size / 2)
-        }).map((k) => {
-          return this.renderItem(i, j, k)
-        })}
+        {items.filter((t) => t >= n * (size / 2) && t < (n + 1) * (size / 2)).map((k) => this.renderItem(i, j, k))}
       </View>
     );
   }
@@ -96,9 +86,7 @@ class GameField extends Component {
     const key = 'row_' + i;
     return (
       <View key={key} style={this.props.styles.styles.row}>
-        {items.map((j) => {
-          return this.renderGroupItem(i, j);
-        })}
+        {items.map((j) => this.renderGroupItem(i, j))}
       </View>
     )
   }
@@ -180,11 +168,7 @@ class GameField extends Component {
   renderPopupGroupItemsLine(i, j, n) {
     return (
       <View style={this.props.styles.styles.popupGroupItemsRow}>
-        {items.filter((t) => {
-          return t >= n * (size / 2) && t < (n + 1) * (size / 2)
-        }).map((k) => {
-          return this.renderPopupItem(i, j, k)
-        })}
+        {items.filter((t) => t >= n * (size / 2) && t < (n + 1) * (size / 2)).map((k) => this.renderPopupItem(i, j, k))}
       </View>
     );
   }
@@ -204,9 +188,7 @@ class GameField extends Component {
     )
   }
 
-  _hidePopup = () => {
-    this.setState({popup: null});
-  };
+  _hidePopup = () => this.setState({popup: null});
 
   render() {
     const styles = this.props.styles;
@@ -224,9 +206,7 @@ class GameField extends Component {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-        {items.map((i) => {
-          return this.renderRow(i);
-        })}
+        {items.map((i) => this.renderRow(i))}
       </View>
     );
   }
@@ -238,10 +218,9 @@ class AbstractRule extends Component {
     this.state = {visible: true}
   }
 
-  toggle = () => {
-    this.setState({visible: !this.state.visible});
-  };
+  toggle = () => this.setState({visible: !this.state.visible});
 
+  // todo: extract styles
   get visibilityStyle() {
     return {opacity: this.state.visible ? 1 : 0.15};
   }
@@ -377,43 +356,30 @@ class Rules extends Component {
     const key = 'rule_group_' + i;
     return (
       <View key={key}>
-        {rules.map((r, j) => {
-          return this.renderHorizontalRule(i, j, r);
-        })}
+        {rules.map((r, j) => this.renderHorizontalRule(i, j, r))}
       </View>
     )
   }
 
   render() {
-    // TODO: refactor
+    // TODO: refactor ?
     const rules = this.props.rules;
-    const hrules = rules.filter((r) => {
-      return 'row' == r.viewType;
-    });
-    const vrules = rules.filter((r) => {
-      return 'column' == r.viewType;
-    });
+    const hrules = rules.filter((r) => 'row' == r.viewType);
+    const vrules = rules.filter((r) => 'column' == r.viewType);
 
-    let rr = vrules.length > 0 ? this.styles.rule3Rows : this.styles.rule3Rows + 2;
-    let rc = Math.max(Math.ceil(hrules.length / rr), this.styles.rule3Columns);
-    let hrb = [];
-    hrules.forEach((r, i) => {
-      let j = i % rc;
-      (hrb[j] = hrb[j] || []).push(r);
-    });
+    const rr = vrules.length > 0 ? this.styles.rule3Rows : this.styles.rule3Rows + 2;
+    const rc = Math.max(Math.ceil(hrules.length / rr), this.styles.rule3Columns);
+    const hrb = Array.from({length: rc}, (v, i) => []);
+    hrules.forEach((r, i) => hrb[(i % rc)].push(r));
 
     // todo: extract styles
     return (
       <ScrollView contentContainerStyle={this.styles.styles.rules} style={{alignSelf: 'flex-start'}} horizontal={true}>
         <View style={{flexDirection: 'row', }}>
-          {hrb.map((rs, i) => {
-            return this.renderHorizontalRuleGroup(i, rs);
-          })}
+          {hrb.map((rs, i) => this.renderHorizontalRuleGroup(i, rs))}
         </View>
         <View style={{flexDirection: 'row'}}>
-          {vrules.map((r, i) => {
-            return this.renderUnderRule(i, r);
-          })}
+          {vrules.map((r, i) => this.renderUnderRule(i, r))}
         </View>
       </ScrollView>
     )
@@ -427,85 +393,30 @@ class Rules extends Component {
 export default class Game extends Component {
   constructor(props) {
     super(props);
-    this.newGame(true);
+    this.state = {
+      styles: new StyleConfig(props.game.size)
+    };
   }
 
-  newGame = (init) => {
-    let field = new Field(size);
-    let game = new GameController(field);
-
-    // TODO: move rules generation to method/class. ruleFactory?
-
-    let solver = new Solver(new GameController(field));
-    do {
-      solver.addRule(ruleFactory.newRule(field));
-    } while (!solver.solve());
-
-    let rules = solver.rules;
-
-    let solved;
-    do {
-      solved = false;
-      for (let n = 0; n < rules.length; ++n) {
-        solver = new Solver(new GameController(field));
-        let trules = [].concat(rules);
-        trules.splice(n, 1);
-        solver.rules = trules;
-        if (solver.solve()) {
-          rules.splice(n, 1);
-          solved = true;
-          break;
-        }
-      }
-    } while (solved);
-
-    for (let i = 0; i < rules.length; ++i) {
-      const rule = rules[i];
-      if ('open' === rule.type) {
-        rule.apply(game);
-      }
-    }
-
-    game.start();
-
-    if (init) {
-      this.state = {
-        field: field,
-        game: game,
-        rules: rules,
-        styles: new StyleConfig(size),
-      }
-    } else {
-      this.setState({
-        field: field,
-        game: game,
-        rules: rules
-      });
-    }
-  };
-
-  _updateStyles = () => {
-    this.setState({
-      styles: new StyleConfig(size)
-    });
-  };
+  _updateStyles = () => this.setState({
+    styles: new StyleConfig(this.props.game.size)
+  });
 
   render() {
+    size = this.props.game.size;
+    items = Array.from({length: size}, (v, k) => k);
     return (
       <View onLayout={this._updateStyles}
             style={[this.state.styles.styles.container, {flexDirection: this.state.styles.direction}]}>
         <View style={this.state.styles.styles.fieldContainer}>
-          {this.state.game && this.state.field ?
-
-
-            <GameField game={this.state.game}
-                       field={this.state.field}
-                       styles={this.state.styles}
-                       onNewGame={this.newGame}/>
-            : null}
+          <GameField game={this.props.game}
+                     field={this.props.game.field}
+                     styles={this.state.styles}/>
         </View>
-        {this.state.rules ? <Rules rules={this.state.rules} styles={this.state.styles}/> : null}
+        <Rules rules={this.props.game.rules} styles={this.state.styles}/>
       </View>
     );
   }
 }
+
+// Props

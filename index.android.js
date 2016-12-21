@@ -11,18 +11,21 @@ const {
 } = NavigationExperimental;
 
 import Game from './src/einstein';
+import {GameFactory} from './src/controller';
 
 class HelloView extends Component {
   constructor(props) {
     super(props);
   }
 
+  // todo
   render() {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{margin: 5}}><Button title="New game" onPress={this.props.onNewGame}/></View>
         {NavigationStateUtils.has(this.props.navigationState, 'game') ?
-          <Button title="Continue" onPress={this.props.onContinueGame}/> :
-          <Button title="New game" onPress={this.props.onNewGame}/> }
+          <View style={{margin: 5}}><Button title="Continue" onPress={this.props.onContinueGame} style={{margin: 10}}/></View> :
+          null }
       </View>
     );
   }
@@ -36,7 +39,8 @@ export default class Application extends Component {
       navigationState: {
         index: 0,
         routes: [{key: 'welcome'}]
-      }
+      },
+      game: null
     };
 
     this._onNavigationChange = this._onNavigationChange.bind(this);
@@ -55,13 +59,13 @@ export default class Application extends Component {
   }
 
   _onNavigationChange(type) {
-    let {navigationState} = this.state;
+    let {navigationState, game} = this.state;
 
     // TODO: configure
 
     switch (type) {
       case 'continue':
-        if (NavigationStateUtils.has(navigationState, 'game')) {
+        if (game) {
           navigationState = NavigationStateUtils.jumpTo(navigationState, 'game');
           break;
         }
@@ -69,9 +73,13 @@ export default class Application extends Component {
       case 'new':
         const route = {key: 'game'};
 
-        navigationState = NavigationStateUtils.has(navigationState, 'game') ?
-          NavigationStateUtils.replaceAt(navigationState, route.key, route) :
-          NavigationStateUtils.push(navigationState, route);
+        if (game) {
+          game = GameFactory.generateGame(6);
+          navigationState = NavigationStateUtils.replaceAt(navigationState, route.key, route);
+        } else {
+          game = GameFactory.generateGame(6);
+          navigationState = NavigationStateUtils.push(navigationState, route);
+        }
         break;
 
       case 'back':
@@ -79,8 +87,8 @@ export default class Application extends Component {
         break;
     }
 
-    if (this.state.navigationState !== navigationState) {
-      this.setState({navigationState});
+    if (this.state.navigationState !== navigationState || this.state.game !== game) {
+      this.setState({navigationState, game});
       return true;
     } else {
       return false;
@@ -96,7 +104,7 @@ export default class Application extends Component {
         renderScene={(scene) => {
           switch (scene.scene.route.key) {
             case 'game':
-              return (<Game/>);
+              return (<Game game={this.state.game}/>);
 
             default:
               return (

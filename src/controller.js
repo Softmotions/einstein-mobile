@@ -1,23 +1,22 @@
 'use strict';
 
+import {ruleFactory} from './rules';
+import {Solver} from './solver';
+
+
 class Field {
+  _size;
+  _data;
 
   constructor(size) {
     this._size = Math.min(6, Math.max(3, size));
 
-    this._data = [];
-    for (let i = 0; i < this.size; ++i) {
-      this._data[i] = [];
-
-      let tmp = [];
-      for (let j = 0; j < this.size; ++j) {
-        tmp.push(j);
-      }
-
-      while (tmp.length > 0) {
-        this._data[i].push(tmp.splice(Math.random() * tmp.length, 1)[0]);
-      }
-    }
+    this._data = Array.from({length: this.size}, (v, k) => []);
+    this._data.forEach((v) => {
+      let tmp = Array.from({length: this.size}, (v, k) => k);
+      Array.from({length: this.size})
+        .forEach(() => v.push(tmp.splice(Math.random() * tmp.length, 1)[0]));
+    }, this);
   }
 
   get size() {
@@ -31,6 +30,11 @@ class Field {
 
 class GameController {
 
+  _field;
+  _rules;
+  _count;
+  _data;
+
   constructor(field) {
     this._field = field;
     this._init();
@@ -38,6 +42,14 @@ class GameController {
 
   get size() {
     return this._field.size;
+  }
+
+  set rules(rules) {
+    this._rules = rules;
+  }
+
+  get rules() {
+    return this._rules;
   }
 
   _init() {
@@ -191,6 +203,45 @@ class GameController {
 }
 
 
+class GameFactory {
+
+  static generateGame(size) {
+    let field = new Field(size);
+    let game = new GameController(field);
+
+    let solver = new Solver(new GameController(field));
+    do {
+      solver.addRule(ruleFactory.newRule(field));
+    } while (!solver.solve());
+
+    let rules = solver.rules;
+
+    let solved;
+    do {
+      solved = false;
+      for (let n = 0; n < rules.length; ++n) {
+        solver = new Solver(new GameController(field));
+        let trules = Array.from(rules);
+        trules.splice(n, 1);
+        solver.rules = trules;
+        if (solver.solve()) {
+          rules.splice(n, 1);
+          solved = true;
+          break;
+        }
+      }
+    } while (solved);
+
+    rules.filter((v) => v.type === 'open')
+      .forEach((v) => v.apply(game));
+
+    game.rules = rules.filter((v) => v.type !== 'open');
+    return game;
+  }
+}
+
 export {
-  Field, GameController
+  Field,
+  GameController,
+  GameFactory
 }
