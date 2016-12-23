@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('einstein', () => einstein);
+AppRegistry.registerComponent('Einstein', () => einstein);

@@ -12,6 +12,8 @@ import {
   Text
 } from 'react-native';
 
+import {connect} from 'react-redux';
+
 import {StyleConfig} from './utils';
 
 // todo: global ?
@@ -378,6 +380,7 @@ class Rules extends Component {
   }
 }
 
+// TODO extract styles
 class TimeInfo extends Component {
   constructor(props) {
     super(props);
@@ -404,7 +407,7 @@ class TimeInfo extends Component {
   }
 }
 
-export default class Game extends Component {
+class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -436,3 +439,10 @@ export default class Game extends Component {
     );
   }
 }
+
+export default connect(state => ({
+    game: state.app.game
+  }),
+  dispatch => ({
+  })
+)(Game);
