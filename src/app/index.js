@@ -11,8 +11,9 @@ const {
   CardStack: NavigationCardStack,
 } = NavigationExperimental;
 
-import Game from './modules/Game';
 import Welcome from './modules/Welcome';
+import Help from './modules/Help';
+import Game from './modules/Game';
 
 class Application extends Component {
   constructor(props) {
@@ -44,6 +45,9 @@ class Application extends Component {
           switch (scene.scene.route.key) {
             case 'game':
               return (<Game />);
+
+            case 'help':
+              return (<Help />);
 
             default:
               return (

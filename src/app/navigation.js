@@ -3,13 +3,10 @@
 import {handleActions} from 'redux-actions';
 import {combineReducers} from 'redux';
 
-import {NavigationExperimental/*, BackAndroid*/} from 'react-native';
+import {NavigationExperimental} from 'react-native';
 const {
-  // CardStack: NavigationCardStack,
   StateUtils: NavigationStateUtils,
 } = NavigationExperimental;
-
-// import * as NavigationStateUtils from 'NavigationStateUtils';
 
 
 import {GameFactory} from './modules/controller';
@@ -31,7 +28,8 @@ const newGame = (navApp = initialApp) => {
   game.start();
 
   if (NavigationStateUtils.has(navigationState, route.key)) {
-    navigationState = NavigationStateUtils.replaceAt(navigationState, route.key, route);
+    navigationState = NavigationStateUtils.jumpTo(navigationState, route.key);
+    // navigationState = NavigationStateUtils.replaceAt(navigationState, route.key, route);
   } else {
     navigationState = NavigationStateUtils.push(navigationState, route);
   }
@@ -42,7 +40,6 @@ const newGame = (navApp = initialApp) => {
     game: game
   }
 };
-
 
 const continueGame = (navApp = initialApp) => {
   let {navigationState, game} = navApp;
@@ -61,11 +58,16 @@ export default combineReducers({
   app: handleActions({
     ['back']: (navApp = initialApp) => {
       let {navigationState, game} = navApp;
-      if (game && game.finished) {
-        navigationState = NavigationStateUtils.pop(navigationState);
-      } else {
-        navigationState = NavigationStateUtils.back(navigationState);
-      }
+
+      // TODO: rewrite!
+
+      navigationState = NavigationStateUtils.jumpTo(navigationState, 'welcome');
+
+      // if (game && game.finished) {
+      //   navigationState = NavigationStateUtils.pop(navigationState);
+      // } else {
+      //   navigationState = NavigationStateUtils.back(navigationState);
+      // }
 
       if (game) {
         game.pause();
@@ -74,10 +76,26 @@ export default combineReducers({
       return {
         ...navApp,
         navigationState: navigationState,
-        game: game
+        // game: game
       }
     },
     ['new']: newGame,
-    ['continue']: continueGame
+    ['continue']: continueGame,
+    ['help']: (navApp = initialApp) => {
+      let {navigationState} = navApp;
+      const route = {key: 'help'};
+
+      if (NavigationStateUtils.has(navigationState, route.key)) {
+        navigationState = NavigationStateUtils.jumpTo(navigationState, route.key);
+        // navigationState = NavigationStateUtils.replaceAt(navigationState, route.key, route);
+      } else {
+        navigationState = NavigationStateUtils.push(navigationState, route);
+      }
+
+      return {
+        ...navApp,
+        navigationState
+      }
+    }
   }, initialApp)
 });

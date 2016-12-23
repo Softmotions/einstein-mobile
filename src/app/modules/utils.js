@@ -57,6 +57,7 @@ export class StyleConfig {
 
   _width;
   _height;
+
   _statusHeight;
 
   _size;
@@ -206,6 +207,7 @@ export class StyleConfig {
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
+        flexDirection: this.direction,
       },
 
       fieldContainer: {

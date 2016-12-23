@@ -44,7 +44,7 @@ class GameField extends Component {
   }
 
   renderItem(i, j, k) {
-    const game = this.props.game;
+    const {game} = this.props;
     const key = 'item_' + i + '_' + j + '_' + k;
     return (
       <View key={key} style={this.styles.itemBox}>
@@ -70,7 +70,7 @@ class GameField extends Component {
   }
 
   renderGroupItem(i, j) {
-    const game = this.props.game;
+    const {game} = this.props;
     const key = 'group_' + i + '_' + j;
 
     return (
@@ -98,7 +98,7 @@ class GameField extends Component {
   }
 
   _onPressPopupItem(i, j, k) {
-    const game = this.props.game;
+    const {game} = this.props;
 
     return () => {
       if (!game.possible(i, j, k)) {
@@ -117,7 +117,7 @@ class GameField extends Component {
   };
 
   _onLongPressPopupItem(i, j, k) {
-    const game = this.props.game;
+    const {game} = this.props;
 
     return () => {
       if (!game.possible(i, j, k)) {
@@ -137,7 +137,7 @@ class GameField extends Component {
   };
 
   renderPopupItem(i, j, k) {
-    const game = this.props.game;
+    const {game} = this.props;
     const key = 'popup_item_' + i + '_' + j + '_' + k;
 
     // TODO: disable hidden
@@ -162,7 +162,7 @@ class GameField extends Component {
   }
 
   renderPopupGroupItem() {
-    let popup = this.state.popup;
+    let {popup} = this.state;
     return (
       <TouchableWithoutFeedback onPress={() => {}}>
         { popup ?
@@ -353,15 +353,15 @@ class Rules extends Component {
   }
 
   render() {
-    const rules = this.props.rules;
+    const {styles, rules} = this.props;
     const hrules = rules.filter((r) => 'row' == r.viewType);
     const vrules = rules.filter((r) => 'column' == r.viewType);
 
     // TODO: extract to utility method
-    const rr = vrules.length > 0 ? this.props.styles.rule3Rows : this.props.styles.rule3Rows + 2;
-    const rc = Math.max(Math.ceil(hrules.length / rr), this.props.styles.rule3Columns);
+    const rr = vrules.length > 0 ? styles.rule3Rows : styles.rule3Rows + 2;
+    const rc = Math.max(Math.ceil(hrules.length / rr), styles.rule3Columns);
     const hrb = Array.from({length: rc}, (v, i) => []);
-    hrules.forEach((r, i) => hrb[(i % rc)].push(r));
+    hrules.forEach((r, i) => hrb[i % rc].push(r));
 
     return (
       <ScrollView contentContainerStyle={this.styles.rules} horizontal={true}>
@@ -431,7 +431,7 @@ class Game extends Component {
     let {styles} = this.state;
 
     return (
-      <View onLayout={this._updateStyles} style={[this.styles.container, {flexDirection: styles.direction}]}>
+      <View onLayout={this._updateStyles} style={this.styles.container}>
         {/*<TimeInfo game={game} styles={styles}/>*/}
         <GameField game={game} field={game.field} styles={styles}/>
         <Rules game={game} rules={game.rules} styles={styles}/>
@@ -443,6 +443,5 @@ class Game extends Component {
 export default connect(state => ({
     game: state.app.game
   }),
-  dispatch => ({
-  })
+  dispatch => ({})
 )(Game);
