@@ -12,7 +12,7 @@ const {
 } = NavigationExperimental;
 
 import Game from './modules/einstein';
-import Welcome from './modules/welcome';
+import Welcome from './modules/Welcome';
 
 class Application extends Component {
   constructor(props) {
