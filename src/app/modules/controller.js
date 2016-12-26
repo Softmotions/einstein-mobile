@@ -192,7 +192,7 @@ class GameController {
   }
 
   resume() {
-    if (this._active) {
+    if (this.active || this.finished) {
       return;
     }
     this._active = true;
