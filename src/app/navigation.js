@@ -43,10 +43,10 @@ const back = (navApp = initialApp) => {
 };
 
 const newGame = (navApp = initialApp) => {
-  let {navigationState, game} = navApp;
+  let {navigationState} = navApp;
   const route = {key: GAME_KEY};
 
-  game = GameFactory.generateGame(6);
+  let game = GameFactory.generateGame(6);
   game.start();
 
   return {
