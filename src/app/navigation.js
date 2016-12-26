@@ -24,10 +24,13 @@ const initialApp = {
 };
 
 
+const safeJumpTo = (navigationState, route) =>
+  NavigationStateUtils.has(navigationState, route.key) ?
+    NavigationStateUtils.jumpTo(navigationState, route.key) :
+    NavigationStateUtils.push(navigationState, route);
+
 const back = (navApp = initialApp) => {
   let {navigationState, game} = navApp;
-
-  navigationState = NavigationStateUtils.jumpTo(navigationState, WELCOME_KEY);
 
   if (game) {
     game.pause();
@@ -35,7 +38,7 @@ const back = (navApp = initialApp) => {
 
   return {
     ...navApp,
-    navigationState: navigationState,
+    navigationState: NavigationStateUtils.jumpTo(navigationState, WELCOME_KEY),
   }
 };
 
@@ -46,27 +49,22 @@ const newGame = (navApp = initialApp) => {
   game = GameFactory.generateGame(6);
   game.start();
 
-  if (NavigationStateUtils.has(navigationState, route.key)) {
-    navigationState = NavigationStateUtils.jumpTo(navigationState, route.key);
-  } else {
-    navigationState = NavigationStateUtils.push(navigationState, route);
-  }
-
   return {
     ...navApp,
-    navigationState: navigationState,
-    game: game
+    navigationState: safeJumpTo(navigationState, route),
+    game
   }
 };
 
 const continueGame = (navApp = initialApp) => {
   let {navigationState, game} = navApp;
+  const route = {key: GAME_KEY};
+
   if (game) {
-    navigationState = NavigationStateUtils.jumpTo(navigationState, GAME_KEY);
     game.resume();
     return {
       ...navApp,
-      navigationState: navigationState
+      navigationState: safeJumpTo(navigationState, route)
     };
   }
   return {
@@ -78,16 +76,9 @@ const help = (navApp = initialApp) => {
   let {navigationState} = navApp;
   const route = {key: HELP_KEY};
 
-  if (NavigationStateUtils.has(navigationState, route.key)) {
-    navigationState = NavigationStateUtils.jumpTo(navigationState, route.key);
-    // navigationState = NavigationStateUtils.replaceAt(navigationState, route.key, route);
-  } else {
-    navigationState = NavigationStateUtils.push(navigationState, route);
-  }
-
   return {
     ...navApp,
-    navigationState
+    navigationState: safeJumpTo(navigationState, route)
   }
 };
 
