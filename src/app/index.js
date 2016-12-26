@@ -41,6 +41,7 @@ class Application extends Component {
       <NavigationCardStack
         onNavigateBack={_onNavigateBack}
         navigationState={navigationState}
+        gestureResponseDistance={150}
         renderScene={(scene) => {
           switch (scene.scene.route.key) {
             case 'game':
