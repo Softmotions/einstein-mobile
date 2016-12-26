@@ -5,7 +5,8 @@ import {connect} from 'react-redux';
 
 import {StyleSheet, View, Button, Text} from 'react-native';
 
-// todo navigation
+import {Navigator} from 'react-native';
+
 import {NavigationExperimental, BackAndroid} from 'react-native';
 const {
   CardStack: NavigationCardStack,
@@ -36,6 +37,24 @@ class Application extends Component {
 
   render() {
     let {navigationState, _onNavigateBack} = this.props;
+    /*
+     <Navigator initialRoute={{id: 'welcome', name: 'Welcome'}}
+     configureScene={(route, routeStack) => Navigator.SceneConfigs.HorizontalSwipeJump}
+     renderScene={(route, navigator) => {
+     switch(route.id) {
+     case 'game':
+     return (<Game navigator={navigator}/>);
+
+     case 'help':
+     return (<Help navigator={navigator}/>);
+
+     default:
+     return (<Welcome navigator={navigator}/>);
+     }
+     }}
+     />
+
+     */
 
     return (
       <NavigationCardStack
@@ -43,19 +62,12 @@ class Application extends Component {
         navigationState={navigationState}
         gestureResponseDistance={150}
         renderScene={(scene) => {
-          switch (scene.scene.route.key) {
-            case 'game':
-              return (<Game />);
-
-            case 'help':
-              return (<Help />);
-
-            default:
-              return (
-                <Welcome />
-              )
-          }
-        }}/>
+            switch (scene.scene.route.key) {
+              case 'game': return (<Game />);
+              case 'help': return (<Help />);
+              default: return (<Welcome />)
+            }
+          }}/>
     );
   }
 }

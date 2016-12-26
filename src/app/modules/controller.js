@@ -50,6 +50,12 @@ class GameController {
     return this._field.size;
   }
 
+  get field() {
+    if (__DEV__) {
+      return this._field;
+    }
+  }
+
   set rules(rules) {
     this._rules = rules;
   }
@@ -187,6 +193,9 @@ class GameController {
   }
 
   pause() {
+    if (!this.active) {
+      return;
+    }
     this._active = false;
     this._time += (new Date().getTime() - this._start);
   }

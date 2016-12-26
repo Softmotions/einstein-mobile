@@ -2,6 +2,7 @@
 
 import React, {Component} from 'react';
 import {
+  AppState,
   StyleSheet,
   View,
   ScrollView,
@@ -18,6 +19,14 @@ import {StyleConfig} from './utils';
 
 // todo: global ?
 let size, items;
+
+const formatTime = function (time, suppressZeroHours) {
+  const hours = Math.floor(time / 3600);
+  const minutes = Math.floor((time % 3600) / 60);
+  const seconds = time % 60;
+
+  return '' + (hours || !suppressZeroHours ? hours + ':' : '') + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+};
 
 class ItemImage extends Component {
   static src(row, value) {
@@ -97,6 +106,21 @@ class GameField extends Component {
     )
   }
 
+  _onGameFinish = () =>
+    this.props.game.solved ?
+      this._onGameSolved() :
+      this._onGameFailed();
+
+  _onGameSolved = () => Alert.alert(
+    'Solved',
+    'Congratulate! You successfully solve this puzzle!\nYour time: ' + formatTime(this.props.game.time, true),
+    null,
+    {}
+  );
+
+  // todo: failed game alert
+  _onGameFailed = () => Alert.alert('Fail', 'todo: text', null, {});
+
   _onPressPopupItem(i, j, k) {
     const {game} = this.props;
 
@@ -108,10 +132,7 @@ class GameField extends Component {
       game.set(i, j, k);
       this._hidePopup();
       if (game.finished) {
-        // TODO: end game alert
-        Alert.alert(game.solved ? 'Solved' : 'Fail', 'Your time: ' + game.time + 's', null, {
-          // cancelable: false
-        });
+        this._onGameFinish()
       }
     }
   };
@@ -128,10 +149,7 @@ class GameField extends Component {
       this.forceUpdate();
       if (game.finished) {
         this._hidePopup();
-        // TODO: end game alert
-        Alert.alert(game.solved ? 'Solved' : 'Fail', 'Your time: ' + game.time + 's', null, {
-          // cancelable: false
-        });
+        this._onGameFinish();
       }
     }
   };
@@ -140,6 +158,14 @@ class GameField extends Component {
     const {game} = this.props;
     const key = 'popup_item_' + i + '_' + j + '_' + k;
 
+    let devStyle = null;
+    if (__DEV__ && game.field.value(i, j) == k) {
+      devStyle = {
+        borderWidth: 2,
+        borderColor: 'red'
+      }
+    }
+
     // TODO: disable hidden
     return (
       <TouchableOpacity key={key}
@@ -147,7 +173,7 @@ class GameField extends Component {
                         onPress={this._onPressPopupItem(i, j, k)}
                         onLongPress={this._onLongPressPopupItem(i, j, k)}>
         <View style={this.styles.popupItemBox}>
-          { game.possible(i, j, k) ? <ItemImage style={this.styles.popupItem} row={i} value={k}/> : null }
+          { game.possible(i, j, k) ? <ItemImage style={[this.styles.popupItem, devStyle]} row={i} value={k}/> : null }
         </View>
       </TouchableOpacity>
     );
@@ -382,6 +408,8 @@ class Rules extends Component {
 
 // TODO extract styles
 class TimeInfo extends Component {
+  _timer;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -397,11 +425,15 @@ class TimeInfo extends Component {
     clearInterval(this._timer);
   }
 
+  _formatTime = () => formatTime(this.state.time);
+
+
+  // todo extract timeinfo style
   render() {
     return (
       <View
-        style={{position: 'absolute', backgroundColor: '#fff', height: 15, width: 45, top: 0, right: 0, zIndex: 5, alignItems: 'flex-end'}}>
-        <Text>{this.state.time}</Text>
+        style={{position: 'absolute', padding: 5, bottom: 0, right: 0, zIndex: 5, alignItems: 'flex-end'}}>
+        <Text>{this._formatTime()}</Text>
       </View>
     );
   }
@@ -418,6 +450,23 @@ class Game extends Component {
     items = Array.from({length: size}, (v, k) => k);
   }
 
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  _handleAppStateChange = (currentAppState) => {
+    let {game} = this.props;
+    if ('background' == currentAppState || 'inactive' == currentAppState) {
+      game.pause();
+    } else if ('active' == currentAppState) {
+      game.resume();
+    }
+  };
+
   get styles() {
     return this.state.styles.styles;
   }
@@ -432,7 +481,7 @@ class Game extends Component {
 
     return (
       <View onLayout={this._updateStyles} style={this.styles.container}>
-        {/*<TimeInfo game={game} styles={styles}/>*/}
+        <TimeInfo game={game} styles={styles}/>
         <GameField game={game} field={game.field} styles={styles}/>
         <Rules game={game} rules={game.rules} styles={styles}/>
       </View>

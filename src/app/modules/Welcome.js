@@ -12,14 +12,19 @@ import {connect} from 'react-redux';
 class Welcome extends Component {
   render() {
     let {game, _onNewGame, _onContinueGame, _onHelp} = this.props;
-    // TODO: update game state!
+
+    // todo: confirm new game!
     return (
       <View style={styles.welcomeScreen}>
-        <View style={styles.button}><Button title="New game" onPress={_onNewGame}/></View>
-        {game && !game.finished ?
-          <View style={styles.button}><Button title="Continue" onPress={_onContinueGame}/></View> :
-          null }
-        <View style={styles.button}><Button title="Help" onPress={_onHelp}/></View>
+        <View style={styles.button}>
+          <Button color="grey" title="New game" onPress={_onNewGame}/>
+        </View>
+        <View style={styles.button}>
+          <Button disabled={!game} color="grey" title="Continue" onPress={_onContinueGame}/>
+        </View>
+        <View style={styles.button}>
+          <Button color="grey" title="Help" onPress={_onHelp}/>
+        </View>
       </View>
     );
   }
