@@ -188,6 +188,10 @@ class GameController {
   }
 
   stop() {
+    if (!this._started) {
+      console.debug('duplicate stop');
+      return;
+    }
     this._started = false;
     this._time += (new Date().getTime() - this._start);
   }
