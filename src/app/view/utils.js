@@ -337,6 +337,14 @@ export class StyleConfig {
         height: this.popupItemHeight,
         width: this.popupItemWidth,
       },
+
+      timeInfoBox: {
+        position: 'absolute',
+        padding: 5,
+        bottom: 0,
+        right: 0,
+        alignItems: 'flex-end'
+      },
     });
   }
 

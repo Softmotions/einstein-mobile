@@ -3,12 +3,13 @@
 import React, {Component} from 'react';
 import {createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
-import thunk from 'redux-thunk';
+import promiseMiddleware from 'redux-promise';
+// import thunk from 'redux-thunk';
 
-import reducers from './app/navigation';
+import reducers from './app/reducers';
 import Application from './app';
 
-const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+const createStoreWithMiddleware = applyMiddleware(promiseMiddleware)(createStore);
 const store = createStoreWithMiddleware(reducers);
 
 export default class Einstein extends Component {

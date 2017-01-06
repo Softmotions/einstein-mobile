@@ -10,10 +10,14 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Alert,
-  Text
+  Text,
+  InteractionManager
 } from 'react-native';
 
 import {connect} from 'react-redux';
+
+// todo: game reducers
+import gameReducers from '../reducers/game';
 
 import {StyleConfig} from './utils';
 
@@ -320,6 +324,7 @@ class BetweenRule extends Rule3 {
 
 }
 
+// class ARule2 extends AbstractRule {
 class Rule2 extends AbstractRule {
   constructor(props) {
     super(props);
@@ -336,6 +341,10 @@ class Rule2 extends AbstractRule {
     );
   }
 }
+
+// const Rule2 = connect(state => {
+//
+// })(ARule2);
 
 class Rules extends Component {
 
@@ -406,7 +415,6 @@ class Rules extends Component {
   }
 }
 
-// TODO extract styles
 class TimeInfo extends Component {
   _timer;
 
@@ -415,6 +423,10 @@ class TimeInfo extends Component {
     this.state = {
       time: this.props.game.time
     };
+  }
+
+  get styles() {
+    return this.props.styles.styles;
   }
 
   componentDidMount() {
@@ -427,12 +439,10 @@ class TimeInfo extends Component {
 
   _formatTime = () => formatTime(this.state.time);
 
-
-  // todo extract timeinfo style
   render() {
     return (
       <View
-        style={{position: 'absolute', padding: 5, bottom: 0, right: 0, zIndex: 5, alignItems: 'flex-end'}}>
+        style={[this.styles.timeInfoBox, {zIndex: 5}]}>
         <Text>{this._formatTime()}</Text>
       </View>
     );
@@ -443,10 +453,11 @@ class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      styles: new StyleConfig(props.game.size)
+      styles: new StyleConfig(6/*props.game.game.size*/)
     };
 
-    size = props.game.size;
+    // TODO: fuck (((
+    size = 6;//props.game.game.size;
     items = Array.from({length: size}, (v, k) => k);
   }
 
@@ -461,9 +472,9 @@ class Game extends Component {
   _handleAppStateChange = (currentAppState) => {
     let {game} = this.props;
     if ('background' == currentAppState || 'inactive' == currentAppState) {
-      game.pause();
+      game.game.pause();
     } else if ('active' == currentAppState) {
-      game.resume();
+      game.game.resume();
     }
   };
 
@@ -472,25 +483,36 @@ class Game extends Component {
   }
 
   _updateStyles = () => this.setState({
-    styles: new StyleConfig(this.props.game.size)
+    styles: new StyleConfig(this.props.game.game.size)
   });
 
+  renderPlaceHolder() {
+    return (
+      <View style={{/*this.styles.container*/}}>
+        <Text>Loading...</Text>
+      </View>
+    )
+  }
+
   render() {
-    let {game} = this.props;
     let {styles} = this.state;
+    let {game} = this.props;
+    if (!game.game) {
+      return this.renderPlaceHolder();
+    }
 
     return (
       <View onLayout={this._updateStyles} style={this.styles.container}>
-        <TimeInfo game={game} styles={styles}/>
-        <GameField game={game} field={game.field} styles={styles}/>
-        <Rules game={game} rules={game.rules} styles={styles}/>
+        <TimeInfo game={game.game} styles={styles}/>
+        <GameField game={game.game} field={game.game.field} styles={styles}/>
+        <Rules game={game.game} rules={game.game.rules} styles={styles}/>
       </View>
     );
   }
 }
 
 export default connect(state => ({
-    game: state.app.game
+    game: state.game
   }),
   dispatch => ({})
 )(Game);

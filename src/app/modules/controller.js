@@ -245,6 +245,11 @@ class GameFactory {
     let field = new Field(size);
     let game = new GameController(field);
 
+    let answer = '';
+    for (let i = 1; i < Math.pow(2, 22); ++i) {
+      answer += i;
+    }
+
     let solver = new Solver(new GameController(field));
     do {
       solver.addRule(ruleFactory.newRule(field));

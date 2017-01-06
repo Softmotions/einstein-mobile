@@ -5,16 +5,19 @@ import {connect} from 'react-redux';
 
 import {StyleSheet, View, Button, Text} from 'react-native';
 
-import {Navigator} from 'react-native';
+// import {Navigator} from 'react-native';
 
 import {NavigationExperimental, BackAndroid} from 'react-native';
 const {
   CardStack: NavigationCardStack,
 } = NavigationExperimental;
 
-import Welcome from './modules/Welcome';
-import Help from './modules/Help';
-import Game from './modules/Game';
+import {WELCOME_SCREEN_KEY, GAME_SCREEN_KEY, HELP_SCREEN_KEY} from './constants/navigation';
+import {NAVIGATION_BACK} from './constants/navigation';
+
+import Welcome from './view/Welcome';
+import Help from './view/Help';
+import Game from './view/Game';
 
 class Application extends Component {
   constructor(props) {
@@ -37,25 +40,6 @@ class Application extends Component {
 
   render() {
     let {navigationState, _onNavigateBack} = this.props;
-    /*
-     <Navigator initialRoute={{id: 'welcome', name: 'Welcome'}}
-     configureScene={(route, routeStack) => Navigator.SceneConfigs.HorizontalSwipeJump}
-     renderScene={(route, navigator) => {
-     switch(route.id) {
-     case 'game':
-     return (<Game navigator={navigator}/>);
-
-     case 'help':
-     return (<Help navigator={navigator}/>);
-
-     default:
-     return (<Welcome navigator={navigator}/>);
-     }
-     }}
-     />
-
-     */
-
     return (
       <NavigationCardStack
         onNavigateBack={_onNavigateBack}
@@ -63,8 +47,8 @@ class Application extends Component {
         gestureResponseDistance={150}
         renderScene={(scene) => {
             switch (scene.scene.route.key) {
-              case 'game': return (<Game />);
-              case 'help': return (<Help />);
+              case GAME_SCREEN_KEY: return (<Game />);
+              case HELP_SCREEN_KEY: return (<Help />);
               default: return (<Welcome />)
             }
           }}/>
@@ -73,9 +57,9 @@ class Application extends Component {
 }
 
 export default connect(state => ({
-    navigationState: state.app.navigationState
+    navigationState: state.navigationState
   }),
   dispatch => ({
-    _onNavigateBack: () => dispatch({type: 'back'})
+    _onNavigateBack: () => dispatch({type: NAVIGATION_BACK})
   })
 )(Application);

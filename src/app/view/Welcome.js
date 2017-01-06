@@ -4,10 +4,17 @@ import React, {Component} from 'react';
 import {
   View,
   Button,
-  StyleSheet
+  StyleSheet,
+  InteractionManager
 } from 'react-native';
 
 import {connect} from 'react-redux';
+
+import {
+  NAVIGATION_GAME_NEW,
+  NAVIGATION_GAME_CONTINUE,
+  NAVIGATION_HELP
+} from '../constants/navigation';
 
 class Welcome extends Component {
   render() {
@@ -44,10 +51,13 @@ const styles = StyleSheet.create({
 
 
 export default connect(state => ({
-    game: state.app.game
+    game: state.game
   }), dispatch => ({
-    _onNewGame: () => dispatch({type: 'new'}),
-    _onContinueGame: () => dispatch({type: 'continue'}),
-    _onHelp: () => dispatch({type: 'help'}),
+    _onNewGame: () => {
+      dispatch({type: NAVIGATION_GAME_NEW});
+      InteractionManager.runAfterInteractions(() => dispatch({type: 'GAME_CREATE'}));
+    },
+    _onContinueGame: () => dispatch({type: NAVIGATION_GAME_CONTINUE}),
+    _onHelp: () => dispatch({type: NAVIGATION_HELP}),
   })
 )(Welcome);
