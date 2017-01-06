@@ -21,11 +21,11 @@ export class StyleConfig {
 
     const dimension = this.direction == 'row' ? this.height - this.statusHeight : this.width;
     const box = dimension - this.border * 2;
-    this._groupSize = Math.floor((box - this.border * 2 * this.size/*this.space * 7*/) / 6) + this.border * 2;
+    this._groupSize = Math.floor((box - this.border * 2 * this.size) / this.size) + this.border * 2;
     this._itemSize = Math.floor((this.groupSize - this.border * 2) / 3);
 
-    this._fieldSize = this.groupSize * this.size + this.space * 2 /*(this.size + 1)*/ + this.border * 2;
-    this._fieldRowWidth = this.groupSize * this.size + this.space * 2/*(this.size - 1)*/;
+    this._fieldSize = this.groupSize * this.size + this.space * 2 + this.border * 2;
+    this._fieldRowWidth = this.groupSize * this.size + this.space * 2;
     this._fieldRowHeight = this.groupSize;
 
     this._ruleBorder = 1;
@@ -224,7 +224,6 @@ export class StyleConfig {
         borderColor: '#000',
         flexDirection: 'column',
         justifyContent: 'center',
-        // padding: this.space,
       },
 
       row: {
