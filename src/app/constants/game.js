@@ -1,0 +1,11 @@
+'use strict';
+
+const GAME_TOGGLE_RULE = 'GAME_TOGGLE_RULE';
+const GAME_CLEAR = 'GAME_CLEAR';
+const GAME_CREATE = 'GAME_CREATE';
+
+export {
+  GAME_CLEAR,
+  GAME_CREATE,
+  GAME_TOGGLE_RULE
+}

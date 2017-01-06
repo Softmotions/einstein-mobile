@@ -17,7 +17,9 @@ import {
 import {connect} from 'react-redux';
 
 // todo: game reducers
-import gameReducers from '../reducers/game';
+import {
+  GAME_TOGGLE_RULE
+} from '../constants/game';
 
 import {StyleConfig} from './utils';
 
@@ -45,7 +47,7 @@ class ItemImage extends Component {
   }
 }
 
-class GameField extends Component {
+class AGameField extends Component {
 
   constructor(props) {
     super(props);
@@ -56,23 +58,17 @@ class GameField extends Component {
     return this.props.styles.styles;
   }
 
-  renderItem(i, j, k) {
-    const {game} = this.props;
-    const key = 'item_' + i + '_' + j + '_' + k;
-    return (
-      <View key={key} style={this.styles.itemBox}>
-        { game.possible(i, j, k) ? <ItemImage style={this.styles.item} row={i} value={k}/> : null }
-      </View>
-    );
-  };
+  renderItem = (i, j, k) => (
+    <View key={'item_' + i + '_' + j + '_' + k} style={this.styles.itemBox}>
+      { this.props.game.possible(i, j, k) ? <ItemImage style={this.styles.item} row={i} value={k}/> : null }
+    </View>
+  );
 
-  renderGroupItemsLine(i, j, n) {
-    return (
-      <View style={this.styles.groupItemsRow}>
-        {items.filter((t) => t >= n * (size / 2) && t < (n + 1) * (size / 2)).map((k) => this.renderItem(i, j, k))}
-      </View>
-    );
-  }
+  renderGroupItemsLine = (i, j, n) => (
+    <View style={this.styles.groupItemsRow}>
+      {items.filter((t) => t >= n * (size / 2) && t < (n + 1) * (size / 2)).map((k) => this.renderItem(i, j, k))}
+    </View>
+  );
 
   _openPopup(i, j) {
     return () => {
@@ -82,33 +78,27 @@ class GameField extends Component {
     };
   }
 
-  renderGroupItem(i, j) {
-    const {game} = this.props;
-    const key = 'group_' + i + '_' + j;
-
-    return (
-      <TouchableWithoutFeedback key={key} disabled={game.finished} onPress={this._openPopup(i, j)}>
-        <View>
-          {!game.isSet(i, j) ?
-            <View style={this.styles.groupItem}>
-              {this.renderGroupItemsLine(i, j, 0)}
-              {this.renderGroupItemsLine(i, j, 1)}
-            </View> :
-            <ItemImage style={this.styles.groupItem} row={i} value={game.get(i, j)}/>
-          }
-        </View>
-      </TouchableWithoutFeedback>
-    );
-  }
-
-  renderRow(i) {
-    const key = 'row_' + i;
-    return (
-      <View key={key} style={this.styles.row}>
-        {items.map((j) => this.renderGroupItem(i, j))}
+  renderGroupItem = (i, j) => (
+    <TouchableWithoutFeedback key={'group_' + i + '_' + j}
+                              disabled={this.props.game.finished}
+                              onPress={this._openPopup(i, j)}>
+      <View>
+        {!this.props.game.isSet(i, j) ?
+          <View style={this.styles.groupItem}>
+            {this.renderGroupItemsLine(i, j, 0)}
+            {this.renderGroupItemsLine(i, j, 1)}
+          </View> :
+          <ItemImage style={this.styles.groupItem} row={i} value={this.props.game.get(i, j)}/>
+        }
       </View>
-    )
-  }
+    </TouchableWithoutFeedback>
+  );
+
+  renderRow = (i) => (
+    <View key={'row_' + i} style={this.styles.row}>
+      {items.map((j) => this.renderGroupItem(i, j))}
+    </View>
+  );
 
   _onGameFinish = () =>
     this.props.game.solved ?
@@ -125,38 +115,32 @@ class GameField extends Component {
   // todo: failed game alert
   _onGameFailed = () => Alert.alert('Fail', 'todo: text', null, {});
 
-  _onPressPopupItem(i, j, k) {
-    const {game} = this.props;
-
-    return () => {
-      if (!game.possible(i, j, k)) {
+  _onPressPopupItem = (i, j, k) => (() => {
+      if (!this.props.game.possible(i, j, k)) {
         return;
       }
 
-      game.set(i, j, k);
+      this.props.game.set(i, j, k);
       this._hidePopup();
-      if (game.finished) {
+      if (this.props.game.finished) {
         this._onGameFinish()
       }
     }
-  };
+  );
 
-  _onLongPressPopupItem(i, j, k) {
-    const {game} = this.props;
-
-    return () => {
-      if (!game.possible(i, j, k)) {
+  _onLongPressPopupItem = (i, j, k) => (() => {
+      if (!this.props.game.possible(i, j, k)) {
         return;
       }
 
-      game.exclude(i, j, k);
+      this.props.game.exclude(i, j, k);
       this.forceUpdate();
-      if (game.finished) {
+      if (this.props.game.finished) {
         this._hidePopup();
         this._onGameFinish();
       }
     }
-  };
+  );
 
   renderPopupItem(i, j, k) {
     const {game} = this.props;
@@ -183,71 +167,66 @@ class GameField extends Component {
     );
   };
 
-  renderPopupGroupItemsLine(i, j, n) {
-    return (
-      <View style={this.styles.popupGroupItemsRow}>
-        {items.filter((t) => t >= n * (size / 2) && t < (n + 1) * (size / 2)).map((k) => this.renderPopupItem(i, j, k))}
-      </View>
-    );
-  }
+  renderPopupGroupItemsLine = (i, j, n) => (
+    <View style={this.styles.popupGroupItemsRow}>
+      {items.filter((t) => t >= n * (size / 2) && t < (n + 1) * (size / 2)).map((k) => this.renderPopupItem(i, j, k))}
+    </View>
+  );
 
-  renderPopupGroupItem() {
-    let {popup} = this.state;
-    return (
-      <TouchableWithoutFeedback onPress={() => {}}>
-        { popup ?
-          <View style={this.styles.popupGroupItemBox}>
-            {this.renderPopupGroupItemsLine(popup.i, popup.j, 0)}
-            {this.renderPopupGroupItemsLine(popup.i, popup.j, 1)}
-          </View> :
-          null
-        }
-      </TouchableWithoutFeedback>
-    )
-  }
+  renderPopupGroupItem = () => (
+    <TouchableWithoutFeedback onPress={() => {}}>
+      { this.state.popup ?
+        <View style={this.styles.popupGroupItemBox}>
+          {this.renderPopupGroupItemsLine(this.state.popup.i, this.state.popup.j, 0)}
+          {this.renderPopupGroupItemsLine(this.state.popup.i, this.state.popup.j, 1)}
+        </View> :
+        null
+      }
+    </TouchableWithoutFeedback>
+  );
 
   _hidePopup = () => this.setState({popup: null});
 
-  render() {
-    return (
-      <View style={this.styles.fieldContainer}>
-        <View>
-          {this.state.popup !== null ?
-            <View style={[this.styles.modalContainerOuter, {zIndex: 1}]}>
-              <TouchableWithoutFeedback onPress={this._hidePopup}>
-                <View style={this.styles.modalContainerInner}>
-                  <View style={[this.styles.groupItemPopup, this.props.styles.popupPosition(this.state.popup)]}>
-                    {this.renderPopupGroupItem()}
-                  </View>
+  render = () => (
+    <View style={this.styles.fieldContainer}>
+      <View>
+        {this.state.popup !== null ?
+          <View style={[this.styles.modalContainerOuter, {zIndex: 1}]}>
+            <TouchableWithoutFeedback onPress={this._hidePopup}>
+              <View style={this.styles.modalContainerInner}>
+                <View style={[this.styles.groupItemPopup, this.props.styles.popupPosition(this.state.popup)]}>
+                  {this.renderPopupGroupItem()}
                 </View>
-              </TouchableWithoutFeedback>
-            </View> :
-            <View style={[this.styles.modalContainerOuter, {zIndex: -1}]}/>
-          }
-          <View style={[this.styles.field, {zIndex: 0}]}>
-            {items.map((i) => this.renderRow(i))}
-          </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View> :
+          <View style={[this.styles.modalContainerOuter, {zIndex: -1}]}/>
+        }
+        <View style={[this.styles.field, {zIndex: 0}]}>
+          {items.map((i) => this.renderRow(i))}
         </View>
       </View>
-    );
-  }
+    </View>
+  );
 }
+
+const GameField = connect(state => ({
+  game: state.game.game,
+  field: state.game.game.field
+}), dispatch => ({}))(AGameField);
 
 class AbstractRule extends Component {
   constructor(props) {
     super(props);
-    this.state = {visible: true}
   }
 
   get styles() {
     return this.props.styles.styles;
   }
 
-  toggle = () => this.setState({visible: !this.state.visible});
-
   // todo: extract styles
   get visibilityStyle() {
-    return {opacity: this.state.visible ? 1 : 0.15};
+    return {opacity: this.props.visible ? 1 : 0.15};
   }
 }
 
@@ -268,17 +247,15 @@ class Rule3 extends AbstractRule {
     return '';
   }
 
-  render() {
-    return (
-      <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.toggle}>
-        <View style={[this.styles.rule3, this.visibilityStyle]}>
-          <ItemImage style={this.styles.ruleItem} type={this._type1}/>
-          <ItemImage style={this.styles.ruleItem} type={this._type2}/>
-          <ItemImage style={this.styles.ruleItem} type={this._type3}/>
-        </View>
-      </TouchableWithoutFeedback>
-    )
-  }
+  render = () => (
+    <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.props.toggle}>
+      <View style={[this.styles.rule3, this.visibilityStyle]}>
+        <ItemImage style={this.styles.ruleItem} type={this._type1}/>
+        <ItemImage style={this.styles.ruleItem} type={this._type2}/>
+        <ItemImage style={this.styles.ruleItem} type={this._type3}/>
+      </View>
+    </TouchableWithoutFeedback>
+  )
 }
 
 class NearRule extends Rule3 {
@@ -310,6 +287,10 @@ class DirectionRule extends Rule3 {
 }
 
 class BetweenRule extends Rule3 {
+  constructor(props) {
+    super(props);
+  }
+
   get _type1() {
     return ItemImage.src(this.props.rule.row1, this.props.rule.value1);
   }
@@ -321,76 +302,98 @@ class BetweenRule extends Rule3 {
   get _type3() {
     return ItemImage.src(this.props.rule.row3, this.props.rule.value3);
   }
-
 }
 
-// class ARule2 extends AbstractRule {
 class Rule2 extends AbstractRule {
   constructor(props) {
     super(props);
   }
 
-  render() {
-    return (
-      <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.toggle}>
-        <View style={[this.styles.rule2, this.visibilityStyle]}>
-          <ItemImage style={this.styles.ruleItem} row={this.props.rule.row1} value={this.props.rule.value1}/>
-          <ItemImage style={this.styles.ruleItem} row={this.props.rule.row2} value={this.props.rule.value2}/>
-        </View>
-      </TouchableWithoutFeedback>
-    );
-  }
+  render = () => (
+    <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.props.toggle}>
+      <View style={[this.styles.rule2, this.visibilityStyle]}>
+        <ItemImage style={this.styles.ruleItem} row={this.props.rule.row1} value={this.props.rule.value1}/>
+        <ItemImage style={this.styles.ruleItem} row={this.props.rule.row2} value={this.props.rule.value2}/>
+      </View>
+    </TouchableWithoutFeedback>
+  );
 }
 
-// const Rule2 = connect(state => {
-//
-// })(ARule2);
-
-class Rules extends Component {
-
-  renderUnderRule(i, rule) {
-    const key = 'urule_' + i;
-
-    return (
-      <Rule2 key={key} rule={rule} disabled={!this.props.game.active} styles={this.props.styles}/>
-    );
+class ARule extends Component {
+  constructor(props) {
+    super(props);
   }
 
-  renderHorizontalRule(i, j, rule) {
-    const key = 'rule_' + i + '_' + j;
-    switch (rule.type) {
+  renderRule(rule) {
+    let {game, _onRuleToggle} = this.props;
+    const toggle = () => _onRuleToggle(rule.id);
+
+    switch (rule.rule.type) {
       case 'near':
         return (
-          <NearRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.props.styles}/>
+          <NearRule rule={rule.rule}
+                    disabled={!game.game.active}
+                    toggle={toggle}
+                    visible={rule.visible}
+                    styles={this.props.styles}/>
         );
       case 'direction':
         return (
-          <DirectionRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.props.styles}/>
+          <DirectionRule rule={rule.rule}
+                         disabled={!game.game.active}
+                         toggle={toggle}
+                         visible={rule.visible}
+                         styles={this.props.styles}/>
         );
       case 'between':
         return (
-          <BetweenRule key={key} rule={rule} disabled={!this.props.game.active} styles={this.props.styles}/>
+          <BetweenRule rule={rule.rule}
+                       disabled={!game.game.active}
+                       toggle={toggle}
+                       visible={rule.visible}
+                       styles={this.props.styles}/>
+        );
+      case 'under':
+        return (
+          <Rule2 rule={rule.rule}
+                 disabled={!game.game.active}
+                 toggle={toggle}
+                 visible={rule.visible}
+                 styles={this.props.styles}/>
         );
       default:
         return (
-          <View key={key}/>
+          <View/>
         );
     }
   }
 
-  renderHorizontalRuleGroup(i, rules) {
-    const key = 'rule_group_' + i;
-    return (
-      <View key={key}>
-        {rules.map((r, j) => this.renderHorizontalRule(i, j, r))}
-      </View>
-    )
-  }
+  render = () => (<View>{this.renderRule(this.props.rule)}</View>);
+}
+
+const Rule = connect(state => ({
+  game: state.game
+}), dispatch => ({
+  _onRuleToggle: (id) => dispatch({type: GAME_TOGGLE_RULE, rule: {id: id}})
+}))(ARule);
+
+class ARules extends Component {
+  renderUnderRule = (i, rule) => (
+    <Rule key={rule.id} rule={rule} styles={this.props.styles}/>
+  );
+
+  renderHorizontalRuleGroup = (i, rules) => (
+    <View key={'rule_group_' + i}>
+      {rules.map((rule) => (<Rule key={rule.id} rule={rule} styles={this.props.styles}/>))}
+    </View>
+  );
 
   render() {
-    const {styles, rules} = this.props;
-    const hrules = rules.filter((r) => 'row' == r.viewType);
-    const vrules = rules.filter((r) => 'column' == r.viewType);
+    const {styles, game} = this.props;
+    const rules = Object.keys(game.rules).map((k) => game.rules[k])
+
+    const hrules = rules.filter((r) => 'row' == r.rule.viewType);
+    const vrules = rules.filter((r) => 'column' == r.rule.viewType);
 
     // TODO: extract to utility method
     const rr = vrules.length > 0 ? styles.rule3Rows : styles.rule3Rows + 2;
@@ -415,13 +418,15 @@ class Rules extends Component {
   }
 }
 
-class TimeInfo extends Component {
+const Rules = connect(state => ({game: state.game}), dispatch => ({}))(ARules);
+
+class ATimeInfo extends Component {
   _timer;
 
   constructor(props) {
     super(props);
     this.state = {
-      time: this.props.game.time
+      time: 0//this.props.game.game.time
     };
   }
 
@@ -429,8 +434,8 @@ class TimeInfo extends Component {
     return this.props.styles.styles;
   }
 
-  componentDidMount() {
-    this._timer = setInterval(() => this.setState({time: this.props.game.time}), 500);
+  componentWillMount() {
+    this._timer = setInterval(() => this.setState({time: this.props.game.game.time}), 500);
   }
 
   componentWillUnmount() {
@@ -439,20 +444,20 @@ class TimeInfo extends Component {
 
   _formatTime = () => formatTime(this.state.time);
 
-  render() {
-    return (
-      <View
-        style={[this.styles.timeInfoBox, {zIndex: 5}]}>
-        <Text>{this._formatTime()}</Text>
-      </View>
-    );
-  }
+  render = () => (
+    <View style={[this.styles.timeInfoBox, {zIndex: 5}]}>
+      <Text>{this._formatTime()}</Text>
+    </View>
+  );
 }
+
+const TimeInfo = connect(state => ({game: state.game}), dispatch => ({}))(ATimeInfo);
 
 class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      ready: false,
       styles: new StyleConfig(6/*props.game.game.size*/)
     };
 
@@ -463,6 +468,10 @@ class Game extends Component {
 
   componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillMount() {
+    InteractionManager.runAfterInteractions(() => this.setState({ready: true}));
   }
 
   componentWillUnmount() {
@@ -486,26 +495,25 @@ class Game extends Component {
     styles: new StyleConfig(this.props.game.game.size)
   });
 
-  renderPlaceHolder() {
-    return (
-      <View style={{/*this.styles.container*/}}>
-        <Text>Loading...</Text>
-      </View>
-    )
-  }
+  // todo: loader
+  renderPlaceHolder = () => (
+    <View style={{/*this.styles.container*/}}>
+      <Text>Loading...</Text>
+    </View>
+  );
 
   render() {
-    let {styles} = this.state;
+    let {ready, styles} = this.state;
     let {game} = this.props;
-    if (!game.game) {
+    if (!game.game || !ready) {
       return this.renderPlaceHolder();
     }
 
     return (
       <View onLayout={this._updateStyles} style={this.styles.container}>
-        <TimeInfo game={game.game} styles={styles}/>
-        <GameField game={game.game} field={game.game.field} styles={styles}/>
-        <Rules game={game.game} rules={game.game.rules} styles={styles}/>
+        <TimeInfo styles={styles}/>
+        <GameField styles={styles}/>
+        <Rules styles={styles}/>
       </View>
     );
   }

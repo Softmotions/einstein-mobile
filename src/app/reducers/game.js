@@ -2,6 +2,12 @@
 
 import {handleActions} from 'redux-actions';
 
+import {
+  GAME_CLEAR,
+  GAME_CREATE,
+  GAME_TOGGLE_RULE
+} from '../constants/game';
+
 import {GameFactory} from '../modules/controller';
 
 const initialGameState = {
@@ -15,8 +21,16 @@ const initialRuleState = {
   visible: true,
 };
 
+const clearGame = (state = initialGameState) => ({
+  ...state,
+  game: null,
+  rules: {}
+});
+
 const createGame = (state = initialGameState) => {
   let game = GameFactory.generateGame(6);
+  game.start();
+
   return {
     ...state,
     game: game,
@@ -27,12 +41,7 @@ const createGame = (state = initialGameState) => {
         id: id,
         rule: rule,
       }
-    }).reduce((item, acc) => {
-      return {
-        ...acc,
-        [item.id]: item,
-      }
-    }, {})
+    }).reduce((acc, item) => ({...acc, [item.id]: item}), {})
   }
 };
 
@@ -53,6 +62,7 @@ const toggleRule = (state = initialGameState, action) => {
 
 // TODO: export constants
 export default handleActions({
-  ['GAME_TOGGLE_RULE']: toggleRule,
-  ['GAME_CREATE']: createGame,
+  [GAME_TOGGLE_RULE]: toggleRule,
+  [GAME_CLEAR]: clearGame,
+  [GAME_CREATE]: createGame,
 }, initialGameState);

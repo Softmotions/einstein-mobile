@@ -11,10 +11,14 @@ import {
 import {connect} from 'react-redux';
 
 import {
-  NAVIGATION_GAME_NEW,
-  NAVIGATION_GAME_CONTINUE,
+  NAVIGATION_GAME,
   NAVIGATION_HELP
 } from '../constants/navigation';
+
+import {
+  GAME_CREATE,
+  GAME_CLEAR
+} from '../constants/game';
 
 class Welcome extends Component {
   render() {
@@ -27,7 +31,7 @@ class Welcome extends Component {
           <Button color="grey" title="New game" onPress={_onNewGame}/>
         </View>
         <View style={styles.button}>
-          <Button disabled={!game} color="grey" title="Continue" onPress={_onContinueGame}/>
+          <Button disabled={!game.game} color="grey" title="Continue" onPress={_onContinueGame}/>
         </View>
         <View style={styles.button}>
           <Button color="grey" title="Help" onPress={_onHelp}/>
@@ -54,10 +58,18 @@ export default connect(state => ({
     game: state.game
   }), dispatch => ({
     _onNewGame: () => {
-      dispatch({type: NAVIGATION_GAME_NEW});
-      InteractionManager.runAfterInteractions(() => dispatch({type: 'GAME_CREATE'}));
+      const handle = InteractionManager.createInteractionHandle();
+      dispatch({type: GAME_CLEAR});
+      dispatch({type: NAVIGATION_GAME});
+      InteractionManager.clearInteractionHandle(handle);
+      InteractionManager.runAfterInteractions(() => {
+        dispatch({type: GAME_CREATE})
+      });
     },
-    _onContinueGame: () => dispatch({type: NAVIGATION_GAME_CONTINUE}),
+    _onContinueGame: () => {
+      // todo: create game if not exists?
+      dispatch({type: NAVIGATION_GAME})
+    },
     _onHelp: () => dispatch({type: NAVIGATION_HELP}),
   })
 )(Welcome);
