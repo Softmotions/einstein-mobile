@@ -1,0 +1,1 @@
+Splash screen: https://www.npmjs.com/package/react-native-splash-screen 
