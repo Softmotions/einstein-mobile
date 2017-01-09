@@ -22,6 +22,10 @@ import {
   GAME_RESUME
 } from '../constants/game';
 
+import {
+  statGameTry
+} from '../actions/statistic';
+
 class Welcome extends Component {
   render() {
     let {game, _onNewGame, _onContinueGame, _onHelp, _onStat} = this.props;
@@ -63,17 +67,16 @@ export default connect(state => ({
     game: state.game
   }), dispatch => ({
     _onNewGame: () => {
-      // const handle = InteractionManager.createInteractionHandle();
       dispatch({type: GAME_CLEAR});
       dispatch({type: NAVIGATION_GAME});
-      // InteractionManager.clearInteractionHandle(handle);
       InteractionManager.runAfterInteractions(() => {
-        dispatch({type: GAME_CREATE})
+        dispatch({type: GAME_CREATE});
+        dispatch(statGameTry());
       });
     },
     _onContinueGame: () => {
       // todo: create game if not exists?
-      dispatch({type: NAVIGATION_GAME})
+      dispatch({type: NAVIGATION_GAME});
       InteractionManager.runAfterInteractions(() => {
         dispatch({type: GAME_RESUME})
       });

@@ -22,7 +22,7 @@ import {GAME_PAUSE} from './constants/game';
 import Welcome from './view/Welcome';
 import Game from './view/Game';
 import Help from './view/Help';
-import Statistics from './view/Statistics';
+import Statistics from './view/Statistic';
 
 class Application extends Component {
   constructor(props) {
@@ -31,9 +31,8 @@ class Application extends Component {
 
   _navigateBack = () => {
     let {navigationState, _onNavigateBack} = this.props;
-    console.debug(navigationState);
-    console.debug(_onNavigateBack());
-    console.debug(navigationState);
+    _onNavigateBack();
+    console.debug('Navigation back', navigationState);
     return navigationState.index !== 0;
   };
 
@@ -66,7 +65,7 @@ export default connect(state => ({
   dispatch => ({
     _onNavigateBack: () => {
       dispatch({type: GAME_PAUSE});
-      return dispatch({type: NAVIGATION_BACK});
+      dispatch({type: NAVIGATION_BACK});
     },
   })
 )(Application);

@@ -4,7 +4,7 @@ import {StyleSheet} from 'react-native';
 
 const Dimensions = require('Dimensions');
 
-export class StyleConfig {
+class StyleConfig {
 
   constructor(size) {
     const {height, width} = Dimensions.get('window');
@@ -368,4 +368,18 @@ export class StyleConfig {
       return StyleSheet.create({popupPosition: {}}).popupPosition;
     }
   }
+}
+
+const formatTime = function (time, suppressZeroHours) {
+  const hours = Math.floor(time / 3600);
+  const minutes = Math.floor((time % 3600) / 60);
+  const seconds = time % 60;
+
+  return '' + (hours || !suppressZeroHours ? hours + ':' : '') + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+};
+
+
+export {
+  StyleConfig,
+  formatTime
 }

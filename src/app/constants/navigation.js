@@ -3,7 +3,7 @@
 const WELCOME_SCREEN_KEY = 'welcome';
 const GAME_SCREEN_KEY = 'game';
 const HELP_SCREEN_KEY = 'help';
-const STAT_SCREEN_KEY = 'statistics';
+const STAT_SCREEN_KEY = 'statistic';
 
 const NAVIGATION_BACK = 'NAVIGATION_BACK';
 const NAVIGATION_GAME = 'NAVIGATION_GAME';

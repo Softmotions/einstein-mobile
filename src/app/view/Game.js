@@ -21,18 +21,13 @@ import {
   GAME_TOGGLE_RULE
 } from '../constants/game';
 
-import {StyleConfig} from './utils';
+import {} from '../actions/statistic';
+
+import {StyleConfig, formatTime} from './utils';
+import {statGameFailed, statGameSolved} from '../actions/statistic';
 
 // todo: global ?
 let size, items;
-
-const formatTime = function (time, suppressZeroHours) {
-  const hours = Math.floor(time / 3600);
-  const minutes = Math.floor((time % 3600) / 60);
-  const seconds = time % 60;
-
-  return '' + (hours || !suppressZeroHours ? hours + ':' : '') + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-};
 
 class ItemImage extends Component {
   static src(row, value) {
@@ -105,15 +100,21 @@ class AGameField extends Component {
       this._onGameSolved() :
       this._onGameFailed();
 
-  _onGameSolved = () => Alert.alert(
-    'Solved',
-    'Congratulate! You successfully solve this puzzle!\nYour time: ' + formatTime(this.props.game.time, true),
-    null,
-    {}
-  );
+  _onGameSolved = () => {
+    this.props._statSolved({time: this.props.game.time, date: new Date()});
+    Alert.alert(
+      'Solved',
+      'Congratulate! You successfully solve this puzzle!\nYour time: ' + formatTime(this.props.game.time, true),
+      null,
+      {}
+    );
+  };
 
   // todo: failed game alert
-  _onGameFailed = () => Alert.alert('Fail', 'todo: text', null, {});
+  _onGameFailed = () => {
+    this.props._statFailed();
+    Alert.alert('Fail', 'todo: text', null, {});
+  };
 
   _onPressPopupItem = (i, j, k) => (() => {
       if (!this.props.game.possible(i, j, k)) {
@@ -213,7 +214,10 @@ class AGameField extends Component {
 const GameField = connect(state => ({
   game: state.game.game,
   field: state.game.game.field
-}), dispatch => ({}))(AGameField);
+}), dispatch => ({
+  _statFailed: () => dispatch(statGameFailed()),
+  _statSolved: (time) => dispatch(statGameSolved(time)),
+}))(AGameField);
 
 class AbstractRule extends Component {
   constructor(props) {
@@ -519,8 +523,4 @@ class Game extends Component {
   }
 }
 
-export default connect(state => ({
-    game: state.game
-  }),
-  dispatch => ({})
-)(Game);
+export default connect(state => ({game: state.game}), dispatch => ({}))(Game);
