@@ -10,12 +10,12 @@ import {
 
 import {connect} from 'react-redux';
 
-class Help extends Component {
+class Statistics extends Component {
   render = () => (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>TODO: Help!</Text>
+      <Text>TODO: Statistics!</Text>
     </View>
   );
 }
 
-export default connect(state => ({}), dispatch => ({}))(Help);
+export default connect(state => ({}), dispatch => ({}))(Statistics);

@@ -10,13 +10,19 @@ const {
   CardStack: NavigationCardStack,
 } = NavigationExperimental;
 
-import {WELCOME_SCREEN_KEY, GAME_SCREEN_KEY, HELP_SCREEN_KEY} from './constants/navigation';
+import {
+  WELCOME_SCREEN_KEY,
+  GAME_SCREEN_KEY,
+  HELP_SCREEN_KEY,
+  STAT_SCREEN_KEY,
+} from './constants/navigation';
 import {NAVIGATION_BACK} from './constants/navigation';
 import {GAME_PAUSE} from './constants/game';
 
 import Welcome from './view/Welcome';
-import Help from './view/Help';
 import Game from './view/Game';
+import Help from './view/Help';
+import Statistics from './view/Statistics';
 
 class Application extends Component {
   constructor(props) {
@@ -46,7 +52,8 @@ class Application extends Component {
             switch (scene.scene.route.key) {
               case GAME_SCREEN_KEY: return (<Game />);
               case HELP_SCREEN_KEY: return (<Help />);
-              default: return (<Welcome />)
+              case STAT_SCREEN_KEY: return (<Statistics />);
+              default: return (<Welcome />);
             }
           }}/>
     );

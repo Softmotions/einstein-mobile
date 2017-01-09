@@ -12,7 +12,8 @@ import {connect} from 'react-redux';
 
 import {
   NAVIGATION_GAME,
-  NAVIGATION_HELP
+  NAVIGATION_HELP,
+  NAVIGATION_STAT
 } from '../constants/navigation';
 
 import {
@@ -23,7 +24,7 @@ import {
 
 class Welcome extends Component {
   render() {
-    let {game, _onNewGame, _onContinueGame, _onHelp} = this.props;
+    let {game, _onNewGame, _onContinueGame, _onHelp, _onStat} = this.props;
 
     // todo: confirm new game!
     return (
@@ -36,6 +37,9 @@ class Welcome extends Component {
         </View>
         <View style={styles.button}>
           <Button color="grey" title="Help" onPress={_onHelp}/>
+        </View>
+        <View style={styles.button}>
+          <Button color="grey" title="Statistic" onPress={_onStat}/>
         </View>
       </View>
     );
@@ -75,5 +79,6 @@ export default connect(state => ({
       });
     },
     _onHelp: () => dispatch({type: NAVIGATION_HELP}),
+    _onStat: () => dispatch({type: NAVIGATION_STAT}),
   })
 )(Welcome);
