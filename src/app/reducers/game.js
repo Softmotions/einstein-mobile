@@ -49,9 +49,7 @@ const createGame = (state = initialGameState) => {
 
 const pauseGame = (state = initialGameState) => {
   let {game} = state;
-  if (game) {
-    game.pause();
-  }
+  game && game.pause();
 
   return {
     ...state
@@ -60,9 +58,7 @@ const pauseGame = (state = initialGameState) => {
 
 const resumeGame = (state = initialGameState) => {
   let {game} = state;
-  if (game) {
-    game.resume();
-  }
+  game && game.resume();
 
   return {
     ...state

@@ -479,11 +479,11 @@ class Game extends Component {
   }
 
   _handleAppStateChange = (currentAppState) => {
-    let {game} = this.props;
+    let {game: {game}} = this.props;
     if ('background' == currentAppState || 'inactive' == currentAppState) {
-      game.game.pause();
+      game && game.pause();
     } else if ('active' == currentAppState) {
-      game.game.resume();
+      game && game.resume();
     }
   };
 
