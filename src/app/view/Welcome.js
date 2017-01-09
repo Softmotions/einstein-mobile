@@ -17,7 +17,8 @@ import {
 
 import {
   GAME_CREATE,
-  GAME_CLEAR
+  GAME_CLEAR,
+  GAME_RESUME
 } from '../constants/game';
 
 class Welcome extends Component {
@@ -58,10 +59,10 @@ export default connect(state => ({
     game: state.game
   }), dispatch => ({
     _onNewGame: () => {
-      const handle = InteractionManager.createInteractionHandle();
+      // const handle = InteractionManager.createInteractionHandle();
       dispatch({type: GAME_CLEAR});
       dispatch({type: NAVIGATION_GAME});
-      InteractionManager.clearInteractionHandle(handle);
+      // InteractionManager.clearInteractionHandle(handle);
       InteractionManager.runAfterInteractions(() => {
         dispatch({type: GAME_CREATE})
       });
@@ -69,6 +70,9 @@ export default connect(state => ({
     _onContinueGame: () => {
       // todo: create game if not exists?
       dispatch({type: NAVIGATION_GAME})
+      InteractionManager.runAfterInteractions(() => {
+        dispatch({type: GAME_RESUME})
+      });
     },
     _onHelp: () => dispatch({type: NAVIGATION_HELP}),
   })

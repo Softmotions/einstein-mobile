@@ -5,8 +5,6 @@ import {connect} from 'react-redux';
 
 import {StyleSheet, View, Button, Text} from 'react-native';
 
-// import {Navigator} from 'react-native';
-
 import {NavigationExperimental, BackAndroid} from 'react-native';
 const {
   CardStack: NavigationCardStack,
@@ -14,6 +12,7 @@ const {
 
 import {WELCOME_SCREEN_KEY, GAME_SCREEN_KEY, HELP_SCREEN_KEY} from './constants/navigation';
 import {NAVIGATION_BACK} from './constants/navigation';
+import {GAME_PAUSE} from './constants/game';
 
 import Welcome from './view/Welcome';
 import Help from './view/Help';
@@ -60,6 +59,9 @@ export default connect(state => ({
     navigationState: state.navigationState
   }),
   dispatch => ({
-    _onNavigateBack: () => dispatch({type: NAVIGATION_BACK})
+    _onNavigateBack: () => {
+      dispatch({type: GAME_PAUSE});
+      dispatch({type: NAVIGATION_BACK})
+    }
   })
 )(Application);

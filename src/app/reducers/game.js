@@ -5,6 +5,8 @@ import {handleActions} from 'redux-actions';
 import {
   GAME_CLEAR,
   GAME_CREATE,
+  GAME_PAUSE,
+  GAME_RESUME,
   GAME_TOGGLE_RULE
 } from '../constants/game';
 
@@ -45,6 +47,28 @@ const createGame = (state = initialGameState) => {
   }
 };
 
+const pauseGame = (state = initialGameState) => {
+  let {game} = state;
+  if (game) {
+    game.pause();
+  }
+
+  return {
+    ...state
+  };
+};
+
+const resumeGame = (state = initialGameState) => {
+  let {game} = state;
+  if (game) {
+    game.resume();
+  }
+
+  return {
+    ...state
+  };
+};
+
 const toggleRule = (state = initialGameState, action) => {
   let {rule: {id}} = action;
   let {rules: {[id]: rule}} = state;
@@ -60,9 +84,10 @@ const toggleRule = (state = initialGameState, action) => {
   }
 };
 
-// TODO: export constants
 export default handleActions({
   [GAME_TOGGLE_RULE]: toggleRule,
   [GAME_CLEAR]: clearGame,
   [GAME_CREATE]: createGame,
+  [GAME_PAUSE]: pauseGame,
+  [GAME_RESUME]: resumeGame,
 }, initialGameState);
