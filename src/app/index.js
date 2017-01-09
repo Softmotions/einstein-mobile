@@ -25,17 +25,15 @@ class Application extends Component {
 
   _navigateBack = () => {
     let {navigationState, _onNavigateBack} = this.props;
-    _onNavigateBack();
+    console.debug(navigationState);
+    console.debug(_onNavigateBack());
+    console.debug(navigationState);
     return navigationState.index !== 0;
   };
 
-  componentDidMount() {
-    BackAndroid.addEventListener('hardwareBackPress', this._navigateBack);
-  }
+  componentDidMount = () => BackAndroid.addEventListener('hardwareBackPress', this._navigateBack);
 
-  componentWillUnmount() {
-    BackAndroid.removeEventListener('hardwareBackPress', this._navigateBack);
-  }
+  componentWillUnmount = () => BackAndroid.removeEventListener('hardwareBackPress', this._navigateBack);
 
   render() {
     let {navigationState, _onNavigateBack} = this.props;
@@ -61,7 +59,7 @@ export default connect(state => ({
   dispatch => ({
     _onNavigateBack: () => {
       dispatch({type: GAME_PAUSE});
-      dispatch({type: NAVIGATION_BACK})
-    }
+      return dispatch({type: NAVIGATION_BACK});
+    },
   })
 )(Application);
