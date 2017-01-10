@@ -22,6 +22,8 @@ import {gameRuleToggle} from '../actions/game';
 import {navStat} from '../actions/navigation';
 import {statGameFailed, statGameSolved} from '../actions/statistic';
 
+import EinsteinGame from './GameActivity';
+
 // todo: global ?
 let size, items;
 
@@ -97,6 +99,7 @@ class AGameField extends Component {
       this._onGameFailed();
 
   _onGameSolved = () => {
+    EinsteinGame.stopActivity();
     this.props._statSolved({time: this.props.game.time, date: new Date()});
     Alert.alert(
       'Solved',
@@ -111,6 +114,7 @@ class AGameField extends Component {
 
   // todo: failed game alert
   _onGameFailed = () => {
+    EinsteinGame.stopActivity();
     this.props._statFailed();
     Alert.alert(
       'Fail',
@@ -461,7 +465,12 @@ class Game extends Component {
   }
 
   componentWillMount() {
+    EinsteinGame.startActivity();
     InteractionManager.runAfterInteractions(() => this.setState({ready: true}));
+  }
+
+  componentWillUnmount() {
+    EinsteinGame.stopActivity();
   }
 
   get styles() {
