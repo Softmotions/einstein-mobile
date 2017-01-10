@@ -47,7 +47,7 @@ class Statistic extends Component {
 
     return (
       <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-        <Text>TODO: Statistics!</Text>
+        <Text>TODO: Statistic!</Text>
         <Text>Total tries: {statistic.tries}</Text>
         <Text>Successfully solved: {statistic.successfully}</Text>
         <Text>Failed: {statistic.failed}</Text>
