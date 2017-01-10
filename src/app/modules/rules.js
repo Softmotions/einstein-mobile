@@ -1,8 +1,8 @@
 'use strict';
 
 class Rule {
-  constructor(field) {
-    this.generate(field);
+  constructor(field, rule) {
+    field ? this._generate(field) : this._load(rule);
   }
 
   get type() {
@@ -21,7 +21,18 @@ class Rule {
     return rule.type === this.type;
   }
 
-  generate(data) {
+  _generate(data) {
+  }
+
+  _load(rule) {
+    Object.assign(this, rule);
+  }
+
+  save() {
+    return {
+      ...this,
+      type: this.type
+    };
   }
 }
 
@@ -50,7 +61,7 @@ class OpenRule extends Rule {
     return super.equals(rule) && this._row == rule._row && this._col == rule._col;
   }
 
-  generate(field) {
+  _generate(field) {
     this._row = Math.floor(Math.random() * field.size) % field.size;
     this._col = Math.floor(Math.random() * field.size) % field.size;
     this._val = field.value(this._row, this._col);
@@ -92,7 +103,7 @@ class UnderRule extends Rule {
     return super.equals(rule) && (rule._row1 === this._row1) && (rule._row2 === this._row2) && (rule._val1 === this._val1);
   }
 
-  generate(field) {
+  _generate(field) {
     const col = Math.floor(Math.random() * field.size) % field.size;
     this._row1 = Math.floor(Math.random() * field.size) % field.size;
     do {
@@ -166,7 +177,7 @@ class NearRule extends Rule {
       ((rule._row2 === this._row1) && (rule._val2 === this._val1) && (rule._row1 === this._row2) && (rule._val1 === this._val2));
   }
 
-  generate(field) {
+  _generate(field) {
     this._row1 = Math.floor(Math.random() * field.size) % field.size;
     this._row2 = Math.floor(Math.random() * field.size) % field.size;
 
@@ -239,7 +250,7 @@ class DirectionRule extends Rule {
       (rule._row1 === this._row1) && (rule._val1 === this._val1) && (rule._row2 === this._row2) && (rule._val2 === this._val2);
   }
 
-  generate(field) {
+  _generate(field) {
     this._row1 = Math.floor(Math.random() * field.size) % field.size;
     this._row2 = Math.floor(Math.random() * field.size) % field.size;
 
@@ -352,7 +363,7 @@ class BetweenRule extends Rule {
       (((rule._row1 === this._row1) && (rule._row2 === this._row2)) || ((rule._row1 === this._row2) && (rule._row2 === this._row1)));
   }
 
-  generate(field) {
+  _generate(field) {
     this._row = Math.floor(Math.random() * field.size) % field.size;
     this._row1 = Math.floor(Math.random() * field.size) % field.size;
     this._row2 = Math.floor(Math.random() * field.size) % field.size;
@@ -398,6 +409,14 @@ const RULE_WEIGHTS = [
   {rule: NearRule, weight: 4}
 ];
 
+const RULE_MAP = {
+  open: OpenRule,
+  under: UnderRule,
+  between: BetweenRule,
+  direction: DirectionRule,
+  near: NearRule,
+};
+
 class RuleFactory {
   _config;
   _factory;
@@ -419,15 +438,13 @@ class RuleFactory {
     });
   }
 
-  newRule(field) {
-    return new (this._factory[Math.floor(Math.random() * this._factory.length)])(field);
-  }
+  newRule = (field) => new (this._factory[Math.floor(Math.random() * this._factory.length)])(field);
+  static loadRule = (rule) => new (RULE_MAP[rule.type])(null, rule);
 }
 
 const ruleFactory = new RuleFactory();
 
 export {
   ruleFactory,
-  RuleFactory,
-  Rule,
+  RuleFactory
 }

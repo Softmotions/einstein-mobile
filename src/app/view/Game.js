@@ -219,8 +219,7 @@ class AGameField extends Component {
 }
 
 const GameField = connect(state => ({
-  game: state.game.game,
-  field: state.game.game.field
+  game: state.game.game
 }), dispatch => ({
   _statFailed: () => dispatch(statGameFailed()),
   _statSolved: (time) => dispatch(statGameSolved(time)),
@@ -461,26 +460,9 @@ class Game extends Component {
     items = Array.from({length: size}, (v, k) => k);
   }
 
-  componentDidMount() {
-    AppState.addEventListener('change', this._handleAppStateChange);
-  }
-
   componentWillMount() {
     InteractionManager.runAfterInteractions(() => this.setState({ready: true}));
   }
-
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange);
-  }
-
-  _handleAppStateChange = (currentAppState) => {
-    let {game: {game}} = this.props;
-    if ('background' == currentAppState || 'inactive' == currentAppState) {
-      game && game.pause();
-    } else if ('active' == currentAppState) {
-      game && game.resume();
-    }
-  };
 
   get styles() {
     return this.state.styles.styles;

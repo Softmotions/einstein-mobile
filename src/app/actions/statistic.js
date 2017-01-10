@@ -21,7 +21,7 @@ const clearStat = () => dispatch =>
   AsyncStorage.setItem(STATISTIC_STORAGE_KEY, JSON.stringify(CLEAN_STATISTIC))
     .then(() => dispatch({type: STAT_SET, stat: CLEAN_STATISTIC}))
     .catch(err => {
-      console.error('Error loading statistic', err);
+      console.error('Error clearing statistic', err);
       return Promise.resolve(CLEAN_STATISTIC);
     });
 
@@ -49,7 +49,7 @@ const updateStat = (update) => dispatch => {
       return AsyncStorage.setItem(STATISTIC_STORAGE_KEY, JSON.stringify(stat))
         .then(() => dispatch({type: STAT_SET, stat: stat}))
         .catch(err => {
-          console.error('Save statistic error', err);
+          console.error('Error saving statistic', err);
           return Promise.resolve(stat);
         });
     })

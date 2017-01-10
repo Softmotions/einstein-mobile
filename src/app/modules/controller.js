@@ -1,15 +1,29 @@
 'use strict';
 
-import {ruleFactory} from './rules';
+import {RuleFactory, ruleFactory} from './rules';
 import {Solver} from './solver';
-
 
 class Field {
   _size;
   _data;
 
-  constructor(size) {
-    this._size = Math.min(6, Math.max(3, size));
+  constructor(size, data) {
+    if (!data) {
+      this._size = size;
+      this._generate();
+    } else {
+      this._load(data);
+    }
+  }
+
+  get size() {
+    return this._size;
+  }
+
+  value = (row, col) => this._data[row][col];
+
+  _generate = () => {
+    this._size = Math.min(6, Math.max(3, this._size));
 
     this._data = Array.from({length: this.size}, (v, k) => []);
     this._data.forEach((v) => {
@@ -17,15 +31,11 @@ class Field {
       Array.from({length: this.size})
         .forEach(() => v.push(tmp.splice(Math.random() * tmp.length, 1)[0]));
     }, this);
-  }
 
-  get size() {
-    return this._size;
-  }
+  };
 
-  value(row, col) {
-    return this._data[row][col];
-  }
+  _load = (data) => Object.assign(this, data);
+  save = () => ({...this});
 }
 
 class GameController {
@@ -41,9 +51,13 @@ class GameController {
   _time;
   _start;
 
-  constructor(field) {
-    this._field = field;
-    this._init();
+  constructor(field, data) {
+    if (!data) {
+      this._field = field;
+      this._generate();
+    } else {
+      this._load(data);
+    }
   }
 
   get size() {
@@ -64,7 +78,7 @@ class GameController {
     return this._rules;
   }
 
-  _init() {
+  _generate = () => {
     this._count = this.size * this.size;
     this._data = [];
     for (let i = 0; i < this.size; ++i) {
@@ -89,23 +103,38 @@ class GameController {
         }
       }
     }
-  }
+  };
 
-  possible(row, col, val) {
-    return (!this.isSet(row, col) && this._data[row].cols[col].values[val]) || this.is(row, col, val);
-  }
+  _load = (data) => {
+    this._field = new Field(data.size, data.field);
+    this._count = data.count;
+    this._data = data.data;
+    this._rules = data.rules.map(r => RuleFactory.loadRule(r));
 
-  isSet(row, col) {
-    return this.get(row, col) != null;
-  }
+    this._time = data.time;
+    this._started = data.started;
+    this._active = false;
+  };
 
-  is(row, col, val) {
-    return this.isSet(row, col) && this.get(row, col) == val;
-  }
+  save = () => ({
+    size: this.size,
+    field: this._field.save(),
+    count: this._count,
+    data: this._data,
+    rules: this._rules.map(r => r.save()),
 
-  get(row, col) {
-    return this._data[row].cols[col].defined;
-  }
+    time: this.mstime,
+    started: this._started,
+    active: false
+  });
+
+  possible = (row, col, val) => (!this.isSet(row, col) && this._data[row].cols[col].values[val]) || this.is(row, col, val);
+
+  isSet = (row, col) => this.get(row, col) != null;
+
+  is = (row, col, val) => this.isSet(row, col) && this.get(row, col) == val;
+
+  get = (row, col) => this._data[row].cols[col].defined;
 
   set(row, col, val) {
     if (!this.possible(row, col, val) || this.isSet(row, col)) {
@@ -211,9 +240,12 @@ class GameController {
     this._start = new Date().getTime();
   }
 
+  get mstime() {
+    return !this.active ? this._time : this._time + (new Date().getTime() - this._start);
+  }
+
   get time() {
-    const time = !this.active ? this._time : this._time + (new Date().getTime() - this._start);
-    return Math.floor(time / 1000);
+    return Math.floor(this.mstime / 1000);
   }
 
   get active() {
@@ -240,7 +272,7 @@ class GameController {
 
 class GameFactory {
 
-  static generateGame(size) {
+  static generateGame = (size) => {
     let field = new Field(size);
     let game = new GameController(field);
 
@@ -272,11 +304,12 @@ class GameFactory {
 
     game.rules = rules.filter((v) => v.type !== 'open');
     return game;
-  }
+  };
+
+  static loadGame = (data) => data ? new GameController(null, data) : null;
+  static saveGame = (game) => game ? game.save() : null;
 }
 
 export {
-  Field,
-  GameController,
   GameFactory
 }

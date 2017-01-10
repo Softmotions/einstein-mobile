@@ -3,14 +3,12 @@
 import {handleActions} from 'redux-actions';
 
 import {
+  GAME_SET,
   GAME_CLEAR,
-  GAME_CREATE,
   GAME_PAUSE,
   GAME_RESUME,
   GAME_TOGGLE_RULE
 } from '../constants/game';
-
-import {GameFactory} from '../modules/controller';
 
 const initialGameState = {
   game: null,
@@ -28,24 +26,6 @@ const clearGame = (state = initialGameState) => ({
   game: null,
   rules: {}
 });
-
-const createGame = (state = initialGameState) => {
-  let game = GameFactory.generateGame(6);
-  game.start();
-
-  return {
-    ...state,
-    game: game,
-    rules: game.rules.map((rule, index) => {
-      const id = 'rule_' + index;
-      return {
-        ...initialRuleState,
-        id: id,
-        rule: rule,
-      }
-    }).reduce((acc, item) => ({...acc, [item.id]: item}), {})
-  }
-};
 
 const pauseGame = (state = initialGameState) => {
   let {game} = state;
@@ -65,6 +45,21 @@ const resumeGame = (state = initialGameState) => {
   };
 };
 
+const setGame = (state = initialGameState, action) => (action.game ? {
+  ...state,
+  game: action.game,
+  rules: action.game.rules
+    .map((rule, index) => ({
+      ...initialRuleState,
+      id: 'rule_' + index,
+      rule: rule,
+    }))
+    .reduce((acc, item) => ({
+      ...acc,
+      [item.id]: item
+    }), {})
+} : clearGame(state));
+
 const toggleRule = (state = initialGameState, action) => {
   let {rule: {id}} = action;
   let {rules: {[id]: rule}} = state;
@@ -82,8 +77,10 @@ const toggleRule = (state = initialGameState, action) => {
 
 export default handleActions({
   [GAME_TOGGLE_RULE]: toggleRule,
-  [GAME_CLEAR]: clearGame,
-  [GAME_CREATE]: createGame,
+
   [GAME_PAUSE]: pauseGame,
   [GAME_RESUME]: resumeGame,
+
+  [GAME_SET]: setGame,
+  [GAME_CLEAR]: clearGame,
 }, initialGameState);

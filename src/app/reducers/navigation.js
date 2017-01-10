@@ -10,6 +10,7 @@ import {
 } from '../constants/navigation';
 
 import {
+  NAVIGATION_TO_INDEX,
   NAVIGATION_BACK,
   NAVIGATION_GAME,
   NAVIGATION_HELP,
@@ -34,12 +35,14 @@ const safeJumpTo = (navigationState, route) =>
 // todo: ???
 const backTo = (navigationState, route) => NavigationStateUtils.pop(navigationState);
 
+const navigationToIndex = (navigationState = initialNavigation) => NavigationStateUtils.reset(navigationState, initialNavigation.routes);
 const navigationBack = (navigationState = initialNavigation) => backTo(navigationState, {key: WELCOME_SCREEN_KEY});
 const navigationGame = (navigationState = initialNavigation) => safeJumpTo(navigationState, {key: GAME_SCREEN_KEY});
 const navigationHelp = (navigationState = initialNavigation) => safeJumpTo(navigationState, {key: HELP_SCREEN_KEY});
 const navigationStat = (navigationState = initialNavigation) => safeJumpTo(navigationState, {key: STAT_SCREEN_KEY});
 
 export default handleActions({
+  [NAVIGATION_TO_INDEX]: navigationToIndex,
   [NAVIGATION_BACK]: navigationBack,
   [NAVIGATION_GAME]: navigationGame,
   [NAVIGATION_HELP]: navigationHelp,

@@ -10,13 +10,13 @@ import {
 
 import {connect} from 'react-redux';
 
-import {gameNew, gameClear, gameResume} from '../actions/game';
+import {gameNew, gameResume, gameClear} from '../actions/game';
 import {navGame, navHelp, navStat} from '../actions/navigation';
 import {statGameTry} from '../actions/statistic';
 
 class Welcome extends Component {
   render() {
-    let {game, _onNewGame, _onContinueGame, _onHelp, _onStat} = this.props;
+    let {game, _onNewGame, _onContinueGame, _onClearGame, _onHelp, _onStat} = this.props;
 
     // todo: confirm new game!
     return (
@@ -27,6 +27,11 @@ class Welcome extends Component {
         <View style={styles.button}>
           <Button disabled={!game.game} color="grey" title="Continue" onPress={_onContinueGame}/>
         </View>
+        { __DEV__ ?
+          <View style={styles.button}>
+            <Button disabled={!game.game} color="grey" title="Kill game" onPress={_onClearGame}/>
+          </View> : null
+        }
         <View style={styles.button}>
           <Button color="grey" title="Help" onPress={_onHelp}/>
         </View>
@@ -55,19 +60,14 @@ export default connect(state => ({
     game: state.game
   }), dispatch => ({
     _onNewGame: () => {
-      dispatch(gameClear());
       dispatch(navGame());
-      InteractionManager.runAfterInteractions(() => {
-        dispatch(gameNew());
-        dispatch(statGameTry());
-      });
+      InteractionManager.runAfterInteractions(() => dispatch(gameNew()).then(() => dispatch(statGameTry())));
     },
     _onContinueGame: () => {
       dispatch(navGame());
-      InteractionManager.runAfterInteractions(() => {
-        dispatch(gameResume())
-      });
+      InteractionManager.runAfterInteractions(() => dispatch(gameResume()));
     },
+    _onClearGame: () => dispatch(gameClear()),
     _onHelp: () => dispatch(navHelp()),
     _onStat: () => dispatch(navStat()),
   })
