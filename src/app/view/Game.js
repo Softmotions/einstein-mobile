@@ -336,51 +336,34 @@ class ARule extends Component {
     super(props);
   }
 
-  renderRule(rule) {
-    let {game, _onRuleToggle} = this.props;
+  ruleTypeToComponent = (type) => {
+    switch (type) {
+      case 'near':
+        return NearRule;
+      case 'direction':
+        return DirectionRule;
+      case 'between':
+        return BetweenRule;
+      case 'under':
+        return Rule2;
+      default:
+        return null;
+    }
+  };
+
+  render = () => {
+    let {rule, game, _onRuleToggle} = this.props;
+    const RuleComponent = this.ruleTypeToComponent(rule.rule.type);
     const toggle = () => _onRuleToggle(rule.id);
 
-    switch (rule.rule.type) {
-      case 'near':
-        return (
-          <NearRule rule={rule.rule}
-                    disabled={!game.game.active}
-                    toggle={toggle}
-                    visible={rule.visible}
-                    styles={this.props.styles}/>
-        );
-      case 'direction':
-        return (
-          <DirectionRule rule={rule.rule}
-                         disabled={!game.game.active}
-                         toggle={toggle}
-                         visible={rule.visible}
-                         styles={this.props.styles}/>
-        );
-      case 'between':
-        return (
-          <BetweenRule rule={rule.rule}
-                       disabled={!game.game.active}
-                       toggle={toggle}
-                       visible={rule.visible}
-                       styles={this.props.styles}/>
-        );
-      case 'under':
-        return (
-          <Rule2 rule={rule.rule}
-                 disabled={!game.game.active}
-                 toggle={toggle}
-                 visible={rule.visible}
-                 styles={this.props.styles}/>
-        );
-      default:
-        return (
-          <View/>
-        );
-    }
+    return RuleComponent ?
+      (<RuleComponent rule={rule.rule}
+                      disabled={!game.game.active}
+                      toggle={toggle}
+                      visible={rule.visible}
+                      styles={this.props.styles}/>) :
+      (<View/>);
   }
-
-  render = () => (<View>{this.renderRule(this.props.rule)}</View>);
 }
 
 const Rule = connect(state => ({
