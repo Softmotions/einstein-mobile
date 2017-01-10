@@ -16,13 +16,14 @@ import {
   HELP_SCREEN_KEY,
   STAT_SCREEN_KEY,
 } from './constants/navigation';
-import {NAVIGATION_BACK} from './constants/navigation';
-import {GAME_PAUSE} from './constants/game';
 
 import Welcome from './view/Welcome';
 import Game from './view/Game';
 import Help from './view/Help';
 import Statistics from './view/Statistic';
+
+import {gamePause} from './actions/game';
+import {navBack} from './actions/navigation';
 
 class Application extends Component {
   constructor(props) {
@@ -64,8 +65,8 @@ export default connect(state => ({
   }),
   dispatch => ({
     _onNavigateBack: () => {
-      dispatch({type: GAME_PAUSE});
-      dispatch({type: NAVIGATION_BACK});
+      dispatch(gamePause());
+      dispatch(navBack());
     },
   })
 )(Application);

@@ -10,21 +10,9 @@ import {
 
 import {connect} from 'react-redux';
 
-import {
-  NAVIGATION_GAME,
-  NAVIGATION_HELP,
-  NAVIGATION_STAT
-} from '../constants/navigation';
-
-import {
-  GAME_CREATE,
-  GAME_CLEAR,
-  GAME_RESUME
-} from '../constants/game';
-
-import {
-  statGameTry
-} from '../actions/statistic';
+import {gameNew, gameClear, gameResume} from '../actions/game';
+import {navGame, navHelp, navStat} from '../actions/navigation';
+import {statGameTry} from '../actions/statistic';
 
 class Welcome extends Component {
   render() {
@@ -67,21 +55,20 @@ export default connect(state => ({
     game: state.game
   }), dispatch => ({
     _onNewGame: () => {
-      dispatch({type: GAME_CLEAR});
-      dispatch({type: NAVIGATION_GAME});
+      dispatch(gameClear());
+      dispatch(navGame());
       InteractionManager.runAfterInteractions(() => {
-        dispatch({type: GAME_CREATE});
+        dispatch(gameNew());
         dispatch(statGameTry());
       });
     },
     _onContinueGame: () => {
-      // todo: create game if not exists?
-      dispatch({type: NAVIGATION_GAME});
+      dispatch(navGame());
       InteractionManager.runAfterInteractions(() => {
-        dispatch({type: GAME_RESUME})
+        dispatch(gameResume())
       });
     },
-    _onHelp: () => dispatch({type: NAVIGATION_HELP}),
-    _onStat: () => dispatch({type: NAVIGATION_STAT}),
+    _onHelp: () => dispatch(navHelp()),
+    _onStat: () => dispatch(navStat()),
   })
 )(Welcome);

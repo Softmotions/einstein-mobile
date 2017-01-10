@@ -16,14 +16,9 @@ import {
 
 import {connect} from 'react-redux';
 
-// todo: game reducers
-import {
-  GAME_TOGGLE_RULE
-} from '../constants/game';
-
-import {} from '../actions/statistic';
-
 import {StyleConfig, formatTime} from './utils';
+
+import {gameRuleToggle} from '../actions/game';
 import {statGameFailed, statGameSolved} from '../actions/statistic';
 
 // todo: global ?
@@ -378,7 +373,7 @@ class ARule extends Component {
 const Rule = connect(state => ({
   game: state.game
 }), dispatch => ({
-  _onRuleToggle: (id) => dispatch({type: GAME_TOGGLE_RULE, rule: {id: id}})
+  _onRuleToggle: (id) => dispatch(gameRuleToggle(id))
 }))(ARule);
 
 class ARules extends Component {
