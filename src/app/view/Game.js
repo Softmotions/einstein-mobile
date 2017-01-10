@@ -19,6 +19,7 @@ import {connect} from 'react-redux';
 import {StyleConfig, formatTime} from './utils';
 
 import {gameRuleToggle} from '../actions/game';
+import {navStat} from '../actions/navigation';
 import {statGameFailed, statGameSolved} from '../actions/statistic';
 
 // todo: global ?
@@ -100,7 +101,10 @@ class AGameField extends Component {
     Alert.alert(
       'Solved',
       'Congratulate! You successfully solve this puzzle!\nYour time: ' + formatTime(this.props.game.time, true),
-      null,
+      [
+        {text: 'Stat', onPress: this.props._toStat},
+        {text: 'Ok'}
+      ],
       {}
     );
   };
@@ -108,7 +112,15 @@ class AGameField extends Component {
   // todo: failed game alert
   _onGameFailed = () => {
     this.props._statFailed();
-    Alert.alert('Fail', 'todo: text', null, {});
+    Alert.alert(
+      'Fail',
+      'todo: text',
+      [
+        {text: 'Stat', onPress: this.props._toStat},
+        {text: 'Ok'}
+      ],
+      {}
+    );
   };
 
   _onPressPopupItem = (i, j, k) => (() => {
@@ -212,6 +224,7 @@ const GameField = connect(state => ({
 }), dispatch => ({
   _statFailed: () => dispatch(statGameFailed()),
   _statSolved: (time) => dispatch(statGameSolved(time)),
+  _toStat: () => dispatch(navStat()),
 }))(AGameField);
 
 class AbstractRule extends Component {
