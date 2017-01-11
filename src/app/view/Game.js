@@ -22,7 +22,7 @@ import {gameRuleToggle} from '../actions/game';
 import {navStat} from '../actions/navigation';
 import {statGameFailed, statGameSolved} from '../actions/statistic';
 
-import GameActivity from './GameActivity';
+import {GameActivity} from '../modules/native';
 
 // todo: global ?
 let size, items;
