@@ -7,18 +7,18 @@ import com.facebook.react.bridge.ReactMethod;
 
 /**
  */
-public class GameModule extends ReactContextBaseJavaModule {
-    public GameModule(ReactApplicationContext reactContext) {
+public class GameActivityModule extends ReactContextBaseJavaModule {
+    public GameActivityModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
 
     @Override
     public String getName() {
-        return "EinsteinGame";
+        return "GameActivity";
     }
 
     @ReactMethod
-    public void startActivity() {
+    public void start() {
         getCurrentActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -28,7 +28,7 @@ public class GameModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void stopActivity() {
+    public void stop() {
         getCurrentActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

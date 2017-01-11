@@ -1,10 +1,8 @@
 package com.softmotions.einstein;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -14,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.cboy.rn.splashscreen.SplashScreenReactPackage;
-import com.softmotions.einstein.game.GameReactPackage;
+import com.softmotions.einstein.game.GameActivityReactPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -29,7 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
                     new SplashScreenReactPackage(),
-                    new GameReactPackage()
+                    new GameActivityReactPackage()
             );
         }
     };
