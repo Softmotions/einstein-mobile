@@ -9,7 +9,7 @@ import {
   StyleSheet
 } from 'react-native';
 
-import {Loader} from 'Loader';
+import {Loader} from './Loader';
 
 import {connect} from 'react-redux';
 
