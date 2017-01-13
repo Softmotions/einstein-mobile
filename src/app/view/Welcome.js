@@ -22,21 +22,21 @@ class Welcome extends Component {
     return (
       <View style={styles.welcomeScreen}>
         <View style={styles.button}>
-          <Button color="grey" title="New game" onPress={_onNewGame}/>
+          <Button color="#013397ff" title="New game" onPress={_onNewGame} style={{flex: 1}}/>
         </View>
         <View style={styles.button}>
-          <Button disabled={!game.game} color="grey" title="Continue" onPress={_onContinueGame}/>
+          <Button disabled={!game.game} color="#013397ff" title="Continue" onPress={_onContinueGame}/>
         </View>
         { __DEV__ ?
           <View style={styles.button}>
-            <Button disabled={!game.game} color="grey" title="Kill game" onPress={_onClearGame}/>
+            <Button disabled={!game.game} color="#013397ff" title="Kill game" onPress={_onClearGame}/>
           </View> : null
         }
         <View style={styles.button}>
-          <Button color="grey" title="Help" onPress={_onHelp}/>
+          <Button color="#013397ff" title="Help" onPress={_onHelp}/>
         </View>
         <View style={styles.button}>
-          <Button color="grey" title="Statistic" onPress={_onStat}/>
+          <Button color="#013397ff" title="Statistic" onPress={_onStat}/>
         </View>
       </View>
     );
