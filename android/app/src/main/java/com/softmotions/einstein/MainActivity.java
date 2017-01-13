@@ -39,7 +39,6 @@ public class MainActivity extends ReactFragmentActivity
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        //todo fail resolve
         Log.e("\n\n", "failed");
     }
 

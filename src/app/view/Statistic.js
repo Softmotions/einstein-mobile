@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import {
   View,
   Text,
+  Image,
   Button,
   StyleSheet
 } from 'react-native';
@@ -24,8 +25,8 @@ class Statistic extends Component {
   componentDidMount = () => this.props._loadStat().then(() => this.setState({ready: true}));
 
   renderPlaceholder = () => (
-    <View>
-      <Text>Loading...</Text>
+    <View style={{flex:1, alignItems: 'center', justifyContent:'center'}}>
+      <Image source={require('../../../images/loader.gif')} style={{width: 48, height: 48}}/>
     </View>
   );
 

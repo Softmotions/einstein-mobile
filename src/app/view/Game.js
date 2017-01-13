@@ -481,18 +481,17 @@ class Game extends Component {
     styles: new StyleConfig(this.props.game.game.size)
   });
 
-  // todo: loader
-  renderPlaceHolder = () => (
-    <View style={{/*this.styles.container*/}}>
-      <Text>Loading...</Text>
-    </View>
-  );
+  renderPlaceholder = () => (
+      <View style={{flex:1, alignItems: 'center', justifyContent:'center'}}>
+          <Image source={require('../../../images/loader.gif')} style={{width: 48, height: 48}}/>
+      </View>
+    );
 
   render() {
     let {ready, styles} = this.state;
     let {game} = this.props;
     if (!game.game || !ready) {
-      return this.renderPlaceHolder();
+      return this.renderPlaceholder();
     }
 
     return (
