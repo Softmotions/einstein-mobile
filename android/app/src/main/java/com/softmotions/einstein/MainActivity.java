@@ -29,12 +29,12 @@ public class MainActivity extends ReactFragmentActivity
         super.onCreate(savedInstanceState);
         SplashScreen.show(this);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .enableAutoManage(this, this)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+//                .build();
     }
 
     @Override
