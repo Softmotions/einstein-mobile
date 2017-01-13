@@ -15,6 +15,8 @@ import {gameNew, gameResume, gameClear} from '../actions/game';
 import {navGame, navHelp, navStat} from '../actions/navigation';
 import {statGameTry} from '../actions/statistics';
 
+const color = '#013397ff';
+
 class Welcome extends Component {
   constructor(props) {
     super(props);
@@ -55,21 +57,21 @@ class Welcome extends Component {
       <View onLayout={this.rebuildStyles} style={styles.welcomeScreen}>
         <View style={styles.buttonsView}>
           <View style={styles.buttonView}>
-            <Button color="#013397ff" title="New game" onPress={_onNewGame} style={styles.button}/>
+            <Button color={color} title="New game" onPress={_onNewGame} style={styles.button}/>
           </View>
           <View style={styles.buttonView}>
-            <Button disabled={!game.game} color="#013397ff" title="Continue" onPress={_onContinueGame}/>
+            <Button disabled={!game.game} color={color} title="Continue" onPress={_onContinueGame}/>
           </View>
           { __DEV__ ?
             <View style={styles.buttonView}>
-              <Button disabled={!game.game} color="#013397ff" title="Kill game" onPress={_onClearGame}/>
+              <Button disabled={!game.game} color={color} title="Kill game" onPress={_onClearGame}/>
             </View> : null
           }
           <View style={styles.buttonView}>
-            <Button color="#013397ff" title="Help" onPress={_onHelp}/>
+            <Button color={color} title="Help" onPress={_onHelp}/>
           </View>
           <View style={styles.buttonView}>
-            <Button color="#013397ff" title="Statistics" onPress={_onStat}/>
+            <Button color={color} title="Statistics" onPress={_onStat}/>
           </View>
         </View>
       </View>
