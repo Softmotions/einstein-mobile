@@ -5,6 +5,7 @@ import {
   View,
   Button,
   StyleSheet,
+  Dimensions,
   InteractionManager
 } from 'react-native';
 
@@ -15,15 +16,46 @@ import {navGame, navHelp, navStat} from '../actions/navigation';
 import {statGameTry} from '../actions/statistics';
 
 class Welcome extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      styles: this.buildStyles()
+    }
+  }
+
+  rebuildStyles = () => {
+    this.setState({
+      styles: this.buildStyles()
+    });
+  };
+
+  buildStyles = () => StyleSheet.create({
+    welcomeScreen: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+
+    buttonsView: {
+      flexDirection: 'column',
+    },
+
+    buttonView: {
+      margin: 3,
+      width: Math.floor(Dimensions.get('window').width / 2)
+    }
+  });
+
   render() {
     let {game, _onNewGame, _onContinueGame, _onClearGame, _onHelp, _onStat} = this.props;
+    let {styles} = this.state;
 
     // todo: confirm new game!
     return (
-      <View style={styles.welcomeScreen}>
+      <View onLayout={this.rebuildStyles} style={styles.welcomeScreen}>
         <View style={styles.buttonsView}>
           <View style={styles.buttonView}>
-            <Button color="#013397ff" title="New game" onPress={_onNewGame} style={{flex: 1}}/>
+            <Button color="#013397ff" title="New game" onPress={_onNewGame} style={styles.button}/>
           </View>
           <View style={styles.buttonView}>
             <Button disabled={!game.game} color="#013397ff" title="Continue" onPress={_onContinueGame}/>
@@ -44,23 +76,6 @@ class Welcome extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  welcomeScreen: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-
-  buttonsView: {
-    flexDirection: 'column',
-  },
-
-  buttonView: {
-    margin: 3,
-  },
-});
-
 
 export default connect(state => ({
     game: state.game
