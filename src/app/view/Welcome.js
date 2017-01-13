@@ -21,22 +21,24 @@ class Welcome extends Component {
     // todo: confirm new game!
     return (
       <View style={styles.welcomeScreen}>
-        <View style={styles.button}>
-          <Button color="#013397ff" title="New game" onPress={_onNewGame} style={{flex: 1}}/>
-        </View>
-        <View style={styles.button}>
-          <Button disabled={!game.game} color="#013397ff" title="Continue" onPress={_onContinueGame}/>
-        </View>
-        { __DEV__ ?
-          <View style={styles.button}>
-            <Button disabled={!game.game} color="#013397ff" title="Kill game" onPress={_onClearGame}/>
-          </View> : null
-        }
-        <View style={styles.button}>
-          <Button color="#013397ff" title="Help" onPress={_onHelp}/>
-        </View>
-        <View style={styles.button}>
-          <Button color="#013397ff" title="Statistics" onPress={_onStat}/>
+        <View style={styles.buttonsView}>
+          <View style={styles.buttonView}>
+            <Button color="#013397ff" title="New game" onPress={_onNewGame} style={{flex: 1}}/>
+          </View>
+          <View style={styles.buttonView}>
+            <Button disabled={!game.game} color="#013397ff" title="Continue" onPress={_onContinueGame}/>
+          </View>
+          { __DEV__ ?
+            <View style={styles.buttonView}>
+              <Button disabled={!game.game} color="#013397ff" title="Kill game" onPress={_onClearGame}/>
+            </View> : null
+          }
+          <View style={styles.buttonView}>
+            <Button color="#013397ff" title="Help" onPress={_onHelp}/>
+          </View>
+          <View style={styles.buttonView}>
+            <Button color="#013397ff" title="Statistics" onPress={_onStat}/>
+          </View>
         </View>
       </View>
     );
@@ -50,8 +52,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
 
-  button: {
-    margin: 5
+  buttonsView: {
+    flexDirection: 'column',
+  },
+
+  buttonView: {
+    margin: 3,
   },
 });
 
