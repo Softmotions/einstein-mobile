@@ -32,7 +32,9 @@ export default class Einstein extends Component {
     AppState.addEventListener('change', this._handleAppStateChange);
 
     store.dispatch(gameLoad()).then(
-      () => SplashScreen.hide(),
+      () => {
+        setTimeout(() => SplashScreen.hide(), 3000);
+      },
       (err) => {
         console.error(err);
         SplashScreen.hide();
