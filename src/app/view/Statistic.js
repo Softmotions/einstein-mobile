@@ -9,6 +9,8 @@ import {
   StyleSheet
 } from 'react-native';
 
+import {Loader} from 'Loader';
+
 import {connect} from 'react-redux';
 
 import {loadStat} from '../actions/statistic';
@@ -26,7 +28,7 @@ class Statistic extends Component {
 
   renderPlaceholder = () => (
     <View style={{flex:1, alignItems: 'center', justifyContent:'center'}}>
-      <Image source={require('../../../images/loader.gif')} style={{width: 48, height: 48}}/>
+      <Loader/>
     </View>
   );
 
