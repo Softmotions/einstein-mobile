@@ -3,10 +3,10 @@
 import {handleActions} from 'redux-actions';
 
 import {
-  CLEAN_STATISTIC,
+  CLEAN_STATISTICS,
   STAT_SET,
-} from '../constants/statistic';
+} from '../constants/statistics';
 
 export default handleActions({
   [STAT_SET]: (state, action) => ({...action.stat}),
-}, CLEAN_STATISTIC);
+}, CLEAN_STATISTICS);

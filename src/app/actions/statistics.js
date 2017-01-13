@@ -2,32 +2,32 @@
 
 import {
   STAT_SET,
-  STATISTIC_STORAGE_KEY,
-  CLEAN_STATISTIC
-} from '../constants/statistic';
+  STATISTICS_STORAGE_KEY,
+  CLEAN_STATISTICS
+} from '../constants/statistics';
 
 import {AsyncStorage} from 'react-native';
 
 const loadStat = () => dispatch =>
-  AsyncStorage.getItem(STATISTIC_STORAGE_KEY)
-    .then(stat => stat ? JSON.parse(stat) : CLEAN_STATISTIC)
+  AsyncStorage.getItem(STATISTICS_STORAGE_KEY)
+    .then(stat => stat ? JSON.parse(stat) : CLEAN_STATISTICS)
     .then(stat => dispatch({type: STAT_SET, stat: stat}))
     .catch(err => {
-      console.error('Error loading statistic', err);
-      return Promise.resolve(CLEAN_STATISTIC);
+      console.error('Error loading statistics', err);
+      return Promise.resolve(CLEAN_STATISTICS);
     });
 
 const clearStat = () => dispatch =>
-  AsyncStorage.setItem(STATISTIC_STORAGE_KEY, JSON.stringify(CLEAN_STATISTIC))
-    .then(() => dispatch({type: STAT_SET, stat: CLEAN_STATISTIC}))
+  AsyncStorage.setItem(STATISTICS_STORAGE_KEY, JSON.stringify(CLEAN_STATISTICS))
+    .then(() => dispatch({type: STAT_SET, stat: CLEAN_STATISTICS}))
     .catch(err => {
-      console.error('Error clearing statistic', err);
-      return Promise.resolve(CLEAN_STATISTIC);
+      console.error('Error clearing statistics', err);
+      return Promise.resolve(CLEAN_STATISTICS);
     });
 
 const updateStat = (update) => dispatch => {
-  AsyncStorage.getItem(STATISTIC_STORAGE_KEY)
-    .then(stat => stat ? JSON.parse(stat) : CLEAN_STATISTIC)
+  AsyncStorage.getItem(STATISTICS_STORAGE_KEY)
+    .then(stat => stat ? JSON.parse(stat) : CLEAN_STATISTICS)
     .then(stat => {
       Object.keys(update).forEach((k) => {
         let item = update[k];
@@ -46,16 +46,16 @@ const updateStat = (update) => dispatch => {
       // todo: check time duplicates
       (stat.times = stat.times || []).sort((a, b) => a.time - b.time);
 
-      return AsyncStorage.setItem(STATISTIC_STORAGE_KEY, JSON.stringify(stat))
+      return AsyncStorage.setItem(STATISTICS_STORAGE_KEY, JSON.stringify(stat))
         .then(() => dispatch({type: STAT_SET, stat: stat}))
         .catch(err => {
-          console.error('Error saving statistic', err);
+          console.error('Error saving statistics', err);
           return Promise.resolve(stat);
         });
     })
     .catch(err => {
-      console.error('Error loading statistic', err);
-      return Promise.resolve(CLEAN_STATISTIC);
+      console.error('Error loading statistics', err);
+      return Promise.resolve(CLEAN_STATISTICS);
     });
 };
 

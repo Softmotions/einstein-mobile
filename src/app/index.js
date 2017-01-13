@@ -20,7 +20,7 @@ import {
 import Welcome from './view/Welcome';
 import Game from './view/Game';
 import Help from './view/Help';
-import Statistics from './view/Statistic';
+import Statistics from './view/Statistics';
 
 import {gamePause} from './actions/game';
 import {navBack} from './actions/navigation';

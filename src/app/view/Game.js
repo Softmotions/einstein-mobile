@@ -22,7 +22,7 @@ import {StyleConfig, formatTime} from './utils';
 
 import {gameRuleToggle} from '../actions/game';
 import {navStat} from '../actions/navigation';
-import {statGameFailed, statGameSolved} from '../actions/statistic';
+import {statGameFailed, statGameSolved} from '../actions/statistics';
 
 import {GameActivity} from '../modules/native';
 

@@ -13,10 +13,10 @@ import {Loader} from './Loader';
 
 import {connect} from 'react-redux';
 
-import {loadStat} from '../actions/statistic';
+import {loadStat} from '../actions/statistics';
 import {formatTime} from './utils';
 
-class Statistic extends Component {
+class Statistics extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,29 +40,29 @@ class Statistic extends Component {
 
   render = () => {
     let {ready} = this.state;
-    let {statistic} = this.props;
+    let {statistics} = this.props;
 
     if (!ready) {
       return this.renderPlaceholder();
     }
 
-    console.debug(statistic);
+    console.debug(statistics);
 
     return (
       <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-        <Text>TODO: Statistic!</Text>
-        <Text>Total tries: {statistic.tries}</Text>
-        <Text>Solved: {statistic.successfully}</Text>
-        <Text>Failed: {statistic.failed}</Text>
+        <Text>TODO: Statistics!</Text>
+        <Text>Total tries: {statistics.tries}</Text>
+        <Text>Solved: {statistics.successfully}</Text>
+        <Text>Failed: {statistics.failed}</Text>
         <Text>Best times:</Text>
-        {statistic.times.map(this.renderTimeInfo)}
+        {statistics.times.map(this.renderTimeInfo)}
       </View>
     );
   }
 }
 
 export default connect(state => ({
-  statistic: state.statistic
+  statistics: state.statistics
 }), dispatch => ({
   _loadStat: () => dispatch(loadStat())
-}))(Statistic);
+}))(Statistics);

@@ -12,7 +12,7 @@ import {connect} from 'react-redux';
 
 import {gameNew, gameResume, gameClear} from '../actions/game';
 import {navGame, navHelp, navStat} from '../actions/navigation';
-import {statGameTry} from '../actions/statistic';
+import {statGameTry} from '../actions/statistics';
 
 class Welcome extends Component {
   render() {
@@ -36,7 +36,7 @@ class Welcome extends Component {
           <Button color="#013397ff" title="Help" onPress={_onHelp}/>
         </View>
         <View style={styles.button}>
-          <Button color="#013397ff" title="Statistic" onPress={_onStat}/>
+          <Button color="#013397ff" title="Statistics" onPress={_onStat}/>
         </View>
       </View>
     );
