@@ -470,10 +470,7 @@ class Game extends Component {
 
   componentWillMount() {
     GameActivity.start();
-    InteractionManager.runAfterInteractions(() => {
-      this._updateStyles();
-      this.setState({ready: true})
-    });
+    InteractionManager.runAfterInteractions(() => this.setState({ready: true}));
   }
 
   componentWillUnmount() {
@@ -484,9 +481,11 @@ class Game extends Component {
     return this.state.styles.styles;
   }
 
-  _updateStyles = () => this.setState({
-    styles: new StyleConfig(this.props.game.game.size)
-  });
+  _updateStyles = () => {
+    if (this.props.game.game) {
+      this.setState({styles: new StyleConfig(this.props.game.game.size)});
+    }
+  };
 
   renderPlaceholder = () => (
     <View style={{flex:1, alignItems: 'center', justifyContent:'center'}}>
@@ -498,6 +497,11 @@ class Game extends Component {
     let {ready, styles} = this.state;
     let {game} = this.props;
     if (!game.game || !ready) {
+      return this.renderPlaceholder();
+    }
+
+    if (!styles) {
+      InteractionManager.runAfterInteractions(() => this._updateStyles());
       return this.renderPlaceholder();
     }
 
