@@ -26,9 +26,6 @@ import {statGameFailed, statGameSolved} from '../actions/statistics';
 
 import {GameActivity} from '../modules/native';
 
-// todo: global ?
-let size, items;
-
 class ItemImage extends Component {
   static src(row, value) {
     return 'item' + (row + 1) + (value + 1);
@@ -53,6 +50,10 @@ class AGameField extends Component {
     return this.props.styles.styles;
   }
 
+  get size() {
+    return this.props.game.size;
+  }
+
   renderItem = (i, j, k) => (
     <View key={'item_' + i + '_' + j + '_' + k} style={this.styles.itemBox}>
       { this.props.game.possible(i, j, k) ? <ItemImage style={this.styles.item} row={i} value={k}/> : null }
@@ -61,7 +62,9 @@ class AGameField extends Component {
 
   renderGroupItemsLine = (i, j, n) => (
     <View style={this.styles.groupItemsRow}>
-      {items.filter((t) => t >= n * (size / 2) && t < (n + 1) * (size / 2)).map((k) => this.renderItem(i, j, k))}
+      { Array.from({length: this.size}, (v, k) => k)
+        .filter((t) => t >= n * (this.size / 2) && t < (n + 1) * (this.size / 2))
+        .map((k) => this.renderItem(i, j, k)) }
     </View>
   );
 
@@ -78,12 +81,13 @@ class AGameField extends Component {
                               disabled={this.props.game.finished}
                               onPress={this._openPopup(i, j)}>
       <View>
-        {!this.props.game.isSet(i, j) ?
-          <View style={this.styles.groupItem}>
-            {this.renderGroupItemsLine(i, j, 0)}
-            {this.renderGroupItemsLine(i, j, 1)}
-          </View> :
-          <ItemImage style={this.styles.groupItem} row={i} value={this.props.game.get(i, j)}/>
+        {
+          !this.props.game.isSet(i, j) ?
+            <View style={this.styles.groupItem}>
+              {this.renderGroupItemsLine(i, j, 0)}
+              {this.renderGroupItemsLine(i, j, 1)}
+            </View> :
+            <ItemImage style={this.styles.groupItem} row={i} value={this.props.game.get(i, j)}/>
         }
       </View>
     </TouchableWithoutFeedback>
@@ -91,7 +95,7 @@ class AGameField extends Component {
 
   renderRow = (i) => (
     <View key={'row_' + i} style={this.styles.row}>
-      {items.map((j) => this.renderGroupItem(i, j))}
+      { Array.from({length: this.size}, (v, k) => k).map((j) => this.renderGroupItem(i, j)) }
     </View>
   );
 
@@ -183,7 +187,9 @@ class AGameField extends Component {
 
   renderPopupGroupItemsLine = (i, j, n) => (
     <View style={this.styles.popupGroupItemsRow}>
-      {items.filter((t) => t >= n * (size / 2) && t < (n + 1) * (size / 2)).map((k) => this.renderPopupItem(i, j, k))}
+      { Array.from({length: this.size}, (v, k) => k)
+        .filter((t) => t >= n * (this.size / 2) && t < (n + 1) * (this.size / 2))
+        .map((k) => this.renderPopupItem(i, j, k)) }
     </View>
   );
 
@@ -191,8 +197,8 @@ class AGameField extends Component {
     <TouchableWithoutFeedback onPress={() => {}}>
       { this.state.popup ?
         <View style={this.styles.popupGroupItemBox}>
-          {this.renderPopupGroupItemsLine(this.state.popup.i, this.state.popup.j, 0)}
-          {this.renderPopupGroupItemsLine(this.state.popup.i, this.state.popup.j, 1)}
+          { this.renderPopupGroupItemsLine(this.state.popup.i, this.state.popup.j, 0) }
+          { this.renderPopupGroupItemsLine(this.state.popup.i, this.state.popup.j, 1) }
         </View> :
         null
       }
@@ -204,7 +210,7 @@ class AGameField extends Component {
   render = () => (
     <View style={this.styles.fieldContainer}>
       <View>
-        {this.state.popup !== null ?
+        { this.state.popup !== null ?
           <View style={[this.styles.modalContainerOuter, {zIndex: 1}]}>
             <TouchableWithoutFeedback onPress={this._hidePopup}>
               <View style={this.styles.modalContainerInner}>
@@ -217,7 +223,7 @@ class AGameField extends Component {
           <View style={[this.styles.modalContainerOuter, {zIndex: -1}]}/>
         }
         <View style={[this.styles.field, {zIndex: 0}]}>
-          {items.map((i) => this.renderRow(i))}
+          { Array.from({length: this.size}, (v, k) => k).map((i) => this.renderRow(i)) }
         </View>
       </View>
     </View>
@@ -458,17 +464,16 @@ class Game extends Component {
     super(props);
     this.state = {
       ready: false,
-      styles: new StyleConfig(6/*props.game.game.size*/)
+      styles: null
     };
-
-    // TODO: fuck (((
-    size = 6;//props.game.game.size;
-    items = Array.from({length: size}, (v, k) => k);
   }
 
   componentWillMount() {
     GameActivity.start();
-    InteractionManager.runAfterInteractions(() => this.setState({ready: true}));
+    InteractionManager.runAfterInteractions(() => {
+      this._updateStyles();
+      this.setState({ready: true})
+    });
   }
 
   componentWillUnmount() {
@@ -484,10 +489,10 @@ class Game extends Component {
   });
 
   renderPlaceholder = () => (
-      <View style={{flex:1, alignItems: 'center', justifyContent:'center'}}>
-          <Loader/>
-      </View>
-    );
+    <View style={{flex:1, alignItems: 'center', justifyContent:'center'}}>
+      <Loader/>
+    </View>
+  );
 
   render() {
     let {ready, styles} = this.state;
