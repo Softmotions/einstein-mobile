@@ -106,10 +106,10 @@ class AGameField extends Component {
 
   _onGameSolved = () => {
     GameActivity.stop();
-    this.props._statSolved({time: this.props.game.time, date: new Date()});
+    this.props._statSolved({time: this.props.game.time - 5, date: new Date()});
     Alert.alert(
-      'Solved',
-      'Congratulate! You successfully solve this puzzle!\nYour time: ' + formatTime(this.props.game.time, true),
+      'Congratulations!',
+      'You solved the puzzle.\nTime: ' + formatTime(this.props.game.time, true),
       [
         {text: 'Stat', onPress: this.props._toStat},
         {text: 'Ok'}
@@ -118,13 +118,12 @@ class AGameField extends Component {
     );
   };
 
-  // todo: failed game alert
   _onGameFailed = () => {
     GameActivity.stop();
     this.props._statFailed();
     Alert.alert(
-      'Fail',
-      'todo: text',
+      'Wrong tile!',
+      'Puzzle failed.',
       [
         {text: 'Stat', onPress: this.props._toStat},
         {text: 'Ok'}

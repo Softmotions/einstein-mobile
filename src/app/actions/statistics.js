@@ -42,9 +42,9 @@ const updateStat = (update) => dispatch => {
         }
       });
 
-      // todo: times limit
-      // todo: check time duplicates
-      (stat.times = stat.times || []).sort((a, b) => a.time - b.time);
+      (stat.times = stat.times || []).sort((a, b) => a.time != b.time ? a.time - b.time : a.date - b.date);
+      stat.times = stat.times.reduce((acc, t) => acc.length == 0 || acc[acc.length - 1].time != t.time ? [...acc, t] : acc, []);
+      stat.times = stat.times.slice(0, 15);
 
       return AsyncStorage.setItem(STATISTICS_STORAGE_KEY, JSON.stringify(stat))
         .then(() => dispatch({type: STAT_SET, stat: stat}))

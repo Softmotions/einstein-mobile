@@ -87,7 +87,6 @@ class Separator extends Component {
   )
 }
 
-// todo: help hardcoded :(
 class Help extends Component {
   render = () => (
     <ScrollView style={styles.container}>

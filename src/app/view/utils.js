@@ -1,6 +1,7 @@
 'use strict';
 
 import {StyleSheet} from 'react-native';
+import moment from 'moment';
 
 const Dimensions = require('Dimensions');
 
@@ -370,7 +371,7 @@ class StyleConfig {
   }
 }
 
-const formatTime = function (time, suppressZeroHours) {
+const formatTime = (time, suppressZeroHours) => {
   const hours = Math.floor(time / 3600);
   const minutes = Math.floor((time % 3600) / 60);
   const seconds = time % 60;
@@ -378,8 +379,10 @@ const formatTime = function (time, suppressZeroHours) {
   return '' + (hours || !suppressZeroHours ? hours + ':' : '') + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 };
 
+const formatDate = (date) => date ? moment(date).format('HH:mm:SS DD.MM.YYYY'): '';
 
 export {
   StyleConfig,
-  formatTime
+  formatTime,
+  formatDate
 }
