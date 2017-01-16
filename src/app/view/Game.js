@@ -269,11 +269,15 @@ class Rule3 extends AbstractRule {
     return '';
   }
 
+  get borderedCenter() {
+    return false;
+  }
+
   render = () => (
     <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.props.toggle}>
       <View style={[this.styles.rule3, this.visibilityStyle]}>
         <ItemImage style={this.styles.ruleItem} type={this._type1}/>
-        <ItemImage style={this.styles.ruleItem} type={this._type2}/>
+        <ItemImage style={this.borderedCenter ? this.styles.ruleItem : this.styles.ruleHelpItem} type={this._type2}/>
         <ItemImage style={this.styles.ruleItem} type={this._type3}/>
       </View>
     </TouchableWithoutFeedback>
@@ -323,6 +327,10 @@ class BetweenRule extends Rule3 {
 
   get _type3() {
     return ItemImage.src(this.props.rule.row3, this.props.rule.value3);
+  }
+
+  get borderedCenter() {
+    return true;
   }
 }
 

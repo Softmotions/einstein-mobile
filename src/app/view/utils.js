@@ -29,7 +29,8 @@ class StyleConfig {
     this._fieldRowWidth = this.groupSize * this.size + this.space * 2;
     this._fieldRowHeight = this.groupSize;
 
-    this._ruleBorder = 1;
+    this._ruleBorder = 0.5;
+    this._ruleItemBorder = 0;
     this._ruleSpace = 1;
 
     this._rule3Columns = this.direction == 'row' ? 3 : 5; // todo calculate
@@ -39,10 +40,10 @@ class StyleConfig {
     const ruleBox = Math.floor((rulesWidth - this.ruleSpace * 2 * (this.rule3Columns - 1)) / this.rule3Columns);
     this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 2) / 3);
 
-    this._rule3Width = this.ruleItemSize * 3 + this.ruleSpace * 4 + this.ruleBorder * 2;
-    this._rule3Height = this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 2;
-    this._rule2Width = this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 2;
-    this._rule2Height = this.ruleItemSize * 2 + this.ruleSpace * 3 + this.ruleBorder * 2;
+    this._rule3Width = this.ruleItemSize * 3 + this.ruleSpace * 4 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
+    this._rule3Height = this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
+    this._rule2Width = this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
+    this._rule2Height = this.ruleItemSize * 2 + this.ruleSpace * 3 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
 
     this._rule3Rows = Math.floor((rulesHeight - this.rule2Height - this.ruleSpace) / (this.rule3Height + this.ruleSpace * 2));
 
@@ -69,6 +70,7 @@ class StyleConfig {
   _ruleBorder;
   _ruleSpace;
   _ruleItemSize;
+  _ruleItemBorder;
 
   _rule3Columns;
   _rule3Rows;
@@ -178,6 +180,10 @@ class StyleConfig {
     return this._ruleItemSize;
   }
 
+  get ruleItemBorder() {
+    return this._ruleItemBorder;
+  }
+
   get popupBoxWidth() {
     return this._popupBoxWidth;
   }
@@ -274,9 +280,10 @@ class StyleConfig {
         height: this.rule3Height,
         width: this.rule3Width,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        alignItems: 'center',
+        justifyContent: 'center',
         borderWidth: this.ruleBorder,
-        borderColor: '#000',
+        borderColor: 'grey',
         padding: this.ruleSpace,
         margin: this.ruleSpace,
       },
@@ -285,14 +292,22 @@ class StyleConfig {
         height: this.rule2Height,
         width: this.rule2Width,
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        alignItems: 'center',
+        justifyContent: 'center',
         borderWidth: this.ruleBorder,
-        borderColor: '#000',
+        borderColor: 'grey',
         padding: this.ruleSpace,
         margin: this.ruleSpace,
       },
 
       ruleItem: {
+        height: this.ruleItemSize,
+        width: this.ruleItemSize,
+        borderWidth: this.ruleItemBorder,
+        borderColor: '#000'
+      },
+
+      ruleHelpItem: {
         height: this.ruleItemSize,
         width: this.ruleItemSize,
       },
@@ -379,7 +394,7 @@ const formatTime = (time, suppressZeroHours) => {
   return '' + (hours || !suppressZeroHours ? hours + ':' : '') + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 };
 
-const formatDate = (date) => date ? moment(date).format('HH:mm:SS DD.MM.YYYY'): '';
+const formatDate = (date) => date ? moment(date).format('HH:mm:SS DD.MM.YYYY') : '';
 
 export {
   StyleConfig,
