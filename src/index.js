@@ -11,7 +11,7 @@ import SplashScreen from 'react-native-splash-screen';
 import reducers from './app/reducers';
 import Application from './app';
 
-import {gameLoad, gameSave} from './app/actions/game';
+import {gameLoad, gameSave, gamePause} from './app/actions/game';
 import {navToIndex} from './app/actions/navigation';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
@@ -23,6 +23,7 @@ export default class Einstein extends Component {
     let {game: {game}} = store.getState();
     if ('background' == currentAppState || 'inactive' == currentAppState) {
       store.dispatch(navToIndex());
+      store.dispatch(gamePause());
       store.dispatch(gameSave(game));
     } else if ('active' == currentAppState) {
     }
