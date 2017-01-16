@@ -3,7 +3,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {StyleSheet, View, Button, Text} from 'react-native';
+import {
+  StyleSheet,
+} from 'react-native';
 
 import {NavigationExperimental, BackAndroid} from 'react-native';
 const {
@@ -41,14 +43,12 @@ class Application extends Component {
 
   componentWillUnmount = () => BackAndroid.removeEventListener('hardwareBackPress', this._navigateBack);
 
-  render() {
-    let {navigationState, _onNavigateBack} = this.props;
-    return (
-      <NavigationCardStack
-        onNavigateBack={_onNavigateBack}
-        navigationState={navigationState}
-        gestureResponseDistance={150}
-        renderScene={(scene) => {
+  render = () => (
+    <NavigationCardStack
+      onNavigateBack={this.props._onNavigateBack}
+      navigationState={this.props.navigationState}
+      gestureResponseDistance={150}
+      renderScene={(scene) => {
             switch (scene.scene.route.key) {
               case GAME_SCREEN_KEY: return (<Game />);
               case HELP_SCREEN_KEY: return (<Help />);
@@ -56,8 +56,7 @@ class Application extends Component {
               default: return (<Welcome />);
             }
           }}/>
-    );
-  }
+  );
 }
 
 export default connect(state => ({
