@@ -68,8 +68,6 @@ const styles = StyleSheet.create({
   ruleItemImage: {
     width: 24,
     height: 24,
-    borderWidth: 0.25,
-    borderColor: ruleItemBorderColor
   }
 });
 
