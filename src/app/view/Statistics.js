@@ -46,7 +46,12 @@ const styles = StyleSheet.create({
 
   infoRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+  },
+  infoRowSeparator: {
+    borderColor: 'grey',
+    borderWidth: 0.25,
+    borderStyle: 'dashed'
   }
 });
 
@@ -66,9 +71,12 @@ class Separator extends Component {
 
 class InfoRow extends Component {
   render = () => (
-    <View style={styles.infoRow}>
-      <View><Text style={styles.text}>{this.props.title}</Text></View>
-      <View><Text style={styles.text}>{this.props.text}</Text></View>
+    <View>
+      <View style={styles.infoRow}>
+        <View><Text style={styles.text}>{this.props.title}</Text></View>
+        <View><Text style={styles.text}>{this.props.text}</Text></View>
+      </View>
+      <View style={styles.infoRowSeparator}/>
     </View>
   )
 }
