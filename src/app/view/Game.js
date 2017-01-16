@@ -21,8 +21,8 @@ import {connect} from 'react-redux';
 import {StyleConfig, formatTime} from './utils';
 
 import {gameRuleToggle} from '../actions/game';
-import {navStat} from '../actions/navigation';
-import {statGameFailed, statGameSolved} from '../actions/statistics';
+import {navStats} from '../actions/navigation';
+import {statsGameFailed, statsGameSolved} from '../actions/statistics';
 
 import {GameActivity} from '../modules/native';
 
@@ -111,7 +111,7 @@ class AGameField extends Component {
       'Congratulations!',
       'You solved the puzzle.\nTime: ' + formatTime(this.props.game.time, true),
       [
-        {text: 'Stat', onPress: this.props._toStat},
+        {text: 'Stats', onPress: this.props._toStats},
         {text: 'Ok'}
       ],
       {}
@@ -125,7 +125,7 @@ class AGameField extends Component {
       'Wrong tile!',
       'Puzzle failed.',
       [
-        {text: 'Stat', onPress: this.props._toStat},
+        {text: 'Stats', onPress: this.props._toStats},
         {text: 'Ok'}
       ],
       {}
@@ -232,9 +232,9 @@ class AGameField extends Component {
 const GameField = connect(state => ({
   game: state.game.game
 }), dispatch => ({
-  _statFailed: () => dispatch(statGameFailed()),
-  _statSolved: (time) => dispatch(statGameSolved(time)),
-  _toStat: () => dispatch(navStat()),
+  _statFailed: () => dispatch(statsGameFailed()),
+  _statSolved: (time) => dispatch(statsGameSolved(time)),
+  _toStats: () => dispatch(navStats()),
 }))(AGameField);
 
 class AbstractRule extends Component {

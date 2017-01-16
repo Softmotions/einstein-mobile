@@ -9,10 +9,10 @@ const CLEAN_STATISTICS = {
 
 const STATISTICS_STORAGE_KEY = '@Einstein:statistics';
 
-const STAT_SET = 'STATISTICS_SET';
+const STATS_SET = 'STATISTICS_SET';
 
 export {
   STATISTICS_STORAGE_KEY,
-  STAT_SET,
+  STATS_SET,
   CLEAN_STATISTICS
 }

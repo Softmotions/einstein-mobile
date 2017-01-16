@@ -16,7 +16,7 @@ import {Loader} from './Loader';
 
 import {connect} from 'react-redux';
 
-import {loadStat, clearStat} from '../actions/statistics';
+import {loadStats, clearStats} from '../actions/statistics';
 import {formatTime, formatDate} from './utils';
 
 const mainColor = '#013397';
@@ -98,7 +98,7 @@ class Statistics extends Component {
     </View>
   );
 
-  isStatEmpty = (stat) => !stat.tries && !stat.successfully && !stat.failed && (!stat.times || !stat.times.length);
+  isStatEmpty = (stats) => !stats.tries && !stats.successfully && !stats.failed && (!stats.times || !stats.times.length);
 
   render = () => {
     let {ready} = this.state;
@@ -133,7 +133,7 @@ class Statistics extends Component {
 
         { !this.isStatEmpty(statistics) ?
           <View style={{alignItems: 'flex-end'}}>
-            <Button color={mainColor} title="Clear" onPress={_clearStat}/>
+            {/*<Button color={mainColor} title="Clear" onPress={_clearStat}/>*/}
           </View> :
           null
         }
@@ -145,13 +145,13 @@ class Statistics extends Component {
 export default connect(state => ({
   statistics: state.statistics
 }), dispatch => ({
-  _loadStat: () => dispatch(loadStat()),
+  _loadStat: () => dispatch(loadStats()),
   _clearStat: () => Alert.alert(
     'Are you sure?',
     null,
     [
       {text: 'Cancel', style: 'cancel'},
-      {text: 'Yes', onPress: () => dispatch(clearStat())}
+      {text: 'Yes', onPress: () => dispatch(clearStats())}
     ]
   )
 }))(Statistics);

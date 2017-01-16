@@ -12,8 +12,8 @@ import {
 import {connect} from 'react-redux';
 
 import {gameNew, gameResume, gameClear} from '../actions/game';
-import {navGame, navHelp, navStat} from '../actions/navigation';
-import {statGameTry} from '../actions/statistics';
+import {navGame, navHelp, navStats} from '../actions/navigation';
+import {statsGameTry} from '../actions/statistics';
 
 const color = '#013397ff';
 
@@ -84,7 +84,7 @@ export default connect(state => ({
   }), dispatch => ({
     _onNewGame: () => {
       dispatch(navGame());
-      InteractionManager.runAfterInteractions(() => dispatch(gameNew()).then(() => dispatch(statGameTry())));
+      InteractionManager.runAfterInteractions(() => dispatch(gameNew()).then(() => dispatch(statsGameTry())));
     },
     _onContinueGame: () => {
       dispatch(navGame());
@@ -92,6 +92,6 @@ export default connect(state => ({
     },
     _onClearGame: () => dispatch(gameClear()),
     _onHelp: () => dispatch(navHelp()),
-    _onStat: () => dispatch(navStat()),
+    _onStat: () => dispatch(navStats()),
   })
 )(Welcome);

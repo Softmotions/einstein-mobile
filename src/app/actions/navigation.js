@@ -12,12 +12,12 @@ const navToIndex = () => ({type: NAVIGATION_TO_INDEX});
 const navBack = () => ({type: NAVIGATION_BACK});
 const navGame = () => ({type: NAVIGATION_GAME});
 const navHelp = () => ({type: NAVIGATION_HELP});
-const navStat = () => ({type: NAVIGATION_STAT});
+const navStats = () => ({type: NAVIGATION_STAT});
 
 export {
   navToIndex,
   navBack,
   navGame,
   navHelp,
-  navStat,
+  navStats,
 }
