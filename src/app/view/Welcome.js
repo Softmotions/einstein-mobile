@@ -21,17 +21,17 @@ class Welcome extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      styles: this.buildStyles()
+      styles: this._buildStyles()
     }
   }
 
-  rebuildStyles = () => {
+  _rebuildStyles = () => {
     this.setState({
-      styles: this.buildStyles()
+      styles: this._buildStyles()
     });
   };
 
-  buildStyles = () => StyleSheet.create({
+  _buildStyles = () => StyleSheet.create({
     welcomeScreen: {
       flex: 1,
       alignItems: 'center',
@@ -54,10 +54,10 @@ class Welcome extends Component {
 
     // todo: confirm new game!
     return (
-      <View onLayout={this.rebuildStyles} style={styles.welcomeScreen}>
+      <View onLayout={this._rebuildStyles} style={styles.welcomeScreen}>
         <View style={styles.buttonsView}>
           <View style={styles.buttonView}>
-            <Button color={color} title="New game" onPress={_onNewGame} style={styles.button}/>
+            <Button color={color} title="New game" onPress={_onNewGame}/>
           </View>
           <View style={styles.buttonView}>
             <Button disabled={!game.game} color={color} title="Continue" onPress={_onContinueGame}/>
