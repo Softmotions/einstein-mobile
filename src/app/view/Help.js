@@ -72,10 +72,14 @@ const styles = StyleSheet.create({
 });
 
 class Separator extends Component {
+  get length() {
+    return 'long' == this.props.type ? 8 : 2;
+  }
+
   render = () => (
     <View style={{flexDirection: 'row'}}>
       <View style={{flex: 1}}/>
-      <View style={[styles.separatorLine, {flex: 2}]}/>
+      <View style={[styles.separatorLine, {flex: this.length}]}/>
       <View style={{flex: 1}}/>
     </View>
   )
@@ -155,6 +159,13 @@ class Help extends Component {
           Tiles are in the same column
         </Text>
       </View>
+      <Separator type='long'/>
+      <Text style={styles.text}>
+        To open a tile touch the position and select the tile. Short press to select tile. Long press to disable tile.
+      </Text>
+      <Text style={styles.text}>
+        Also touching rules you can switch rules visibility mode to hide rules you already satisfied.
+      </Text>
     </ScrollView>
   );
 }
