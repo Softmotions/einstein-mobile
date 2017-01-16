@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="splashscreen">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/exploded-aar/einstein/react-native-splash-screen/unspecified/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

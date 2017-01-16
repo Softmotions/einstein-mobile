@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="react-native">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/android/app/build/intermediates/exploded-aar/com.facebook.fresco" />
+      <root url="file://$PROJECT_DIR$/android/app/build/intermediates/exploded-aar/com.facebook.react" />
+      <root url="file://$PROJECT_DIR$/android/app/build/intermediates/exploded-aar/com.facebook.soloader" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/android/app/build/intermediates/exploded-aar/com.facebook.fresco" recursive="true" />
+    <jarDirectory url="file://$PROJECT_DIR$/android/app/build/intermediates/exploded-aar/com.facebook.react" recursive="true" />
+    <jarDirectory url="file://$PROJECT_DIR$/android/app/build/intermediates/exploded-aar/com.facebook.soloader" recursive="true" />
+  </library>
+</component>
