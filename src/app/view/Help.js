@@ -16,6 +16,10 @@ import {connect} from 'react-redux';
 const mainColor = '#013397';
 const ruleItemBorderColor = 'black';
 const styles = StyleSheet.create({
+  separator: {
+    flexDirection: 'row',
+    padding: 15
+  },
   separatorLine: {
     borderTopWidth: 1,
     borderColor: mainColor
@@ -41,9 +45,7 @@ const styles = StyleSheet.create({
     borderColor: ruleItemBorderColor
   },
 
-  ruleGroup: {
-    marginVertical: 15
-  },
+  ruleGroup: {},
   ruleBox: {
     alignSelf: 'center'
   },
@@ -77,7 +79,7 @@ class Separator extends Component {
   }
 
   render = () => (
-    <View style={{flexDirection: 'row'}}>
+    <View style={styles.separator}>
       <View style={{flex: 1}}/>
       <View style={[styles.separatorLine, {flex: this.length}]}/>
       <View style={{flex: 1}}/>
@@ -96,7 +98,7 @@ class Help extends Component {
         There are 4 types of rules:
       </Text>
       {/*Between rule*/}
-      <View style={styles.ruleGroup}>
+      <View style={[styles.ruleGroup, {marginTop: 15}]}>
         <View style={[styles.ruleBox, styles.hrule]}>
           <Image source={{uri: 'item21'}} style={styles.ruleItemImage}/>
           <Image source={{uri: 'item31'}} style={styles.ruleItemImage}/>
