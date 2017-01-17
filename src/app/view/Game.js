@@ -20,7 +20,7 @@ import {connect} from 'react-redux';
 
 import {StyleConfig, formatTime} from './utils';
 
-import {gameRuleToggle} from '../actions/game';
+import {gameRuleToggle, gameNew} from '../actions/game';
 import {navStats} from '../actions/navigation';
 import {statsGameFailed, statsGameSolved} from '../actions/statistics';
 
@@ -235,6 +235,7 @@ const GameField = connect(state => ({
   _statFailed: () => dispatch(statsGameFailed()),
   _statSolved: (time) => dispatch(statsGameSolved(time)),
   _toStats: () => dispatch(navStats()),
+  _newGame: () => dispatch(gameNew()),
 }))(AGameField);
 
 class AbstractRule extends Component {
