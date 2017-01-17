@@ -158,7 +158,7 @@ class Help extends Component {
           Tiles are in the same column
         </Text>
       </View>
-      <Separator type='long'/>
+      <Separator/>
       <Text style={styles.text}>
         To open a tile touch the position and select the tile. Short press to select tile. Long press to disable tile.
       </Text>
