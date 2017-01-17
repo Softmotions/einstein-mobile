@@ -1,19 +1,14 @@
 package com.softmotions.einstein;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.view.WindowManager;
 import com.cboy.rn.splashscreen.SplashScreen;
-import com.facebook.react.ReactFragmentActivity;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.games.Games;
+import com.facebook.react.ReactActivity;
 
-public class MainActivity extends ReactFragmentActivity
-        implements OnConnectionFailedListener, ConnectionCallbacks {
+public class MainActivity extends ReactActivity
+        /*implements OnConnectionFailedListener, ConnectionCallbacks*/ {
 
-    private GoogleApiClient mGoogleApiClient;
+//    private GoogleApiClient mGoogleApiClient;
 
     /**
      * Returns the name of the main component registered from JavaScript.
@@ -27,7 +22,14 @@ public class MainActivity extends ReactFragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            }
+        });
         SplashScreen.show(this);
+
 
 //        mGoogleApiClient = new GoogleApiClient.Builder(this)
 //                .enableAutoManage(this, this)
@@ -37,18 +39,18 @@ public class MainActivity extends ReactFragmentActivity
 //                .build();
     }
 
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e("\n\n", "failed");
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.e("\n\n", "connected");
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.e("\n\n", "suspended");
-    }
+//    @Override
+//    public void onConnectionFailed(ConnectionResult connectionResult) {
+//        Log.e("\n\n", "failed");
+//    }
+//
+//    @Override
+//    public void onConnected(Bundle bundle) {
+//        Log.e("\n\n", "connected");
+//    }
+//
+//    @Override
+//    public void onConnectionSuspended(int i) {
+//        Log.e("\n\n", "suspended");
+//    }
 }

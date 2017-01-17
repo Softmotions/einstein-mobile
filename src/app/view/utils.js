@@ -10,7 +10,7 @@ class StyleConfig {
   constructor(size) {
     const {height, width} = Dimensions.get('window');
     // todo: hardcoded!!!
-    this._statusHeight = 24;
+    this._statusHeight = 0;
 
     // TODO: extract additional size calculations??
     this._size = size;
@@ -38,7 +38,7 @@ class StyleConfig {
     const rulesHeight = (this.direction == 'row' ? this.height : this.height - box) - this.statusHeight;
 
     const ruleBox = Math.floor((rulesWidth - this.ruleSpace * 2 * (this.rule3Columns - 1)) / this.rule3Columns);
-    this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 2) / 3);
+    this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 4) / 3);
 
     this._rule3Width = this.ruleItemSize * 3 + this.ruleSpace * 4 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
     this._rule3Height = this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
