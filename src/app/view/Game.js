@@ -428,13 +428,13 @@ class ARules extends Component {
 
 const Rules = connect(state => ({game: state.game}), dispatch => ({}))(ARules);
 
-class ATimeInfo extends Component {
+class AStatusInfo extends Component {
   _timer;
 
   constructor(props) {
     super(props);
     this.state = {
-      time: 0//this.props.game.game.time
+      time: 0
     };
   }
 
@@ -452,14 +452,21 @@ class ATimeInfo extends Component {
 
   _formatTime = () => formatTime(this.state.time);
 
+  renderGameStatus = () => this.props.game.game.solved ? this.renderGameSolvedStatus() : this.renderGameFailedStatus();
+
+  renderGameFailedStatus = () => (<Text style={this.styles.failedStatusText}>Failed</Text>);
+
+  renderGameSolvedStatus = () => (<Text style={this.styles.solvedStatusText}>Solved</Text>);
+
   render = () => (
-    <View style={[this.styles.timeInfoBox, {zIndex: 5}]}>
-      <Text>{this._formatTime()}</Text>
+    <View style={[this.styles.statusInfoBox, {zIndex: 5}]}>
+      {this.props.game.game.finished ? this.renderGameStatus() : null}
+      <Text style={this.styles.timeStatusText}>{this._formatTime()}</Text>
     </View>
   );
 }
 
-const TimeInfo = connect(state => ({game: state.game}), dispatch => ({}))(ATimeInfo);
+const StatusInfo = connect(state => ({game: state.game}), dispatch => ({}))(AStatusInfo);
 
 class Game extends Component {
   constructor(props) {
@@ -509,7 +516,7 @@ class Game extends Component {
 
     return (
       <View onLayout={this._updateStyles} style={this.styles.container}>
-        <TimeInfo styles={styles}/>
+        <StatusInfo styles={styles}/>
         <GameField styles={styles}/>
         <Rules styles={styles}/>
       </View>

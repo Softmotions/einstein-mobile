@@ -5,6 +5,9 @@ import moment from 'moment';
 
 const Dimensions = require('Dimensions');
 
+// todo: configure
+const mainColor = '#013397';
+
 class StyleConfig {
 
   constructor(size) {
@@ -352,13 +355,26 @@ class StyleConfig {
         width: this.popupItemWidth,
       },
 
-      timeInfoBox: {
+      statusInfoBox: {
+        flexDirection: 'row',
         position: 'absolute',
         padding: 5,
         bottom: 0,
         right: 0,
         alignItems: 'flex-end'
       },
+
+      timeStatusText: {
+        marginLeft: 15
+      },
+
+      failedStatusText: {
+        color: '#ff0000',
+      },
+
+      solvedStatusText: {
+        color: mainColor
+      }
     });
   }
 
