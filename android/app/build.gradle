@@ -100,7 +100,7 @@ android {
         minSdkVersion android_min_sdk_version
         targetSdkVersion android_target_sdk_version
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.3"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
