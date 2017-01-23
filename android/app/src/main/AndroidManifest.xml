@@ -1,14 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="com.softmotions.einstein"
-          android:versionCode="@integer/versionCode"
-          android:versionName="@string/version">
+          android:versionCode="@integer/version_code"
+          android:versionName="@string/version_name">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove"/>
 
-    <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="23"/>
+    <uses-sdk android:minSdkVersion="@integer/android_min_sdk_version"
+              android:targetSdkVersion="@integer/android_target_sdk_version"/>
 
     <!--
         android:normalScreens=["true" | "false"]

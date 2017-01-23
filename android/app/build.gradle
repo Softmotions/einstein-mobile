@@ -99,8 +99,8 @@ android {
         applicationId "com.softmotions.einstein"
         minSdkVersion android_min_sdk_version
         targetSdkVersion android_target_sdk_version
-        versionCode 1
-        versionName "1.0.3"
+        versionCode version_code
+        versionName version_name
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
