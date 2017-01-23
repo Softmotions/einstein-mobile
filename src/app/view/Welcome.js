@@ -15,9 +15,21 @@ import {gameNew, gameResume, gameClear} from '../actions/game';
 import {navGame, navHelp, navStats} from '../actions/navigation';
 import {statsGameTry} from '../actions/statistics';
 
+import {PlayGames} from '../modules/native';
+
 const color = '#013397ff';
 
 class Welcome extends Component {
+  playGamesSignIn = () => {
+    PlayGames.signIn()
+      .then((info) => {
+          console.info(info)
+        },
+        (err) => {
+          console.warn(err)
+        });
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -72,6 +84,9 @@ class Welcome extends Component {
           </View>
           <View style={styles.buttonView}>
             <Button color={color} title="Statistics" onPress={_onStat}/>
+          </View>
+          <View style={styles.buttonView}>
+            <Button color={color} title="Play games" onPress={this.playGamesSignIn}/>
           </View>
         </View>
       </View>

@@ -6,6 +6,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
 /**
+ * @author Vyacheslav Tyutyunkov (tve@softmotions.com)
  */
 public class GameActivityModule extends ReactContextBaseJavaModule {
     public GameActivityModule(ReactApplicationContext reactContext) {

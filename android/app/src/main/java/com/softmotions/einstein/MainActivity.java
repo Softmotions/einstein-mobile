@@ -5,10 +5,10 @@ import android.view.WindowManager;
 import com.cboy.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;
 
-public class MainActivity extends ReactActivity
-        /*implements OnConnectionFailedListener, ConnectionCallbacks*/ {
-
-//    private GoogleApiClient mGoogleApiClient;
+/**
+ * @author Vyacheslav Tyutyunkov (tve@softmotions.com)
+ */
+public class MainActivity extends ReactActivity {
 
     /**
      * Returns the name of the main component registered from JavaScript.
@@ -29,28 +29,5 @@ public class MainActivity extends ReactActivity
             }
         });
         SplashScreen.show(this);
-
-
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .enableAutoManage(this, this)
-//                .addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this)
-//                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-//                .build();
     }
-
-//    @Override
-//    public void onConnectionFailed(ConnectionResult connectionResult) {
-//        Log.e("\n\n", "failed");
-//    }
-//
-//    @Override
-//    public void onConnected(Bundle bundle) {
-//        Log.e("\n\n", "connected");
-//    }
-//
-//    @Override
-//    public void onConnectionSuspended(int i) {
-//        Log.e("\n\n", "suspended");
-//    }
 }

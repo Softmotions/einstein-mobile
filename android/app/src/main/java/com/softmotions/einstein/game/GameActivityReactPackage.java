@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * @author Vyacheslav Tyutyunkov (tve@softmotions.com)
  */
 public class GameActivityReactPackage implements ReactPackage {
 
