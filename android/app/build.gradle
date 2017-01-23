@@ -88,10 +88,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(EISTEIN_RELEASE_STORE_FILE)
-            storePassword EISTEIN_RELEASE_STORE_PASSWORD
-            keyAlias EISTEIN_RELEASE_KEY_ALIAS
-            keyPassword EISTEIN_RELEASE_KEY_PASSWORD
+            storeFile file(EINSTEIN_RELEASE_STORE_FILE)
+            storePassword EINSTEIN_RELEASE_STORE_PASSWORD
+            keyAlias EINSTEIN_RELEASE_KEY_ALIAS
+            keyPassword EINSTEIN_RELEASE_KEY_PASSWORD
         }
     }
 
