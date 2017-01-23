@@ -27,12 +27,13 @@ import {statsGameFailed, statsGameSolved} from '../actions/statistics';
 import {GameActivity} from '../modules/native';
 
 class ItemImage extends Component {
-  static src(row, value) {
-    return 'item' + (row + 1) + (value + 1);
-  }
+  static item = (row, value) => 'item' + (row + 1) + (value + 1);
+  static hint = (row, value) => 'hint' + (row + 1) + (value + 1);
 
   render() {
-    const src = !this.props.type ? ItemImage.src(this.props.row, this.props.value) : this.props.type;
+    const src = !this.props.type ?
+      (this.props.hint ? ItemImage.hint(this.props.row, this.props.value) : ItemImage.item(this.props.row, this.props.value)) :
+      this.props.type;
     return (
       <Image style={this.props.style} source={{uri: src}}/>
     )
@@ -54,9 +55,9 @@ class AGameField extends Component {
     return this.props.game.size;
   }
 
-  renderItem = (i, j, k) => (
-    <View key={'item_' + i + '_' + j + '_' + k} style={this.styles.itemBox}>
-      { this.props.game.possible(i, j, k) ? <ItemImage style={this.styles.item} row={i} value={k}/> : null }
+  renderHint = (i, j, k) => (
+    <View key={'hint_' + i + '_' + j + '_' + k} style={this.styles.itemBox}>
+      { this.props.game.possible(i, j, k) ? <ItemImage style={this.styles.item} row={i} value={k} hint={true}/> : null }
     </View>
   );
 
@@ -64,7 +65,7 @@ class AGameField extends Component {
     <View style={this.styles.groupItemsRow}>
       { Array.from({length: this.size}, (v, k) => k)
         .filter((t) => t >= n * (this.size / 2) && t < (n + 1) * (this.size / 2))
-        .map((k) => this.renderItem(i, j, k)) }
+        .map((k) => this.renderHint(i, j, k)) }
     </View>
   );
 
@@ -193,7 +194,8 @@ class AGameField extends Component {
   );
 
   renderPopupGroupItem = () => (
-    <TouchableWithoutFeedback onPress={() => {}}>
+    <TouchableWithoutFeedback onPress={() => {
+    }}>
       { this.state.popup ?
         <View style={this.styles.popupGroupItemBox}>
           { this.renderPopupGroupItemsLine(this.state.popup.i, this.state.popup.j, 0) }
@@ -270,15 +272,11 @@ class Rule3 extends AbstractRule {
     return '';
   }
 
-  get borderedCenter() {
-    return false;
-  }
-
   render = () => (
     <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.props.toggle}>
       <View style={[this.styles.rule3, this.visibilityStyle]}>
         <ItemImage style={this.styles.ruleItem} type={this._type1}/>
-        <ItemImage style={this.borderedCenter ? this.styles.ruleItem : this.styles.ruleHelpItem} type={this._type2}/>
+        <ItemImage style={this.styles.ruleItem} type={this._type2}/>
         <ItemImage style={this.styles.ruleItem} type={this._type3}/>
       </View>
     </TouchableWithoutFeedback>
@@ -287,7 +285,7 @@ class Rule3 extends AbstractRule {
 
 class NearRule extends Rule3 {
   get _type1() {
-    return ItemImage.src(this.props.rule.row1, this.props.rule.value1);
+    return ItemImage.hint(this.props.rule.row1, this.props.rule.value1);
   }
 
   get _type2() {
@@ -295,13 +293,13 @@ class NearRule extends Rule3 {
   }
 
   get _type3() {
-    return ItemImage.src(this.props.rule.row2, this.props.rule.value2);
+    return ItemImage.hint(this.props.rule.row2, this.props.rule.value2);
   }
 }
 
 class DirectionRule extends Rule3 {
   get _type1() {
-    return ItemImage.src(this.props.rule.row1, this.props.rule.value1);
+    return ItemImage.hint(this.props.rule.row1, this.props.rule.value1);
   }
 
   get _type2() {
@@ -309,7 +307,7 @@ class DirectionRule extends Rule3 {
   }
 
   get _type3() {
-    return ItemImage.src(this.props.rule.row2, this.props.rule.value2);
+    return ItemImage.hint(this.props.rule.row2, this.props.rule.value2);
   }
 }
 
@@ -319,19 +317,15 @@ class BetweenRule extends Rule3 {
   }
 
   get _type1() {
-    return ItemImage.src(this.props.rule.row1, this.props.rule.value1);
+    return ItemImage.hint(this.props.rule.row1, this.props.rule.value1);
   }
 
   get _type2() {
-    return ItemImage.src(this.props.rule.row2, this.props.rule.value2);
+    return ItemImage.hint(this.props.rule.row2, this.props.rule.value2);
   }
 
   get _type3() {
-    return ItemImage.src(this.props.rule.row3, this.props.rule.value3);
-  }
-
-  get borderedCenter() {
-    return true;
+    return ItemImage.hint(this.props.rule.row3, this.props.rule.value3);
   }
 }
 
@@ -343,8 +337,8 @@ class Rule2 extends AbstractRule {
   render = () => (
     <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.props.toggle}>
       <View style={[this.styles.rule2, this.visibilityStyle]}>
-        <ItemImage style={this.styles.ruleItem} row={this.props.rule.row1} value={this.props.rule.value1}/>
-        <ItemImage style={this.styles.ruleItem} row={this.props.rule.row2} value={this.props.rule.value2}/>
+        <ItemImage style={this.styles.ruleItem} row={this.props.rule.row1} value={this.props.rule.value1} hint={true}/>
+        <ItemImage style={this.styles.ruleItem} row={this.props.rule.row2} value={this.props.rule.value2} hint={true}/>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -434,13 +428,13 @@ class ARules extends Component {
 
 const Rules = connect(state => ({game: state.game}), dispatch => ({}))(ARules);
 
-class ATimeInfo extends Component {
+class AStatusInfo extends Component {
   _timer;
 
   constructor(props) {
     super(props);
     this.state = {
-      time: 0//this.props.game.game.time
+      time: 0
     };
   }
 
@@ -458,14 +452,21 @@ class ATimeInfo extends Component {
 
   _formatTime = () => formatTime(this.state.time);
 
+  renderGameStatus = () => this.props.game.game.solved ? this.renderGameSolvedStatus() : this.renderGameFailedStatus();
+
+  renderGameFailedStatus = () => (<Text style={this.styles.failedStatusText}>Failed</Text>);
+
+  renderGameSolvedStatus = () => (<Text style={this.styles.solvedStatusText}>Solved</Text>);
+
   render = () => (
-    <View style={[this.styles.timeInfoBox, {zIndex: 5}]}>
-      <Text>{this._formatTime()}</Text>
+    <View style={[this.styles.statusInfoBox, {zIndex: 5}]}>
+      {this.props.game.game.finished ? this.renderGameStatus() : null}
+      <Text style={this.styles.timeStatusText}>{this._formatTime()}</Text>
     </View>
   );
 }
 
-const TimeInfo = connect(state => ({game: state.game}), dispatch => ({}))(ATimeInfo);
+const StatusInfo = connect(state => ({game: state.game}), dispatch => ({}))(AStatusInfo);
 
 class Game extends Component {
   constructor(props) {
@@ -496,7 +497,7 @@ class Game extends Component {
   };
 
   renderPlaceholder = () => (
-    <View style={{flex:1, alignItems: 'center', justifyContent:'center'}}>
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Loader/>
     </View>
   );
@@ -515,7 +516,7 @@ class Game extends Component {
 
     return (
       <View onLayout={this._updateStyles} style={this.styles.container}>
-        <TimeInfo styles={styles}/>
+        <StatusInfo styles={styles}/>
         <GameField styles={styles}/>
         <Rules styles={styles}/>
       </View>

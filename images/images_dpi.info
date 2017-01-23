@@ -1,0 +1,21 @@
+mpdi        - 160
+hdpi        - 240
+xhdpi       - 320
+xxhdpi      - 480
+xxxhdpi     - 640
+
+in px
+
+item*
+mpdi        - 72
+hdpi        - 108
+xhdpi       - 144
+xxhdpi      - 216
+xxxhdpi     - 288
+
+hint*, direction, near
+mpdi        - 24
+hdpi        - 36
+xhdpi       - 48
+xxhdpi      - 72
+xxxhdpi     - 96

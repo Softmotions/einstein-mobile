@@ -5,6 +5,9 @@ import moment from 'moment';
 
 const Dimensions = require('Dimensions');
 
+// todo: configure
+const mainColor = '#013397';
+
 class StyleConfig {
 
   constructor(size) {
@@ -40,7 +43,7 @@ class StyleConfig {
     const ruleBox = Math.floor((rulesWidth - this.ruleSpace * 2 * (this.rule3Columns - 1)) / this.rule3Columns);
     this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 4) / 3);
 
-    this._rule3Width = this.ruleItemSize * 3 + this.ruleSpace * 4 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
+    this._rule3Width = this.ruleItemSize * 3 + this.ruleSpace * 2 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
     this._rule3Height = this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
     this._rule2Width = this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
     this._rule2Height = this.ruleItemSize * 2 + this.ruleSpace * 3 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
@@ -303,8 +306,6 @@ class StyleConfig {
       ruleItem: {
         height: this.ruleItemSize,
         width: this.ruleItemSize,
-        borderWidth: this.ruleItemBorder,
-        borderColor: '#000'
       },
 
       ruleHelpItem: {
@@ -354,13 +355,26 @@ class StyleConfig {
         width: this.popupItemWidth,
       },
 
-      timeInfoBox: {
+      statusInfoBox: {
+        flexDirection: 'row',
         position: 'absolute',
         padding: 5,
         bottom: 0,
         right: 0,
         alignItems: 'flex-end'
       },
+
+      timeStatusText: {
+        marginLeft: 15
+      },
+
+      failedStatusText: {
+        color: '#ff0000',
+      },
+
+      solvedStatusText: {
+        color: mainColor
+      }
     });
   }
 
