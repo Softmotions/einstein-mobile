@@ -40,7 +40,7 @@ class StyleConfig {
     const ruleBox = Math.floor((rulesWidth - this.ruleSpace * 2 * (this.rule3Columns - 1)) / this.rule3Columns);
     this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 2) / 3);
 
-    this._rule3Width = this.ruleItemSize * 3 + this.ruleSpace * 4 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
+    this._rule3Width = this.ruleItemSize * 3 + this.ruleSpace * 2 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
     this._rule3Height = this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
     this._rule2Width = this.ruleItemSize + this.ruleSpace * 2 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
     this._rule2Height = this.ruleItemSize * 2 + this.ruleSpace * 3 + this.ruleBorder * 4 + this.ruleItemBorder * 2;
@@ -303,8 +303,6 @@ class StyleConfig {
       ruleItem: {
         height: this.ruleItemSize,
         width: this.ruleItemSize,
-        borderWidth: this.ruleItemBorder,
-        borderColor: '#000'
       },
 
       ruleHelpItem: {
