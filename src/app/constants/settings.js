@@ -1,0 +1,15 @@
+'use strict';
+
+const SETTINGS_STORAGE_KEY = '@Einstein:settings';
+
+const SETTINGS_SET = "SETTINGS_SET";
+
+const PLAY_GAMES_LOGGED_IN_KEY = 'PLAY_GAMES_LOGGED_IN_KEY';
+
+export {
+  SETTINGS_STORAGE_KEY,
+
+  SETTINGS_SET,
+
+  PLAY_GAMES_LOGGED_IN_KEY
+}

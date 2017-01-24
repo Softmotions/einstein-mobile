@@ -11,15 +11,6 @@
     <uses-sdk android:minSdkVersion="@integer/android_min_sdk_version"
               android:targetSdkVersion="@integer/android_target_sdk_version"/>
 
-    <!--
-        android:normalScreens=["true" | "false"]
-        android:largeScreens=["true" | "false"]
-        android:xlargeScreens=["true" | "false"]
-        android:anyDensity=["true" | "false"]
-        android:compatibleWidthLimitDp="integer"
-        android:largestWidthLimitDp="integer"
-    -->
-
     <supports-screens android:smallScreens="false"
                       android:requiresSmallestWidthDp="160"/>
 

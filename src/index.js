@@ -13,6 +13,11 @@ import Application from './app';
 
 import {gameLoad, gameSave, gamePause} from './app/actions/game';
 import {navToIndex} from './app/actions/navigation';
+import {settingsLoad} from './app/actions/settings';
+
+import {PLAY_GAMES_LOGGED_IN_KEY} from './app/constants/settings';
+
+import {PlayGames} from './app/modules/native';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(reducers);
@@ -32,15 +37,32 @@ export default class Einstein extends Component {
   componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
 
-    store.dispatch(gameLoad()).then(
-      () => {
-        setTimeout(() => SplashScreen.hide(), 3000);
-      },
-      (err) => {
-        console.error(err);
-        SplashScreen.hide();
-      }
-    );
+    const loadGame = () => store.dispatch(gameLoad())
+      .then(() => {
+          SplashScreen.hide();
+        },
+        (err) => {
+          console.error(err);
+          SplashScreen.hide();
+        }
+      );
+    store.dispatch(settingsLoad())
+      .then((settings) => {
+        if (settings[PLAY_GAMES_LOGGED_IN_KEY]) {
+          PlayGames.signIn()
+            .then(() => {
+                console.log('asdsdf');
+                loadGame()
+              },
+              (err) => {
+                console.error("asdasd", err);
+                loadGame();
+              }
+            )
+        } else {
+          loadGame();
+        }
+      });
   }
 
   componentWillUnmount() {
