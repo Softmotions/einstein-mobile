@@ -32,13 +32,16 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
                 if (mActivityPromise != null) {
                     if (resultCode == Activity.RESULT_CANCELED) {
                         mActivityPromise.reject("gms", "canceled");
+                        mActivityPromise = null;
                     } else if (resultCode == Activity.RESULT_OK) {
-                        mActivityPromise.resolve(null);
+
+                        mGoogleApiClient.connect();
+//                        mActivityPromise.resolve(null);
                     } else {
                         mActivityPromise.reject("gms", "unexpected");
+                        mActivityPromise = null;
                     }
                 }
-                mActivityPromise = null;
             }
         }
     };
@@ -123,7 +126,22 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
     @ReactMethod
     public void achievementUnlock(String id) {
         Games.Achievements.unlock(mGoogleApiClient, id);
+        showAchievements();
+    }
+
+    @ReactMethod
+    private void showAchievements() {
         getCurrentActivity().startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), 5001);
+    }
+
+    @ReactMethod
+    public void showLeaderboard(String leaderboardId) {
+        getCurrentActivity().startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, leaderboardId), 5002);
+    }
+
+    @ReactMethod
+    public void setLeaderboardScore(String leaderboardId, int by){
+        Games.Leaderboards.submitScore(mGoogleApiClient, leaderboardId, by);
     }
 
     @ReactMethod

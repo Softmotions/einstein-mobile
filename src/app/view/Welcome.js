@@ -116,6 +116,20 @@ class Welcome extends Component {
                 <Button color={color} title="Play games sign out" onPress={this._playGamesSignOut}/>
             }
           </View>
+          <View style={styles.buttonView}>
+            {
+              this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+              <Button title="Leaderboard" onPress={() => PlayGames.showLeaderboard("CgkIwoOo3q4YEAIQBg")}/> :
+              null
+            }
+          </View>
+          <View style={styles.buttonView}>
+            {
+              this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+              <Button title="inc LeaderboardScore" onPress={() => PlayGames.setLeaderboardScore("CgkIwoOo3q4YEAIQBg", 3591578)}/> :
+              null
+            }
+          </View>
           {
             this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
               <Button title="inc" onPress={() => PlayGames.achievementUnlock('CgkIwoOo3q4YEAIQAQ')}/> :

@@ -24,7 +24,7 @@ import {gameRuleToggle, gameNew} from '../actions/game';
 import {navStats} from '../actions/navigation';
 import {statsGameFailed, statsGameSolved} from '../actions/statistics';
 
-import {GameActivity} from '../modules/native';
+import {GameActivity, PlayGames} from '../modules/native';
 
 class ItemImage extends Component {
   static item = (row, value) => 'item' + (row + 1) + (value + 1);
@@ -107,7 +107,9 @@ class AGameField extends Component {
 
   _onGameSolved = () => {
     GameActivity.stop();
-    this.props._statSolved({time: this.props.game.time - 5, date: new Date()});
+   let t = this.props.game.time;
+    this.props._statSolved({time: t, date: new Date()});
+    PlayGames.setLeaderboardScore("CgkIwoOo3q4YEAIQBg", t * 1000);
     Alert.alert(
       'Congratulations!',
       'You solved the puzzle.\nTime: ' + formatTime(this.props.game.time, true),
