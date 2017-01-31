@@ -19,9 +19,9 @@ import {settingsUpdate} from '../actions/settings';
 import {PLAY_GAMES_LOGGED_IN_KEY} from '../constants/settings';
 
 import  {
-    PLAYGAME_ACHIEVEMENT_FIRST_SOLVED,
-    PLAYGAME_LEADERBOARD_ID
-} from '../constants/playgame';
+    PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED,
+    PLAYGAMES_LEADERBOARD_ID
+} from '../constants/playgames';
 
 import {PlayGames} from '../modules/native';
 
@@ -124,20 +124,13 @@ class Welcome extends Component {
           <View style={styles.buttonView}>
             {
               this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <Button title="Leaderboard" onPress={() => PlayGames.showLeaderboard(PLAYGAME_LEADERBOARD_ID)}/> :
-              null
-            }
-          </View>
-          <View style={styles.buttonView}>
-            {
-              this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <Button title="inc LeaderboardScore" onPress={() => PlayGames.setLeaderboardScore(PLAYGAME_LEADERBOARD_ID, 3441568)}/> :
+              <Button title="Leaderboard" onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}/> :
               null
             }
           </View>
           {
             this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <Button title="inc" onPress={() => PlayGames.achievementUnlock(PLAYGAME_ACHIEVEMENT_FIRST_SOLVED)}/> :
+              <Button title="inc" onPress={() => PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED)}/> :
               null
           }
         </View>

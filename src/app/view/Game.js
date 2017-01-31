@@ -24,6 +24,10 @@ import {gameRuleToggle, gameNew} from '../actions/game';
 import {navStats} from '../actions/navigation';
 import {statsGameFailed, statsGameSolved} from '../actions/statistics';
 
+import {PLAY_GAMES_LOGGED_IN_KEY} from '../constants/settings';
+
+import {PLAYGAMES_LEADERBOARD_ID} from '../constants/playgames';
+
 import {GameActivity, PlayGames} from '../modules/native';
 
 class ItemImage extends Component {
@@ -109,7 +113,10 @@ class AGameField extends Component {
     GameActivity.stop();
    let t = this.props.game.time;
     this.props._statSolved({time: t, date: new Date()});
-    PlayGames.setLeaderboardScore("CgkIwoOo3q4YEAIQBg", t * 1000);
+    if (this.props.settings[PLAY_GAMES_LOGGED_IN_KEY]) {
+      PlayGames.setLeaderboardScore(PLAYGAME_LEADERBOARD_ID, t * 1000);
+    }
+
     Alert.alert(
       'Congratulations!',
       'You solved the puzzle.\nTime: ' + formatTime(this.props.game.time, true),
