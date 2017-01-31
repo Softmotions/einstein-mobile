@@ -107,7 +107,7 @@ class AGameField extends Component {
 
   _onGameSolved = () => {
     GameActivity.stop();
-    this.props._statSolved({time: this.props.game.time - 5, date: new Date()});
+    this.props._statSolved({time: this.props.game.time, date: new Date()});
     Alert.alert(
       'Congratulations!',
       'You solved the puzzle.\nTime: ' + formatTime(this.props.game.time, true),
