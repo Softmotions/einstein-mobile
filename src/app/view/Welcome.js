@@ -18,6 +18,11 @@ import {settingsUpdate} from '../actions/settings';
 
 import {PLAY_GAMES_LOGGED_IN_KEY} from '../constants/settings';
 
+import  {
+    PLAYGAME_ACHIEVEMENT_FIRST_SOLVED,
+    PLAYGAME_LEADERBOARD_ID
+} from '../constants/playgame';
+
 import {PlayGames} from '../modules/native';
 
 const color = '#013397ff';
@@ -119,20 +124,20 @@ class Welcome extends Component {
           <View style={styles.buttonView}>
             {
               this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <Button title="Leaderboard" onPress={() => PlayGames.showLeaderboard("CgkIwoOo3q4YEAIQBg")}/> :
+              <Button title="Leaderboard" onPress={() => PlayGames.showLeaderboard(PLAYGAME_LEADERBOARD_ID)}/> :
               null
             }
           </View>
           <View style={styles.buttonView}>
             {
               this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <Button title="inc LeaderboardScore" onPress={() => PlayGames.setLeaderboardScore("CgkIwoOo3q4YEAIQBg", 3591578)}/> :
+              <Button title="inc LeaderboardScore" onPress={() => PlayGames.setLeaderboardScore(PLAYGAME_LEADERBOARD_ID, 3441568)}/> :
               null
             }
           </View>
           {
             this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <Button title="inc" onPress={() => PlayGames.achievementUnlock('CgkIwoOo3q4YEAIQAQ')}/> :
+              <Button title="inc" onPress={() => PlayGames.achievementUnlock(PLAYGAME_ACHIEVEMENT_FIRST_SOLVED)}/> :
               null
           }
         </View>
