@@ -32,16 +32,15 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
                 if (mActivityPromise != null) {
                     if (resultCode == Activity.RESULT_CANCELED) {
                         mActivityPromise.reject("gms", "canceled");
-                        mActivityPromise = null;
                     } else if (resultCode == Activity.RESULT_OK) {
 
                         mGoogleApiClient.connect();
-//                        mActivityPromise.resolve(null);
+                        return;
                     } else {
                         mActivityPromise.reject("gms", "unexpected");
-                        mActivityPromise = null;
                     }
                 }
+                mActivityPromise = null;
             }
         }
     };
@@ -75,6 +74,7 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
 
     @Override
     public void onConnectionSuspended(int i) {
+        Log.w("conenction suspended", "");
         mGoogleApiClient.connect();
     }
 
