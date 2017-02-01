@@ -19,6 +19,10 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LifecycleEventListener {
 
     private static final int GOOGLE_SIGN_IN_REQUEST = 8615;
+    private static final int SHOW_ACHIEVEMENTS_REQUEST = 5001;
+    private static final int SHOW_LEADERBOARD_REQUEST = 5002;
+
+    private static final String TAG = "PlayGamesModule";
 
     private Promise mActivityPromise;
 
@@ -27,18 +31,17 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
     private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
         @Override
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-            Log.w("\n\ngms", "");
             if (requestCode == GOOGLE_SIGN_IN_REQUEST) {
                 if (mActivityPromise != null) {
                     if (resultCode == Activity.RESULT_CANCELED) {
-                        mActivityPromise.reject("gms", "canceled");
+                        mActivityPromise.reject(TAG, "canceled");
                     } else if (resultCode == Activity.RESULT_OK) {
-                        if(!mGoogleApiClient.isConnected() && !mGoogleApiClient.isConnecting()){
+                        if (!mGoogleApiClient.isConnected() && !mGoogleApiClient.isConnecting()) {
                             mGoogleApiClient.connect();
                         }
                         return;
                     } else {
-                        mActivityPromise.reject("gms", "unexpected");
+                        mActivityPromise.reject(TAG, "unexpected");
                     }
                 }
                 mActivityPromise = null;
@@ -65,9 +68,8 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.w("\n\ngms", "");
+        Log.d(TAG, "onConnected: ");
         if (mActivityPromise != null) {
-            Log.w("\n\ngms", "");
             mActivityPromise.resolve(null);
             mActivityPromise = null;
         }
@@ -75,13 +77,13 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.w("conenction suspended", "");
+        Log.d(TAG, "onConnectionSuspended: ");
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.e("\n\ngms", "!!!");
+        Log.d(TAG, "onConnectionFailed: ");
         if (result.hasResolution()) {
             try {
                 result.startResolutionForResult(getCurrentActivity(), GOOGLE_SIGN_IN_REQUEST);
@@ -94,7 +96,8 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
             if (dialog != null) {
                 dialog.show();
             }
-            mActivityPromise.reject("gms", "failed");
+            Log.w(TAG, "onConnectionFailed: failed resolve");
+            mActivityPromise.reject(TAG, "failed");
         }
     }
 
@@ -105,9 +108,9 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
 
     @ReactMethod
     public void signIn(Promise promise) {
-        Log.e("\n\ngms", "@@@");
+        Log.d(TAG, "signIn: ");
         if (mGoogleApiClient.isConnected()) {
-            Log.w("\n\ngms", "connected!!!");
+            Log.d(TAG, "signIn: already connected");
             promise.resolve(null);
             return;
         }
@@ -134,19 +137,19 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
     @ReactMethod
     public void showAchievements() {
         if (isSignedIn()) {
-            getCurrentActivity().startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), 5001);
+            getCurrentActivity().startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), SHOW_ACHIEVEMENTS_REQUEST);
         }
     }
 
     @ReactMethod
     public void showLeaderboard(String leaderboardId) {
         if (isSignedIn()) {
-            getCurrentActivity().startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, leaderboardId), 5002);
+            getCurrentActivity().startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, leaderboardId), SHOW_LEADERBOARD_REQUEST);
         }
     }
 
     @ReactMethod
-    public void setLeaderboardScore(String leaderboardId, int by){
+    public void setLeaderboardScore(String leaderboardId, int by) {
         if (isSignedIn()) {
             Games.Leaderboards.submitScore(mGoogleApiClient, leaderboardId, by);
         }
