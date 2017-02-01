@@ -29,6 +29,7 @@ import {
     PLAYGAMES_ACHIEVEMENT_SOLVED_10,
     PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM,
     PLAYGAMES_ACHIEVEMENT_SPRINTER,
+    PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED,
 } from '../constants/playgames';
 
 import {GameActivity, PlayGames} from '../modules/native';
@@ -119,6 +120,7 @@ class AGameField extends Component {
     if(t<60){
         PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_SPRINTER);
     }
+    PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED);
     PlayGames.setLeaderboardScore(PLAYGAMES_LEADERBOARD_ID, t * 1000);
     PlayGames.achievementIncrement(PLAYGAMES_ACHIEVEMENT_SOLVED_10, 1);
 

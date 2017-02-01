@@ -134,12 +134,16 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
 
     @ReactMethod
     public void showAchievements() {
-        getCurrentActivity().startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), 5001);
+        if (isSignedIn()) {
+            getCurrentActivity().startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), 5001);
+        }
     }
 
     @ReactMethod
     public void showLeaderboard(String leaderboardId) {
-        getCurrentActivity().startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, leaderboardId), 5002);
+        if (isSignedIn()) {
+            getCurrentActivity().startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, leaderboardId), 5002);
+        }
     }
 
     @ReactMethod

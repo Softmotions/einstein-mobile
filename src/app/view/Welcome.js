@@ -24,7 +24,6 @@ import {settingsUpdate} from '../actions/settings';
 import {PLAY_GAMES_LOGGED_IN_KEY} from '../constants/settings';
 
 import  {
-    PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED,
     PLAYGAMES_LEADERBOARD_ID
 } from '../constants/playgames';
 
@@ -85,6 +84,21 @@ class Welcome extends Component {
       googleButtonImage: {
           height: 18,
           width: 18
+      },
+
+      googlePlayPanel: {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 30,
+          flexDirection: 'row',
+          alignItems: 'center'
+      },
+
+      googlePlayIcon: {
+          height: 24,
+          width: 24
       }
   });
 
@@ -118,17 +132,14 @@ class Welcome extends Component {
     // todo: confirm new game!
     return (
       <View onLayout={this._rebuildStyles} style={styles.welcomeScreen}>
-        {/* TODO: header */}
-        {/*<View style={{*/}
-        {/*position: 'absolute',*/}
-        {/*top: 0,*/}
-        {/*left: 0,*/}
-        {/*right: 0,*/}
-        {/*height: 30,*/}
-        {/*flexDirection: 'row',*/}
-        {/*backgroundColor: 'grey'*/}
-        {/*}}>*/}
-        {/*</View>*/}
+          <View style={styles.googlePlayPanel}>
+              <GoogleButton onPress={() => PlayGames.showAchievements()}>
+                  <Image style={styles.googlePlayIcon} source={{uri: 'games_achievements'}} />
+              </GoogleButton>
+              <GoogleButton onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}>
+                  <Image style={styles.googlePlayIcon} source={{uri: 'games_leaderboards'}} />
+              </GoogleButton>
+          </View>
           <View style={styles.buttonView}>
             <Button color={color} title="New game" onPress={_onNewGame}/>
           </View>
@@ -152,28 +163,14 @@ class Welcome extends Component {
                   <GoogleButton onPress={this._playGamesSignIn}>
                       <View style={styles.googleButton}>
                           <View style={styles.googleButtonImagePadding}>
-                              <Image style={styles.googleButtonImage} source={require('../../../images/googleIcon.png')}/>
+                              <Image style={styles.googleButtonImage} source={{uri: 'googleicon.png'}}/>
                           </View>
                           <Text style={styles.googleButtonText}>Sign in with Google</Text>
                       </View>
                   </GoogleButton>:
-                  <Button color={color} title="Sign out Google" onPress={this._playGamesSignOut}/>
+                  null
               }
           </View>
-          <View style={styles.buttonView}>
-            {
-              this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <Button color={color} title="Leaderboard" onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}/> :
-              null
-            }
-          </View>
-        <View style={styles.buttonsView}>
-          {
-            this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <Button title="Achievements" onPress={() => PlayGames.showAchievements()}/> :
-              null
-          }
-        </View>
       </View>
     );
   }
