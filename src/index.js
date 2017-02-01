@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {AppState} from 'react-native';
+import {AppState, DeviceEventEmitter} from 'react-native';
 import {createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
 import thunk from 'redux-thunk';
@@ -13,7 +13,7 @@ import Application from './app';
 
 import {gameLoad, gameSave, gamePause} from './app/actions/game';
 import {navToIndex} from './app/actions/navigation';
-import {settingsLoad} from './app/actions/settings';
+import {settingsLoad, settingsUpdate} from './app/actions/settings';
 
 import {PLAY_GAMES_LOGGED_IN_KEY} from './app/constants/settings';
 
@@ -34,6 +34,10 @@ export default class Einstein extends Component {
     }
   };
 
+  _handleGoogleSignOut = (event) => {
+    store.dispatch(settingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: false}))
+  };
+
   componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
 
@@ -51,11 +55,9 @@ export default class Einstein extends Component {
         if (settings[PLAY_GAMES_LOGGED_IN_KEY]) {
           PlayGames.signIn()
             .then(() => {
-                console.log('asdsdf');
                 loadGame()
               },
               (err) => {
-                console.error("asdasd", err);
                 loadGame();
               }
             )
@@ -65,8 +67,13 @@ export default class Einstein extends Component {
       });
   }
 
+  componentWillMount() {
+    DeviceEventEmitter.addListener('googleSignOut', this._handleGoogleSignOut);
+  }
+
   componentWillUnmount() {
     AppState.removeEventListener('change', this._handleAppStateChange);
+    DeviceEventEmitter.removeEventListener('googleSignOut', this._handleGoogleSignOut);
   }
 
   render = () => (

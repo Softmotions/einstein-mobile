@@ -12,6 +12,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesActivityResultCodes;
 
 /**
  * @author Vyacheslav Tyutyunkov (tve@softmotions.com)
@@ -50,10 +51,12 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
                     break;
                 case SHOW_ACHIEVEMENTS_REQUEST:
                 case SHOW_LEADERBOARD_REQUEST:
-                    if (!mGoogleApiClient.isConnected()) {
+                    if (resultCode == GamesActivityResultCodes.RESULT_RECONNECT_REQUIRED) {
+                        Log.e(TAG, "onActivityResult: disconnect");
+                        mGoogleApiClient.disconnect();
                         getReactApplicationContext()
-                                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                                .emit("googleSignOut", null);
+                            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit("googleSignOut", Arguments.createMap());
                     }
                     break;
             }
