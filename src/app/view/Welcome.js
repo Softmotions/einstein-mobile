@@ -132,14 +132,18 @@ class Welcome extends Component {
     // todo: confirm new game!
     return (
       <View onLayout={this._rebuildStyles} style={styles.welcomeScreen}>
-          <View style={styles.googlePlayPanel}>
-              <GoogleButton onPress={() => PlayGames.showAchievements()}>
-                  <Image style={styles.googlePlayIcon} source={{uri: 'games_achievements'}} />
-              </GoogleButton>
-              <GoogleButton onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}>
-                  <Image style={styles.googlePlayIcon} source={{uri: 'games_leaderboards'}} />
-              </GoogleButton>
-          </View>
+          {
+              this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+              <View style={styles.googlePlayPanel}>
+                  <GoogleButton onPress={() => PlayGames.showAchievements()}>
+                      <Image style={styles.googlePlayIcon} source={{uri: 'games_achievements'}}/>
+                  </GoogleButton>
+                  <GoogleButton onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}>
+                      <Image style={styles.googlePlayIcon} source={{uri: 'games_leaderboards'}}/>
+                  </GoogleButton>
+              </View> :
+              null
+          }
           <View style={styles.buttonView}>
             <Button color={color} title="New game" onPress={_onNewGame}/>
           </View>
@@ -157,9 +161,9 @@ class Welcome extends Component {
           <View style={styles.buttonView}>
             <Button color={color} title="Statistics" onPress={_onStat}/>
           </View>
-          <View style={styles.buttonView}>
-              {
-                  !this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+          {
+              !this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+              <View style={styles.buttonView}>
                   <GoogleButton onPress={this._playGamesSignIn}>
                       <View style={styles.googleButton}>
                           <View style={styles.googleButtonImagePadding}>
@@ -167,10 +171,10 @@ class Welcome extends Component {
                           </View>
                           <Text style={styles.googleButtonText}>Sign in with Google</Text>
                       </View>
-                  </GoogleButton>:
-                  null
-              }
-          </View>
+                  </GoogleButton>
+              </View> :
+              null
+          }
       </View>
     );
   }
