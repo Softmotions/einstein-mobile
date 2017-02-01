@@ -128,7 +128,6 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
     public void achievementUnlock(String id) {
         if (isSignedIn()) {
             Games.Achievements.unlock(mGoogleApiClient, id);
-            showAchievements();
         }
     }
 
