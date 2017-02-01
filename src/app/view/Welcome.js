@@ -24,7 +24,7 @@ import {settingsUpdate} from '../actions/settings';
 import {PLAY_GAMES_LOGGED_IN_KEY} from '../constants/settings';
 
 import  {
-    PLAYGAMES_LEADERBOARD_ID
+  PLAYGAMES_LEADERBOARD_ID
 } from '../constants/playgames';
 
 import {PlayGames} from '../modules/native';
@@ -61,45 +61,44 @@ class Welcome extends Component {
       width: Math.floor(Dimensions.get('window').width / 2)
     },
 
-      googleButton: {
-          backgroundColor: color,
-          flexDirection: 'row',
-          alignItems: 'center',
-          borderColor: color,
-          borderWidth: 1,
-      },
+    googleButton: {
+      backgroundColor: color,
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 2,
+      elevation: 4,
+    },
 
-      googleButtonText: {
-          fontSize: 13,
-          color: 'white',
-          paddingLeft: 16,
-          fontFamily: 'sans-serif-medium'
-      },
+    googleButtonText: {
+      fontSize: 13,
+      color: 'white',
+      paddingLeft: 16,
+      fontFamily: 'sans-serif-medium'
+    },
 
-      googleButtonImagePadding: {
-          padding: 8,
-          backgroundColor: 'white'
-      },
+    googleButtonImagePadding: {
+      padding: 1,
+    },
 
-      googleButtonImage: {
-          height: 18,
-          width: 18
-      },
+    googleButtonImage: {
+      height: 33,
+      width: 33
+    },
 
-      googlePlayPanel: {
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 30,
-          flexDirection: 'row',
-          alignItems: 'center'
-      },
+    googlePlayPanel: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 33,
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
 
-      googlePlayIcon: {
-          height: 24,
-          width: 24
-      }
+    googlePlayIcon: {
+      height: 33,
+      width: 33
+    }
   });
 
   _playGamesSignIn = () => {
@@ -126,55 +125,55 @@ class Welcome extends Component {
     let {styles} = this.state;
     let GoogleButton = TouchableHighlight;
     if (Platform.OS === 'android') {
-        GoogleButton = TouchableNativeFeedback;
+      GoogleButton = TouchableNativeFeedback;
     }
 
     // todo: confirm new game!
     return (
       <View onLayout={this._rebuildStyles} style={styles.welcomeScreen}>
-          {
-              this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <View style={styles.googlePlayPanel}>
-                  <GoogleButton onPress={() => PlayGames.showAchievements()}>
-                      <Image style={styles.googlePlayIcon} source={{uri: 'games_achievements'}}/>
-                  </GoogleButton>
-                  <GoogleButton onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}>
-                      <Image style={styles.googlePlayIcon} source={{uri: 'games_leaderboards'}}/>
-                  </GoogleButton>
-              </View> :
-              null
-          }
+        {
+          this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+            <View style={styles.googlePlayPanel}>
+              <GoogleButton onPress={() => PlayGames.showAchievements()}>
+                <Image style={styles.googlePlayIcon} source={{uri: 'games_achievements'}}/>
+              </GoogleButton>
+              <GoogleButton onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}>
+                <Image style={styles.googlePlayIcon} source={{uri: 'games_leaderboards'}}/>
+              </GoogleButton>
+            </View> :
+            null
+        }
+        <View style={styles.buttonView}>
+          <Button color={color} title="New game" onPress={_onNewGame}/>
+        </View>
+        <View style={styles.buttonView}>
+          <Button disabled={!game.game} color={color} title="Continue" onPress={_onContinueGame}/>
+        </View>
+        { __DEV__ ?
           <View style={styles.buttonView}>
-            <Button color={color} title="New game" onPress={_onNewGame}/>
-          </View>
-          <View style={styles.buttonView}>
-            <Button disabled={!game.game} color={color} title="Continue" onPress={_onContinueGame}/>
-          </View>
-          { __DEV__ ?
+            <Button disabled={!game.game} color={color} title="Kill game" onPress={_onClearGame}/>
+          </View> : null
+        }
+        <View style={styles.buttonView}>
+          <Button color={color} title="Help" onPress={_onHelp}/>
+        </View>
+        <View style={styles.buttonView}>
+          <Button color={color} title="Statistics" onPress={_onStat}/>
+        </View>
+        {
+          !this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
             <View style={styles.buttonView}>
-              <Button disabled={!game.game} color={color} title="Kill game" onPress={_onClearGame}/>
-            </View> : null
-          }
-          <View style={styles.buttonView}>
-            <Button color={color} title="Help" onPress={_onHelp}/>
-          </View>
-          <View style={styles.buttonView}>
-            <Button color={color} title="Statistics" onPress={_onStat}/>
-          </View>
-          {
-              !this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <View style={styles.buttonView}>
-                  <GoogleButton onPress={this._playGamesSignIn}>
-                      <View style={styles.googleButton}>
-                          <View style={styles.googleButtonImagePadding}>
-                              <Image style={styles.googleButtonImage} source={{uri: 'googleicon.png'}}/>
-                          </View>
-                          <Text style={styles.googleButtonText}>Sign in with Google</Text>
-                      </View>
-                  </GoogleButton>
-              </View> :
-              null
-          }
+              <GoogleButton onPress={this._playGamesSignIn}>
+                <View style={styles.googleButton}>
+                  <View style={styles.googleButtonImagePadding}>
+                    <Image style={styles.googleButtonImage} source={{uri: 'google'}}/>
+                  </View>
+                  <Text style={styles.googleButtonText}>Sign in with Google</Text>
+                </View>
+              </GoogleButton>
+            </View> :
+            null
+        }
       </View>
     );
   }
