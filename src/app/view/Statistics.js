@@ -16,7 +16,7 @@ import {Loader} from './Loader';
 
 import {connect} from 'react-redux';
 
-import {loadStats, clearStats} from '../actions/statistics';
+import {statsLoad, statsClear} from '../actions/statistics';
 import {formatTime, formatDate} from './utils';
 
 const mainColor = '#013397';
@@ -145,13 +145,13 @@ class Statistics extends Component {
 export default connect(state => ({
   statistics: state.statistics
 }), dispatch => ({
-  _loadStat: () => dispatch(loadStats()),
+  _loadStat: () => dispatch(statsLoad()),
   _clearStat: () => Alert.alert(
     'Are you sure?',
     null,
     [
       {text: 'Cancel', style: 'cancel'},
-      {text: 'Yes', onPress: () => dispatch(clearStats())}
+      {text: 'Yes', onPress: () => dispatch(statsClear())}
     ]
   )
 }))(Statistics);

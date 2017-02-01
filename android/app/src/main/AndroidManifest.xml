@@ -11,15 +11,6 @@
     <uses-sdk android:minSdkVersion="@integer/android_min_sdk_version"
               android:targetSdkVersion="@integer/android_target_sdk_version"/>
 
-    <!--
-        android:normalScreens=["true" | "false"]
-        android:largeScreens=["true" | "false"]
-        android:xlargeScreens=["true" | "false"]
-        android:anyDensity=["true" | "false"]
-        android:compatibleWidthLimitDp="integer"
-        android:largestWidthLimitDp="integer"
-    -->
-
     <supports-screens android:smallScreens="false"
                       android:requiresSmallestWidthDp="160"/>
 
@@ -29,7 +20,7 @@
                  android:icon="@mipmap/icon"
                  android:theme="@style/AppTheme">
 
-        <!--<meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/app_id"/>-->
+        <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/app_id"/>
 
         <activity android:name=".MainActivity"
                   android:label="@string/app_name"

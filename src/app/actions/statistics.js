@@ -8,7 +8,7 @@ import {
 
 import {AsyncStorage} from 'react-native';
 
-const loadStats = () => dispatch =>
+const statsLoad = () => dispatch =>
   AsyncStorage.getItem(STATISTICS_STORAGE_KEY)
     .then(stats => stats ? JSON.parse(stats) : CLEAN_STATISTICS)
     .then(stats => dispatch({type: STATS_SET, stats: stats}))
@@ -17,7 +17,7 @@ const loadStats = () => dispatch =>
       return Promise.resolve(CLEAN_STATISTICS);
     });
 
-const clearStats = () => dispatch =>
+const statsClear = () => dispatch =>
   AsyncStorage.setItem(STATISTICS_STORAGE_KEY, JSON.stringify(CLEAN_STATISTICS))
     .then(() => dispatch({type: STATS_SET, stats: CLEAN_STATISTICS}))
     .catch(err => {
@@ -64,8 +64,8 @@ const statsGameFailed = () => updateStats({failed: 1});
 const statsGameSolved = (time) => updateStats({successfully: 1, times: [time]});
 
 export {
-  loadStats,
-  clearStats,
+  statsLoad,
+  statsClear,
   statsGameTry,
   statsGameFailed,
   statsGameSolved

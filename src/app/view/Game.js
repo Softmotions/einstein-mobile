@@ -24,7 +24,15 @@ import {gameRuleToggle, gameNew} from '../actions/game';
 import {navStats} from '../actions/navigation';
 import {statsGameFailed, statsGameSolved} from '../actions/statistics';
 
-import {GameActivity} from '../modules/native';
+import {
+    PLAYGAMES_LEADERBOARD_ID,
+    PLAYGAMES_ACHIEVEMENT_SOLVED_10,
+    PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM,
+    PLAYGAMES_ACHIEVEMENT_SPRINTER,
+    PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED,
+} from '../constants/playgames';
+
+import {GameActivity, PlayGames} from '../modules/native';
 
 class ItemImage extends Component {
   static item = (row, value) => 'item' + (row + 1) + (value + 1);
@@ -107,7 +115,15 @@ class AGameField extends Component {
 
   _onGameSolved = () => {
     GameActivity.stop();
-    this.props._statSolved({time: this.props.game.time, date: new Date()});
+   let t = this.props.game.time;
+    this.props._statSolved({time: t, date: new Date()});
+    if(t<60){
+        PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_SPRINTER);
+    }
+    PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED);
+    PlayGames.setLeaderboardScore(PLAYGAMES_LEADERBOARD_ID, t * 1000);
+    PlayGames.achievementIncrement(PLAYGAMES_ACHIEVEMENT_SOLVED_10, 1);
+
     Alert.alert(
       'Congratulations!',
       'You solved the puzzle.\nTime: ' + formatTime(this.props.game.time, true),
@@ -121,6 +137,7 @@ class AGameField extends Component {
 
   _onGameFailed = () => {
     GameActivity.stop();
+    PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM);
     this.props._statFailed();
     Alert.alert(
       'Wrong tile!',

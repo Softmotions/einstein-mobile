@@ -6,7 +6,9 @@
       <root url="file://$PROJECT_DIR$/android/app/build/intermediates/exploded-aar/com.facebook.soloader" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/node_modules/react-native/android/com/facebook/react/react-native/0.39.2/react-native-0.39.2-sources.jar!/" />
+    </SOURCES>
     <jarDirectory url="file://$PROJECT_DIR$/android/app/build/intermediates/exploded-aar/com.facebook.fresco" recursive="true" />
     <jarDirectory url="file://$PROJECT_DIR$/android/app/build/intermediates/exploded-aar/com.facebook.react" recursive="true" />
     <jarDirectory url="file://$PROJECT_DIR$/android/app/build/intermediates/exploded-aar/com.facebook.soloader" recursive="true" />
