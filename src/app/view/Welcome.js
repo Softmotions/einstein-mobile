@@ -11,7 +11,8 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  InteractionManager
+  InteractionManager,
+  DeviceEventEmitter
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -118,6 +119,13 @@ class Welcome extends Component {
         console.debug('Play Games sign out');
         this.props._onSettingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: false});
       })
+  };
+
+  componentWillMount() {
+    DeviceEventEmitter.addListener('googleSignOut', function(e) {
+      // handle event.
+      console.error();
+    });
   };
 
   render() {

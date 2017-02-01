@@ -7,6 +7,7 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.util.Log;
 import com.facebook.react.bridge.*;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,20 +32,30 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
     private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
         @Override
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-            if (requestCode == GOOGLE_SIGN_IN_REQUEST) {
-                if (mActivityPromise != null) {
-                    if (resultCode == Activity.RESULT_CANCELED) {
-                        mActivityPromise.reject(TAG, "canceled");
-                    } else if (resultCode == Activity.RESULT_OK) {
-                        if (!mGoogleApiClient.isConnected() && !mGoogleApiClient.isConnecting()) {
-                            mGoogleApiClient.connect();
+            switch (requestCode) {
+                case GOOGLE_SIGN_IN_REQUEST:
+                    if (mActivityPromise != null) {
+                        if (resultCode == Activity.RESULT_CANCELED) {
+                            mActivityPromise.reject(TAG, "canceled");
+                        } else if (resultCode == Activity.RESULT_OK) {
+                            if (!mGoogleApiClient.isConnected() && !mGoogleApiClient.isConnecting()) {
+                                mGoogleApiClient.connect();
+                            }
+                            return;
+                        } else {
+                            mActivityPromise.reject(TAG, "unexpected");
                         }
-                        return;
-                    } else {
-                        mActivityPromise.reject(TAG, "unexpected");
                     }
-                }
-                mActivityPromise = null;
+                    mActivityPromise = null;
+                    break;
+                case SHOW_ACHIEVEMENTS_REQUEST:
+                case SHOW_LEADERBOARD_REQUEST:
+                    if (!mGoogleApiClient.isConnected()) {
+                        getReactApplicationContext()
+                                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                .emit("googleSignOut", null);
+                    }
+                    break;
             }
         }
     };
