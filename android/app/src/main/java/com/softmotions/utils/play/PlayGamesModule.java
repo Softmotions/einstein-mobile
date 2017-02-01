@@ -33,8 +33,9 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
                     if (resultCode == Activity.RESULT_CANCELED) {
                         mActivityPromise.reject("gms", "canceled");
                     } else if (resultCode == Activity.RESULT_OK) {
-
-                        mGoogleApiClient.connect();
+                        if(!mGoogleApiClient.isConnected() && !mGoogleApiClient.isConnecting()){
+                            mGoogleApiClient.connect();
+                        }
                         return;
                     } else {
                         mActivityPromise.reject("gms", "unexpected");
@@ -125,12 +126,14 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
 
     @ReactMethod
     public void achievementUnlock(String id) {
-        Games.Achievements.unlock(mGoogleApiClient, id);
-        showAchievements();
+        if (isSignedIn()) {
+            Games.Achievements.unlock(mGoogleApiClient, id);
+            showAchievements();
+        }
     }
 
     @ReactMethod
-    private void showAchievements() {
+    public void showAchievements() {
         getCurrentActivity().startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), 5001);
     }
 
@@ -141,12 +144,16 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
 
     @ReactMethod
     public void setLeaderboardScore(String leaderboardId, int by){
-        Games.Leaderboards.submitScore(mGoogleApiClient, leaderboardId, by);
+        if (isSignedIn()) {
+            Games.Leaderboards.submitScore(mGoogleApiClient, leaderboardId, by);
+        }
     }
 
     @ReactMethod
     public void achievementIncrement(String id, int by) {
-        Games.Achievements.increment(mGoogleApiClient, id, by);
+        if (isSignedIn()) {
+            Games.Achievements.increment(mGoogleApiClient, id, by);
+        }
     }
 
     @Override

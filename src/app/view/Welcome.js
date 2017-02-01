@@ -4,6 +4,11 @@ import React, {Component} from 'react';
 import {
   View,
   Button,
+  Platform,
+  TouchableHighlight,
+  TouchableNativeFeedback,
+  Image,
+  Text,
   StyleSheet,
   Dimensions,
   InteractionManager
@@ -55,7 +60,32 @@ class Welcome extends Component {
     buttonView: {
       margin: 3,
       width: Math.floor(Dimensions.get('window').width / 2)
-    }
+    },
+
+      googleButton: {
+          backgroundColor: color,
+          flexDirection: 'row',
+          alignItems: 'center',
+          borderColor: color,
+          borderWidth: 1,
+      },
+
+      googleButtonText: {
+          fontSize: 13,
+          color: 'white',
+          paddingLeft: 16,
+          fontFamily: 'sans-serif-medium'
+      },
+
+      googleButtonImagePadding: {
+          padding: 8,
+          backgroundColor: 'white'
+      },
+
+      googleButtonImage: {
+          height: 18,
+          width: 18
+      }
   });
 
   _playGamesSignIn = () => {
@@ -80,6 +110,10 @@ class Welcome extends Component {
   render() {
     let {game, _onNewGame, _onContinueGame, _onClearGame, _onHelp, _onStat} = this.props;
     let {styles} = this.state;
+    let GoogleButton = TouchableHighlight;
+    if (Platform.OS === 'android') {
+        GoogleButton = TouchableNativeFeedback;
+    }
 
     // todo: confirm new game!
     return (
@@ -95,7 +129,6 @@ class Welcome extends Component {
         {/*backgroundColor: 'grey'*/}
         {/*}}>*/}
         {/*</View>*/}
-        <View style={styles.buttonsView}>
           <View style={styles.buttonView}>
             <Button color={color} title="New game" onPress={_onNewGame}/>
           </View>
@@ -113,24 +146,31 @@ class Welcome extends Component {
           <View style={styles.buttonView}>
             <Button color={color} title="Statistics" onPress={_onStat}/>
           </View>
-          {/* TODO: render google sign in button*/}
           <View style={styles.buttonView}>
-            {
-              !this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-                <Button color={color} title="Play games sign in" onPress={this._playGamesSignIn}/> :
-                <Button color={color} title="Play games sign out" onPress={this._playGamesSignOut}/>
-            }
+              {
+                  !this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+                  <GoogleButton onPress={this._playGamesSignIn}>
+                      <View style={styles.googleButton}>
+                          <View style={styles.googleButtonImagePadding}>
+                              <Image style={styles.googleButtonImage} source={require('../../../images/googleIcon.png')}/>
+                          </View>
+                          <Text style={styles.googleButtonText}>Sign in with Google</Text>
+                      </View>
+                  </GoogleButton>:
+                  <Button color={color} title="Sign out Google" onPress={this._playGamesSignOut}/>
+              }
           </View>
           <View style={styles.buttonView}>
             {
               this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <Button title="Leaderboard" onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}/> :
+              <Button color={color} title="Leaderboard" onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}/> :
               null
             }
           </View>
+        <View style={styles.buttonsView}>
           {
             this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-              <Button title="inc" onPress={() => PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED)}/> :
+              <Button title="Achievements" onPress={() => PlayGames.showAchievements()}/> :
               null
           }
         </View>

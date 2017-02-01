@@ -24,9 +24,12 @@ import {gameRuleToggle, gameNew} from '../actions/game';
 import {navStats} from '../actions/navigation';
 import {statsGameFailed, statsGameSolved} from '../actions/statistics';
 
-import {PLAY_GAMES_LOGGED_IN_KEY} from '../constants/settings';
-
-import {PLAYGAMES_LEADERBOARD_ID} from '../constants/playgames';
+import {
+    PLAYGAMES_LEADERBOARD_ID,
+    PLAYGAMES_ACHIEVEMENT_SOLVED_10,
+    PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM,
+    PLAYGAMES_ACHIEVEMENT_SPRINTER,
+} from '../constants/playgames';
 
 import {GameActivity, PlayGames} from '../modules/native';
 
@@ -113,9 +116,11 @@ class AGameField extends Component {
     GameActivity.stop();
    let t = this.props.game.time;
     this.props._statSolved({time: t, date: new Date()});
-    if (this.props.settings[PLAY_GAMES_LOGGED_IN_KEY]) {
-      PlayGames.setLeaderboardScore(PLAYGAME_LEADERBOARD_ID, t * 1000);
+    if(t<60){
+        PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_SPRINTER);
     }
+    PlayGames.setLeaderboardScore(PLAYGAMES_LEADERBOARD_ID, t * 1000);
+    PlayGames.achievementIncrement(PLAYGAMES_ACHIEVEMENT_SOLVED_10, 1);
 
     Alert.alert(
       'Congratulations!',
@@ -130,6 +135,7 @@ class AGameField extends Component {
 
   _onGameFailed = () => {
     GameActivity.stop();
+    PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM);
     this.props._statFailed();
     Alert.alert(
       'Wrong tile!',

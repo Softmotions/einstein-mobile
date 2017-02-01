@@ -12,6 +12,10 @@ import {
   GAME_STORAGE_KEY
 } from '../constants/game';
 
+import {PLAYGAMES_ACHIEVEMENT_PUZZLE_LOVER} from '../constants/playgames';
+
+import {PlayGames} from '../modules/native';
+
 import {GameFactory} from '../modules/controller';
 
 const gameClear = () => dispatch => Promise.resolve().then(() => dispatch({type: GAME_CLEAR}));
@@ -23,6 +27,7 @@ const gameNew = () => dispatch =>
     .then(() => new Promise((resolve, reject) => {
       let game = GameFactory.generateGame(6);
       game.start();
+      PlayGames.achievementIncrement(PLAYGAMES_ACHIEVEMENT_PUZZLE_LOVER, 1);
 
       resolve(game);
     }).then(game => dispatch(gameSet(game))));
