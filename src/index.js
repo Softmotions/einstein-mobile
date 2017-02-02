@@ -73,7 +73,7 @@ export default class Einstein extends Component {
 
   componentWillUnmount() {
     AppState.removeEventListener('change', this._handleAppStateChange);
-    DeviceEventEmitter.removeEventListener('googleSignOut', this._handleGoogleSignOut);
+    // DeviceEventEmitter.removeEventListener('googleSignOut', this._handleGoogleSignOut);
   }
 
   render = () => (
