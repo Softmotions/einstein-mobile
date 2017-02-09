@@ -1,4 +1,5 @@
 <resources>
+    <!---->
     <string name="app_name">Einstein</string>
     <string name="app_package">com.softmotions.einstein</string>
     <string name="app_id">837179539906</string>
