@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {AppState, DeviceEventEmitter} from 'react-native';
+import {AppState, DeviceEventEmitter, ToastAndroid} from 'react-native';
 import {createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
 import thunk from 'redux-thunk';
@@ -55,6 +55,7 @@ export default class Einstein extends Component {
         if (settings[PLAY_GAMES_LOGGED_IN_KEY]) {
           PlayGames.signIn()
             .then(() => {
+                ToastAndroid.show("Play Games logged in", ToastAndroid.SHORT);
                 loadGame()
               },
               (err) => {
