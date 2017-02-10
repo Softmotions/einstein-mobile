@@ -8,6 +8,8 @@ import {
 
 import {AsyncStorage} from 'react-native';
 
+const STATISTICS_ITEMS_COUNT = 50;
+
 const statsLoad = () => dispatch =>
   AsyncStorage.getItem(STATISTICS_STORAGE_KEY)
     .then(stats => stats ? JSON.parse(stats) : CLEAN_STATISTICS)
@@ -44,7 +46,7 @@ const updateStats = (update) => dispatch => {
 
       (stats.times = stats.times || []).sort((a, b) => a.time != b.time ? a.time - b.time : a.date - b.date);
       stats.times = stats.times.reduce((acc, t) => acc.length == 0 || acc[acc.length - 1].time != t.time ? [...acc, t] : acc, []);
-      stats.times = stats.times.slice(0, 15);
+      stats.times = stats.times.slice(0, STATISTICS_ITEMS_COUNT);
 
       return AsyncStorage.setItem(STATISTICS_STORAGE_KEY, JSON.stringify(stats))
         .then(() => dispatch({type: STATS_SET, stats: stats}))
