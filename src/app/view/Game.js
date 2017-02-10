@@ -24,6 +24,8 @@ import {gameRuleToggle, gameNew} from '../actions/game';
 import {navStats} from '../actions/navigation';
 import {statsGameFailed, statsGameSolved} from '../actions/statistics';
 
+import {i18n} from '../utils/i18n';
+
 import {
     PLAYGAMES_LEADERBOARD_ID,
     PLAYGAMES_ACHIEVEMENT_SOLVED_10,
@@ -125,11 +127,11 @@ class AGameField extends Component {
     PlayGames.achievementIncrement(PLAYGAMES_ACHIEVEMENT_SOLVED_10, 1);
 
     Alert.alert(
-      'Congratulations!',
-      'You solved the puzzle.\nTime: ' + formatTime(this.props.game.time, true),
+      i18n.message.tr('solve_title'),
+      i18n.message.tr('solve_text', formatTime(this.props.game.time, true)),
       [
-        {text: 'Stats', onPress: this.props._toStats},
-        {text: 'Ok'}
+        {text: i18n.button.tr('statistics_short'), onPress: this.props._toStats},
+        {text: i18n.button.tr('ok')}
       ],
       {}
     );
@@ -140,11 +142,11 @@ class AGameField extends Component {
     PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM);
     this.props._statFailed();
     Alert.alert(
-      'Wrong tile!',
-      'Puzzle failed.',
+      i18n.message.tr('fail_title'),
+      i18n.message.tr('fail_text', formatTime(this.props.game.time, true)),
       [
-        {text: 'Stats', onPress: this.props._toStats},
-        {text: 'Ok'}
+        {text: i18n.button.tr('statistics_short'), onPress: this.props._toStats},
+        {text: i18n.button.tr('ok')}
       ],
       {}
     );

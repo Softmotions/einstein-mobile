@@ -27,14 +27,14 @@ class Section {
 
   tr() {
     const key = this.__section + '_' + arguments[0];
-    const args = arguments;
+    const args = Array.from(arguments).slice(1);
     let str = LocaleModule.getString(key);
     if (!str) {
-      console.warn("!!!!!", key);
+      console.warn('Undefined translation key:', key);
       str = key;
     }
     return str.replace(/{(\d+)}/g, function (match, number) {
-      return typeof args[number + 1] != 'undefined' ? args[number + 1] : match;
+      return typeof args[number] != 'undefined' ? args[number] : match;
     });
   }
 }
@@ -44,7 +44,8 @@ class I18N {
 
   constructor() {
     // aliases
-    this.initSection('button');
+    this.tr('button');
+    this.tr('message');
   }
 
   initSection(name) {
@@ -58,6 +59,8 @@ class I18N {
   };
 
   getSection = (name) => this.initSection(name);
+
+  tr = (name) => this.initSection(name);
 }
 
 const i18n = new I18N();

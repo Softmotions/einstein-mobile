@@ -7,7 +7,11 @@
     <string name="button_help">Help</string>
     <string name="button_statistics">Statistics</string>
     <string name="button_sign_in_google">Sign in with Google</string>
-    <string name="button_ok">Ok</string>
+    <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_statistics_short">Stats</string>
+    <string name="message_solve_title">Congratulations!</string>
+    <string name="message_solve_text">You solved the puzzle.\nTime: {1}</string>
+    <string name="message_fail_title">Wrong tile!</string>
+    <string name="message_fail_text">Puzzle failed.</string>
 </resources>
