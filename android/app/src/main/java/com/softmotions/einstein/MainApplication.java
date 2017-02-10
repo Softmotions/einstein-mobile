@@ -1,19 +1,18 @@
 package com.softmotions.einstein;
 
 import android.app.Application;
-
+import com.cboy.rn.splashscreen.SplashScreenReactPackage;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.softmotions.einstein.game.GameActivityReactPackage;
+import com.softmotions.utils.locale.LocaleReactPackage;
+import com.softmotions.utils.play.PlayGamesReactPackage;
 
 import java.util.Arrays;
 import java.util.List;
-
-import com.cboy.rn.splashscreen.SplashScreenReactPackage;
-import com.softmotions.einstein.game.GameActivityReactPackage;
-import com.softmotions.utils.play.PlayGamesReactPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -29,7 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
                     new MainReactPackage(),
                     new SplashScreenReactPackage(),
                     new GameActivityReactPackage(),
-                    new PlayGamesReactPackage()
+                    new PlayGamesReactPackage(),
+                    new LocaleReactPackage()
             );
         }
     };

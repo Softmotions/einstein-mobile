@@ -119,7 +119,6 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
         }
     }
 
-    @ReactMethod
     public boolean isSignedIn() {
         return getGoogleApiClient().isConnected();
     }

@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="@string/app_package"
+          package="com.softmotions.einstein"
           android:versionCode="@integer/version_code"
           android:versionName="@string/version_name">
 

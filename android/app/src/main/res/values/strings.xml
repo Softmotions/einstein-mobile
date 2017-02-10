@@ -1,7 +1,13 @@
 <resources>
-    <!---->
-    <string name="app_name">Einstein</string>
-    <string name="app_package">com.softmotions.einstein</string>
-    <string name="app_id">837179539906</string>
-    <string name="company">Softmotions</string>
+    <string name="app_name" translatable="false">Einstein</string>
+    <string name="app_id" translatable="false">837179539906</string>
+    <string name="company" translatable="false">Softmotions</string>
+    <string name="button_new">New game</string>
+    <string name="button_continue">Continue</string>
+    <string name="button_help">Help</string>
+    <string name="button_statistics">Statistics</string>
+    <string name="button_sign_in_google">Sign in with Google</string>
+    <string name="button_ok">Ok</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_statistics_short">Stats</string>
 </resources>

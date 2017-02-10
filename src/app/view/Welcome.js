@@ -21,6 +21,8 @@ import {navGame, navHelp, navStats} from '../actions/navigation';
 import {statsGameTry} from '../actions/statistics';
 import {settingsUpdate} from '../actions/settings';
 
+import {i18n} from '../utils/i18n';
+
 import {PLAY_GAMES_LOGGED_IN_KEY} from '../constants/settings';
 
 import  {
@@ -136,10 +138,10 @@ class Welcome extends Component {
             null
         }
         <View style={styles.buttonView}>
-          <Button color={color} title="New game" onPress={_onNewGame}/>
+          <Button color={color} title={i18n.button.tr('new')} onPress={_onNewGame}/>
         </View>
         <View style={styles.buttonView}>
-          <Button disabled={!game.game} color={color} title="Continue" onPress={_onContinueGame}/>
+          <Button disabled={!game.game} color={color} title={i18n.button.tr('continue')} onPress={_onContinueGame}/>
         </View>
         { __DEV__ ?
           <View style={styles.buttonView}>
@@ -147,10 +149,10 @@ class Welcome extends Component {
           </View> : null
         }
         <View style={styles.buttonView}>
-          <Button color={color} title="Help" onPress={_onHelp}/>
+          <Button color={color} title={i18n.button.tr('help')} onPress={_onHelp}/>
         </View>
         <View style={styles.buttonView}>
-          <Button color={color} title="Statistics" onPress={_onStat}/>
+          <Button color={color} title={i18n.button.tr('statistics')} onPress={_onStat}/>
         </View>
         {
           !this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
@@ -160,7 +162,7 @@ class Welcome extends Component {
                   <View style={styles.googleButtonImagePadding}>
                     <Image style={styles.googleButtonImage} source={{uri: 'google'}}/>
                   </View>
-                  <Text style={styles.googleButtonText}>Sign in with Google</Text>
+                  <Text style={styles.googleButtonText}>{i18n.button.tr('sign_in_google')}</Text>
                 </View>
               </GoogleButton>
             </View> :

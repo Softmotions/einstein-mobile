@@ -15,7 +15,7 @@ import java.util.List;
 public class LocaleReactPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Collections.singletonList(new LocaleModule(reactContext));
+        return Collections.<NativeModule>singletonList(new LocaleModule(reactContext));
     }
 
     @Override
