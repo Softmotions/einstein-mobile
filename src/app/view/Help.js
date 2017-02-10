@@ -12,6 +12,8 @@ import {
 
 import {connect} from 'react-redux';
 
+import {i18n} from '../utils/i18n';
+
 // todo: import color
 const mainColor = '#013397';
 const ruleItemBorderColor = 'black';
@@ -86,87 +88,85 @@ class Separator extends Component {
 }
 
 class Help extends Component {
-  render = () => (
-    <ScrollView style={styles.container}>
-      <Text style={styles.text}>
-        <Text style={styles.caption}>Game goal</Text>:
-        to discover tiles in each of 36 field positions.
-        Tiles are different and rules shows how they placed one to each other.
-        There are 4 types of rules:
-      </Text>
-      {/*Between rule*/}
-      <View style={[styles.ruleGroup, {marginTop: 15}]}>
-        <View style={[styles.ruleBox, styles.hrule]}>
-          <Image source={{uri: 'item21'}} style={styles.ruleItemImage}/>
-          <Image source={{uri: 'item31'}} style={styles.ruleItemImage}/>
-          <Image source={{uri: 'item61'}} style={styles.ruleItemImage}/>
-        </View>
+  __trt() {
+    const key = arguments[0];
+    const elements = Array.from(arguments).slice(1);
+    return (<Text style={styles.text} key={key}>
+      {i18n.tr('help').tr(key)
+        .split(/{(\d+)}/)
+        .map((item, i) => (
+          <Text key={key + '_' + i}>{typeof elements[item] != 'undefined' ? elements[item] : item}</Text>
+        ))
+      }
+    </Text>);
+  };
+
+  render = () => {
+    const help = i18n.tr('help');
+    return (
+      <ScrollView style={styles.container}>
         <Text style={styles.text}>
-          Means 3 tiles are in columns next to each other -
-          column with
-          {' '} <Image source={{uri: 'item21'}} style={styles.image}/> {' '}
-          is next to column with
-          {' '} <Image source={{uri: 'item31'}} style={styles.image}/> {' '}
-          and column with
-          {' '} <Image source={{uri: 'item31'}} style={styles.image}/> {' '}
-          next to column with
-          {' '} <Image source={{uri: 'item61'}} style={styles.image}/>
+          <Text style={styles.caption}>{help.tr('goal_title')}</Text>: {help.tr('goal_text')}
         </Text>
-      </View>
-      <Separator/>
-      {/*Near rule*/}
-      <View style={styles.ruleGroup}>
-        <View style={[styles.ruleBox, styles.hrule]}>
-          <Image source={{uri: 'item21'}} style={styles.ruleItemImage}/>
-          <Image source={{uri: 'near'}} style={styles.ruleImage}/>
-          <Image source={{uri: 'item35'}} style={styles.ruleItemImage}/>
-        </View>
-        <Text style={styles.text}>
-          Means 2 tiles are in columns next to each other –
-          column with
-          {' '} <Image source={{uri: 'item21'}} style={styles.image}/> {' '}
-          is next to column with
-          {' '} <Image source={{uri: 'item35'}} style={styles.image}/>
-        </Text>
-      </View>
-      <Separator/>
-      {/*Direction rule*/}
-      <View style={styles.ruleGroup}>
-        <View style={[styles.ruleBox, styles.hrule]}>
-          <Image source={{uri: 'item21'}} style={styles.ruleItemImage}/>
-          <Image source={{uri: 'direction'}} style={styles.ruleImage}/>
-          <Image source={{uri: 'item61'}} style={styles.ruleItemImage}/>
-        </View>
-        <Text style={styles.text}>
-          Means left tile is in a column left to column with right tile –
-          column with
-          {' '} <Image source={{uri: 'item21'}} style={styles.image}/> {' '}
-          is left to column with
-          {' '} <Image source={{uri: 'item61'}} style={styles.image}/>
-        </Text>
-      </View>
-      <Separator/>
-      {/*Under rule*/}
-      <View style={styles.ruleGroup}>
-        <View style={styles.ruleBox}>
-          <View style={styles.vrule}>
+        {/*Between rule*/}
+        <View style={[styles.ruleGroup, {marginTop: 15}]}>
+          <View style={[styles.ruleBox, styles.hrule]}>
             <Image source={{uri: 'item21'}} style={styles.ruleItemImage}/>
+            <Image source={{uri: 'item31'}} style={styles.ruleItemImage}/>
             <Image source={{uri: 'item61'}} style={styles.ruleItemImage}/>
           </View>
+          {this.__trt('rules_between',
+            <Image source={{uri: 'item21'}} style={styles.image}/>,
+            <Image source={{uri: 'item31'}} style={styles.image}/>,
+            <Image source={{uri: 'item61'}} style={styles.image}/>
+          )}
         </View>
+        <Separator/>
+        {/*Near rule*/}
+        <View style={styles.ruleGroup}>
+          <View style={[styles.ruleBox, styles.hrule]}>
+            <Image source={{uri: 'item21'}} style={styles.ruleItemImage}/>
+            <Image source={{uri: 'near'}} style={styles.ruleImage}/>
+            <Image source={{uri: 'item35'}} style={styles.ruleItemImage}/>
+          </View>
+          {this.__trt('rules_near',
+            <Image source={{uri: 'item21'}} style={styles.image}/>,
+            <Image source={{uri: 'item35'}} style={styles.image}/>
+          )}
+        </View>
+        <Separator/>
+        {/*Direction rule*/}
+        <View style={styles.ruleGroup}>
+          <View style={[styles.ruleBox, styles.hrule]}>
+            <Image source={{uri: 'item21'}} style={styles.ruleItemImage}/>
+            <Image source={{uri: 'direction'}} style={styles.ruleImage}/>
+            <Image source={{uri: 'item61'}} style={styles.ruleItemImage}/>
+          </View>
+          {this.__trt('rules_direction',
+            <Image source={{uri: 'item21'}} style={styles.image}/>,
+            <Image source={{uri: 'item61'}} style={styles.image}/>
+          )}
+        </View>
+        <Separator/>
+        {/*Under rule*/}
+        <View style={styles.ruleGroup}>
+          <View style={styles.ruleBox}>
+            <View style={styles.vrule}>
+              <Image source={{uri: 'item21'}} style={styles.ruleItemImage}/>
+              <Image source={{uri: 'item61'}} style={styles.ruleItemImage}/>
+            </View>
+          </View>
+          {this.__trt('rules_under')}
+        </View>
+        <Separator/>
         <Text style={styles.text}>
-          Tiles are in the same column
+          {help.tr('field_actions')}
+          {'\n'}
+          {help.tr('rule_actions')}
         </Text>
-      </View>
-      <Separator/>
-      <Text style={styles.text}>
-        To open a tile touch the position and select the tile. Short press to select tile. Long press to disable tile.
-      </Text>
-      <Text style={styles.text}>
-        Also touching rules you can switch rules visibility mode to hide rules you already satisfied.
-      </Text>
-    </ScrollView>
-  );
+      </ScrollView>
+    )
+  };
 }
 
 export default connect(state => ({}), dispatch => ({}))(Help);

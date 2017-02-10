@@ -18,6 +18,7 @@ import {connect} from 'react-redux';
 
 import {statsLoad, statsClear} from '../actions/statistics';
 import {formatTime, formatDate} from './utils';
+import {i18n} from '../utils/i18n';
 
 const mainColor = '#013397';
 const styles = StyleSheet.create({
@@ -112,17 +113,17 @@ class Statistics extends Component {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.caption}>Statistics</Text>
+        <Text style={styles.caption}>{i18n.statistics.tr('title')}</Text>
 
-        <InfoRow title="Total tries:" text={statistics.tries}/>
-        <InfoRow title="Solved:" text={statistics.successfully}/>
-        <InfoRow title="Failed:" text={statistics.failed}/>
+        <InfoRow title={i18n.statistics.tr('total')} text={statistics.tries}/>
+        <InfoRow title={i18n.statistics.tr('solved')} text={statistics.successfully}/>
+        <InfoRow title={i18n.statistics.tr('failed')} text={statistics.failed}/>
 
         <View style={{flex: 1}}>
           { statistics.times.length > 0 ?
             <View style={{flex: 1}}>
               <Separator type='long'/>
-              <Text style={styles.caption}>Best times</Text>
+              <Text style={styles.caption}>{i18n.statistics.tr('best_times')}</Text>
               <ListView dataSource={this._ds.cloneWithRows(statistics.times)}
                         renderRow={(data) => (<InfoRow title={formatTime(data.time)} text={formatDate(data.date)}/>)}>
               </ListView>
@@ -147,11 +148,11 @@ export default connect(state => ({
 }), dispatch => ({
   _loadStat: () => dispatch(statsLoad()),
   _clearStat: () => Alert.alert(
-    'Are you sure?',
+    i18n.message.tr('confirm_title'),
     null,
     [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Yes', onPress: () => dispatch(statsClear())}
+      {text: i18n.button.tr('cancel'), style: 'cancel'},
+      {text: i18n.button.tr('yes'), onPress: () => dispatch(statsClear())}
     ]
   )
 }))(Statistics);

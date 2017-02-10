@@ -2,22 +2,6 @@
 
 import {LocaleModule} from '../modules/native';
 
-// const Message = {
-//   get: function (target, name) {
-//     const key = target.section + '_' + name;
-//     const str = Locale.getString(key) || key;
-//
-//     return new Proxy(str, {
-//       apply: function (target, name, args) {
-//         if ('tr' == name) {
-//
-//         }
-//         return target.apply(name, args);
-//       }
-//     });
-//   },
-// };
-
 class Section {
   __section = null;
 
@@ -25,17 +9,22 @@ class Section {
     this.__section = section;
   }
 
-  tr() {
+  __getString(name) {
     const key = this.__section + '_' + arguments[0];
-    const args = Array.from(arguments).slice(1);
-    let str = LocaleModule.getString(key);
+    const str = LocaleModule.getString(key);
     if (!str) {
       console.warn('Undefined translation key:', key);
-      str = key;
+      return key;
     }
-    return str.replace(/{(\d+)}/g, function (match, number) {
+    return str;
+  }
+
+  tr() {
+    const str = this.__getString(arguments[0]);
+    const args = Array.from(arguments).slice(1);
+    return args.length > 0 ? str.replace(/{(\d+)}/g, function (match, number) {
       return typeof args[number] != 'undefined' ? args[number] : match;
-    });
+    }) : str;
   }
 }
 
@@ -46,6 +35,8 @@ class I18N {
     // aliases
     this.tr('button');
     this.tr('message');
+    this.tr('help');
+    this.tr('statistics');
   }
 
   initSection(name) {
