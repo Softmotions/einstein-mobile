@@ -42,6 +42,11 @@ class Section {
 class I18N {
   __sections = {};
 
+  constructor() {
+    // aliases
+    this.initSection('button');
+  }
+
   initSection(name) {
     if (!this.__sections[name]) {
       let section = new Section(name);
@@ -53,11 +58,6 @@ class I18N {
   };
 
   getSection = (name) => this.initSection(name);
-
-  // aliases
-  get button() {
-    return this.getSection('button');
-  }
 }
 
 const i18n = new I18N();
