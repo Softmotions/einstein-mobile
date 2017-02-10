@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="button_cancel">Отмена</string>
+    <string name="button_continue">Продолжить</string>
+    <string name="button_help">Справка</string>
+    <string name="button_new">Новая игра</string>
+    <string name="button_no">Нет</string>
+    <string name="button_statistics">Статистика</string>
+    <string name="button_sign_in_google">Войти в Play Games</string>
+    <string name="button_statistics_short">Статистика</string>
+    <string name="button_yes">Да</string>
+    <string name="message_confirm_title">Вы уверены?</string>
+    <string name="message_fail_text">Головоломка провалена.</string>
+    <string name="message_fail_title">Не та фишка!</string>
+    <string name="message_solve_text">Вы решили головомку. \nВремя: {0}</string>
+    <string name="message_solve_title">Молодец!</string>
+    <string name="statistics_best_times">Лучшее время</string>
+    <string name="statistics_failed">Ошибок:</string>
+    <string name="statistics_solved">Решено:</string>
+    <string name="statistics_title">Статистика</string>
+    <string name="statistics_total">Всего попыток:</string>
+    <string name="help_goal_title">Цель игры</string>
+    <string name="help_goal_text">
+        открыть фишки в каждой клетке поля (всего 36). Все фишки уникальны.
+        Решить головоломку помогу правила расположения фишек друг относительно друга. Есть 4 вида правил:
+    </string>
+    <string name="help_rules_between">
+        Столбца с указанными фишками образут блок рядом стоящих:
+        столбцы для фишек {0} и {1} расположены рядом, и столбцы с фишками {1} и {2} стоят рядом,
+        т.е. фишка {1} располагается между {0} и {2}
+    </string>
+    <string name="help_rules_near">
+        Столбцы с указанными фишками расположены рядом:
+        столбец с фишками {0} и {1} является соседними.
+    </string>
+    <string name="help_rules_direction">
+        Определяет последовательность расположения слева на право:
+        столбец с фишкой {0} левее столбца с фишкой {1}
+    </string>
+    <string name="help_rules_under">
+        Фишки расположены в одной столбце.
+    </string>
+    <string name="help_field_actions">
+        При нажати на клетку поля открывается окошко с выбором фишки.
+        Короткое нажатие выбирает фишку, а длинное исключает её из списка возможных.
+    </string>
+    <string name="help_rule_actions">
+        Чтобы спрятать уже примённое правило нажмите на него и оно слегка затенится. Повторное нажатие делает его видимым снова.
+    </string>
+</resources>

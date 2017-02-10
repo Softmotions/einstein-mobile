@@ -408,7 +408,7 @@ const formatTime = (time, suppressZeroHours) => {
   return '' + (hours || !suppressZeroHours ? hours + ':' : '') + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 };
 
-const formatDate = (date) => date ? moment(date).format('HH:mm:SS DD.MM.YYYY') : '';
+const formatDate = (date) => date ? moment(date).format('HH:mm DD.MM.YYYY') : '';
 
 export {
   StyleConfig,
