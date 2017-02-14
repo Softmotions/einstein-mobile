@@ -23,6 +23,8 @@
     <string name="statistics_total">Total tries:</string>
     <string name="statistics_solved">Solved:</string>
     <string name="statistics_failed">Failed:</string>
+    <string name="statistics_current_stack">Current stack:</string>
+    <string name="statistics_max_stack">Max stack:</string>
     <string name="statistics_best_times">Best times</string>
     <string name="help_goal_title">Game goal</string>
     <string name="help_goal_text">to discover tiles in each of 36 field positions.

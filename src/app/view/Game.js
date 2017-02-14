@@ -27,11 +27,11 @@ import {statsGameFailed, statsGameSolved} from '../actions/statistics';
 import {i18n} from '../utils/i18n';
 
 import {
-    PLAYGAMES_LEADERBOARD_ID,
-    PLAYGAMES_ACHIEVEMENT_SOLVED_10,
-    PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM,
-    PLAYGAMES_ACHIEVEMENT_SPRINTER,
-    PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED,
+  PLAYGAMES_LEADERBOARD_ID,
+  PLAYGAMES_ACHIEVEMENT_SOLVED_10,
+  PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM,
+  PLAYGAMES_ACHIEVEMENT_SPRINTER,
+  PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED,
 } from '../constants/playgames';
 
 import {GameActivity, PlayGames} from '../modules/native';
@@ -117,10 +117,10 @@ class AGameField extends Component {
 
   _onGameSolved = () => {
     GameActivity.stop();
-   let t = this.props.game.time;
+    let t = this.props.game.time;
     this.props._statSolved({time: t, date: new Date()});
-    if(t<60){
-        PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_SPRINTER);
+    if (t < 60) {
+      PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_SPRINTER);
     }
     PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED);
     PlayGames.setLeaderboardScore(PLAYGAMES_LEADERBOARD_ID, t * 1000);
@@ -170,6 +170,14 @@ class AGameField extends Component {
         return;
       }
 
+      if (__DEV__ && this.props.game.field.value(i, j) == k) {
+        this.props.game._count = 0;
+        this.props.game.stop();
+        this._hidePopup();
+        this._onGameFinish();
+        return;
+      }
+
       this.props.game.exclude(i, j, k);
       this.forceUpdate();
       if (this.props.game.finished) {
@@ -180,7 +188,7 @@ class AGameField extends Component {
   );
 
   renderPopupItem(i, j, k) {
-    const {game} = this.props;
+    let {game} = this.props;
     const key = 'popup_item_' + i + '_' + j + '_' + k;
 
     let devStyle = null;
@@ -416,7 +424,7 @@ class ARules extends Component {
   );
 
   render() {
-    const {styles, game} = this.props;
+    let {styles, game} = this.props;
     const rules = Object.keys(game.rules).map((k) => game.rules[k]);
 
     const hrules = rules.filter((r) => 'row' == r.rule.viewType);

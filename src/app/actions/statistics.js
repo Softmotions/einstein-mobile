@@ -39,13 +39,22 @@ const updateStats = (update) => dispatch => {
           stats[k] = (stats[k] || []).concat(item);
         } else if (Number.isInteger(item)) {
           stats[k] += item;
+        } else if (typeof item == 'function') {
+          item.call(stats, stats);
         } else {
           stats[k] = item;
         }
       });
 
       (stats.times = stats.times || []).sort((a, b) => a.time != b.time ? a.time - b.time : a.date - b.date);
-      stats.times = stats.times.reduce((acc, t) => acc.length == 0 || acc[acc.length - 1].time != t.time ? [...acc, t] : acc, []);
+      stats.times = stats.times.reduce((acc, t) => {
+        if (acc.length != 0 && acc[acc.length - 1].time == t.time) {
+          acc[acc.length - 1].repeats = (acc[acc.length - 1].repeats || 1) + (t.repeats || 1);
+          return acc;
+        } else {
+          return [...acc, t];
+        }
+      }, []);
       stats.times = stats.times.slice(0, STATISTICS_ITEMS_COUNT);
 
       return AsyncStorage.setItem(STATISTICS_STORAGE_KEY, JSON.stringify(stats))
@@ -61,9 +70,26 @@ const updateStats = (update) => dispatch => {
     });
 };
 
-const statsGameTry = () => updateStats({tries: 1});
-const statsGameFailed = () => updateStats({failed: 1});
-const statsGameSolved = (time) => updateStats({successfully: 1, times: [time]});
+const statsGameTry = () => updateStats({
+  tries: 1, stack: (stats) => {
+    if (!stats.trySolved) {
+      stats.currentStack = 0;
+    }
+    stats.trySolved = false;
+  }
+});
+const statsGameFailed = () => updateStats({
+  failed: 1, stack: (stats) => {
+    stats.currentStack = 0;
+  }
+});
+const statsGameSolved = (time) => updateStats({
+  successfully: 1, times: [time], solvedDates: [time.date], stack: (stats) => {
+    stats.trySolved = true;
+    stats.currentStack++;
+    stats.maxStack = Math.max(stats.currentStack, stats.maxStack);
+  }
+});
 
 export {
   statsLoad,

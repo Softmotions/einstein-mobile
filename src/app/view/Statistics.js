@@ -82,6 +82,19 @@ class InfoRow extends Component {
   )
 }
 
+class InfoTimesRow extends Component {
+  render = () => (
+    <View>
+      <View style={styles.infoRow}>
+        <View><Text style={styles.text}>{formatTime(this.props.data.time)}</Text></View>
+        <View><Text style={styles.text}>{this.props.data.repeats ? 'x' + this.props.data.repeats : null}</Text></View>
+        <View><Text style={styles.text}>{formatDate(this.props.data.date)}</Text></View>
+      </View>
+      <View style={styles.infoRowSeparator}/>
+    </View>
+  )
+}
+
 class Statistics extends Component {
   constructor(props) {
     super(props);
@@ -118,6 +131,8 @@ class Statistics extends Component {
         <InfoRow title={i18n.statistics.tr('total')} text={statistics.tries}/>
         <InfoRow title={i18n.statistics.tr('solved')} text={statistics.successfully}/>
         <InfoRow title={i18n.statistics.tr('failed')} text={statistics.failed}/>
+        <InfoRow title={i18n.statistics.tr('current_stack')} text={statistics.currentStack || 0}/>
+        <InfoRow title={i18n.statistics.tr('max_stack')} text={statistics.maxStack || 0}/>
 
         <View style={{flex: 1}}>
           { statistics.times.length > 0 ?
@@ -125,7 +140,7 @@ class Statistics extends Component {
               <Separator type='long'/>
               <Text style={styles.caption}>{i18n.statistics.tr('best_times')}</Text>
               <ListView dataSource={this._ds.cloneWithRows(statistics.times)}
-                        renderRow={(data) => (<InfoRow title={formatTime(data.time)} text={formatDate(data.date)}/>)}>
+                        renderRow={(data) => (<InfoTimesRow data={data}/>)}>
               </ListView>
             </View> :
             null
