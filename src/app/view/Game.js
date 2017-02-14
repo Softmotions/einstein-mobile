@@ -28,10 +28,12 @@ import {i18n} from '../utils/i18n';
 
 import {
   PLAYGAMES_LEADERBOARD_ID,
+  PLAYGAMES_LEADERBOARD_STACK_ID,
   PLAYGAMES_ACHIEVEMENT_SOLVED_10,
   PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM,
   PLAYGAMES_ACHIEVEMENT_SPRINTER,
   PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED,
+  PLAYGAMES_ACHIEVEMENT_STRONG_SOLVER
 } from '../constants/playgames';
 
 import {GameActivity, PlayGames} from '../modules/native';
@@ -115,10 +117,17 @@ class AGameField extends Component {
       this._onGameSolved() :
       this._onGameFailed();
 
+  // TODO: extract play games achievements handlers & config
   _onGameSolved = () => {
     GameActivity.stop();
     let t = this.props.game.time;
-    this.props._statSolved({time: t, date: new Date()});
+    this.props._statSolved({time: t, date: new Date()})
+      .then((stats) => {
+        if (stats.currentStack >= 10) {
+          PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_STRONG_SOLVER);
+        }
+        PlayGames.setLeaderboardScore(PLAYGAMES_LEADERBOARD_STACK_ID, stats.currentStack);
+      });
     if (t < 60) {
       PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_SPRINTER);
     }

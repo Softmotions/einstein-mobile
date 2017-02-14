@@ -26,7 +26,8 @@ import {i18n} from '../utils/i18n';
 import {PLAY_GAMES_LOGGED_IN_KEY} from '../constants/settings';
 
 import  {
-  PLAYGAMES_LEADERBOARD_ID
+  PLAYGAMES_LEADERBOARD_ID,
+  PLAYGAMES_LEADERBOARD_STACK_ID
 } from '../constants/playgames';
 
 import {PlayGames} from '../modules/native';
@@ -132,6 +133,9 @@ class Welcome extends Component {
                 <Image style={styles.googlePlayIcon} source={{uri: 'games_achievements'}}/>
               </GoogleButton>
               <GoogleButton onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}>
+                <Image style={styles.googlePlayIcon} source={{uri: 'games_fastest_leaderboard'}}/>
+              </GoogleButton>
+              <GoogleButton onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_STACK_ID)}>
                 <Image style={styles.googlePlayIcon} source={{uri: 'games_leaderboards'}}/>
               </GoogleButton>
             </View> :

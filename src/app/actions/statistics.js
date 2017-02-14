@@ -27,7 +27,7 @@ const statsClear = () => dispatch =>
       return Promise.resolve(CLEAN_STATISTICS);
     });
 
-const updateStats = (update) => dispatch => {
+const updateStats = (update) => dispatch =>
   AsyncStorage.getItem(STATISTICS_STORAGE_KEY)
     .then(stats => stats ? JSON.parse(stats) : CLEAN_STATISTICS)
     .then(stats => {
@@ -58,7 +58,10 @@ const updateStats = (update) => dispatch => {
       stats.times = stats.times.slice(0, STATISTICS_ITEMS_COUNT);
 
       return AsyncStorage.setItem(STATISTICS_STORAGE_KEY, JSON.stringify(stats))
-        .then(() => dispatch({type: STATS_SET, stats: stats}))
+        .then(() => {
+          dispatch({type: STATS_SET, stats: stats});
+          return Promise.resolve(stats);
+        })
         .catch(err => {
           console.error('Error saving statistics', err);
           return Promise.resolve(stats);
@@ -68,7 +71,6 @@ const updateStats = (update) => dispatch => {
       console.error('Error loading statistics', err);
       return Promise.resolve(CLEAN_STATISTICS);
     });
-};
 
 const statsGameTry = () => updateStats({
   tries: 1, stack: (stats) => {
