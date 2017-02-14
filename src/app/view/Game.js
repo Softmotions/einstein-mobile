@@ -126,7 +126,7 @@ class AGameField extends Component {
         if (stats.currentStack >= 10) {
           PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_STRONG_SOLVER);
         }
-        PlayGames.setLeaderboardScore(PLAYGAMES_LEADERBOARD_STACK_ID, stats.currentStack);
+        PlayGames.setLeaderboardScore(PLAYGAMES_LEADERBOARD_STACK_ID, stats.currentStack || 1);
       });
     if (t < 60) {
       PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_SPRINTER);
