@@ -37,6 +37,7 @@ class I18N {
     this.tr('message');
     this.tr('help');
     this.tr('statistics');
+    this.tr('status')
   }
 
   initSection(name) {

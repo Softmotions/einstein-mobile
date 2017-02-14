@@ -49,7 +49,8 @@ const styles = StyleSheet.create({
 
   ruleGroup: {},
   ruleBox: {
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginBottom: 5
   },
   hrule: {
     flexDirection: 'row',
@@ -153,7 +154,7 @@ class Help extends Component {
           <View style={styles.ruleBox}>
             <View style={styles.vrule}>
               <Image source={{uri: 'item21'}} style={styles.ruleItemImage}/>
-              <Image source={{uri: 'item61'}} style={styles.ruleItemImage}/>
+              <Image source={{uri: 'item41'}} style={styles.ruleItemImage}/>
             </View>
           </View>
           {this.__trt('rules_under')}

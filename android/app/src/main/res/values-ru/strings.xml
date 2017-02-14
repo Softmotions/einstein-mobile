@@ -15,6 +15,8 @@
     <string name="message_fail_title">Не та фишка!</string>
     <string name="message_solve_text">Вы решили головомку. \nВремя: {0}</string>
     <string name="message_solve_title">Молодец!</string>
+    <string name="status_solved">Решёно</string>
+    <string name="status_failed">Провалено</string>
     <string name="statistics_best_times">Лучшее время</string>
     <string name="statistics_failed">Ошибок:</string>
     <string name="statistics_solved">Решено:</string>

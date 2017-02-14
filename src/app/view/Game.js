@@ -473,9 +473,9 @@ class AStatusInfo extends Component {
 
   renderGameStatus = () => this.props.game.game.solved ? this.renderGameSolvedStatus() : this.renderGameFailedStatus();
 
-  renderGameFailedStatus = () => (<Text style={this.styles.failedStatusText}>Failed</Text>);
+  renderGameFailedStatus = () => (<Text style={this.styles.failedStatusText}>{i18n.status.tr('failed')}</Text>);
 
-  renderGameSolvedStatus = () => (<Text style={this.styles.solvedStatusText}>Solved</Text>);
+  renderGameSolvedStatus = () => (<Text style={this.styles.solvedStatusText}>{i18n.status.tr('solved')}</Text>);
 
   render = () => (
     <View style={[this.styles.statusInfoBox, {zIndex: 5}]}>
