@@ -18,7 +18,7 @@ import com.google.android.gms.games.GamesActivityResultCodes;
  * @author Vyacheslav Tyutyunkov (tve@softmotions.com)
  */
 public class PlayGamesModule extends ReactContextBaseJavaModule
-        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LifecycleEventListener {
+    implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LifecycleEventListener {
 
     private static final int GOOGLE_SIGN_IN_REQUEST = 8615;
     private static final int SHOW_ACHIEVEMENTS_REQUEST = 5001;
@@ -44,6 +44,7 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
                             }
                             return;
                         } else {
+                            Log.d(TAG, "onActivityResult: " + resultCode);
                             mActivityPromise.reject(TAG, "unexpected");
                         }
                     }
@@ -55,8 +56,8 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
                         Log.e(TAG, "onActivityResult: disconnect");
                         getGoogleApiClient().disconnect();
                         getReactApplicationContext()
-                                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                                .emit("googleSignOut", Arguments.createMap());
+                            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit("googleSignOut", Arguments.createMap());
                     }
                     break;
             }
@@ -76,10 +77,10 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
     private GoogleApiClient getGoogleApiClient() {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getReactApplicationContext().getCurrentActivity())
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                    .build();
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                .build();
         }
         return mGoogleApiClient;
     }
@@ -110,7 +111,7 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
             }
         } else {
             Dialog dialog = GoogleApiAvailability.getInstance()
-                    .getErrorDialog(getCurrentActivity(), result.getErrorCode(), GOOGLE_SIGN_IN_REQUEST);
+                .getErrorDialog(getCurrentActivity(), result.getErrorCode(), GOOGLE_SIGN_IN_REQUEST);
             if (dialog != null) {
                 dialog.show();
             }
@@ -119,7 +120,7 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
         }
     }
 
-    public boolean isSignedIn() {
+    private boolean isSignedIn() {
         return getGoogleApiClient().isConnected();
     }
 
@@ -142,6 +143,11 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
             getGoogleApiClient().disconnect();
         }
         promise.resolve(null);
+    }
+
+    @ReactMethod
+    public void isSignedIn(Promise promise) {
+        promise.resolve(isSignedIn());
     }
 
     @ReactMethod

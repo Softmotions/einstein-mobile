@@ -11,7 +11,7 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  InteractionManager
+  InteractionManager,
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -27,10 +27,13 @@ import {PLAY_GAMES_LOGGED_IN_KEY} from '../constants/settings';
 
 import  {
   PLAYGAMES_LEADERBOARD_ID,
-  PLAYGAMES_LEADERBOARD_STACK_ID
+  PLAYGAMES_LEADERBOARD_STACK_ID,
 } from '../constants/playgames';
 
 import {PlayGames} from '../modules/native';
+
+import {Header} from './header';
+import {ImageHeaderButton} from './header/buttons';
 
 const color = '#013397ff';
 
@@ -38,13 +41,13 @@ class Welcome extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      styles: this._buildStyles()
-    }
+      styles: this._buildStyles(),
+    };
   }
 
   _rebuildStyles = () => {
     this.setState({
-      styles: this._buildStyles()
+      styles: this._buildStyles(),
     });
   };
 
@@ -52,7 +55,7 @@ class Welcome extends Component {
     welcomeScreen: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
 
     buttonsView: {
@@ -61,7 +64,7 @@ class Welcome extends Component {
 
     buttonView: {
       margin: 3,
-      width: Math.floor(Dimensions.get('window').width / 2)
+      width: Math.floor(Dimensions.get('window').width / 2),
     },
 
     googleButton: {
@@ -76,7 +79,7 @@ class Welcome extends Component {
       fontSize: 13,
       color: 'white',
       paddingLeft: 16,
-      fontFamily: 'sans-serif-medium'
+      fontFamily: 'sans-serif-medium',
     },
 
     googleButtonImagePadding: {
@@ -85,23 +88,8 @@ class Welcome extends Component {
 
     googleButtonImage: {
       height: 33,
-      width: 33
+      width: 33,
     },
-
-    googlePlayPanel: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      height: 33,
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-
-    googlePlayIcon: {
-      height: 33,
-      width: 33
-    }
   });
 
   _playGamesSignIn = () => {
@@ -111,7 +99,7 @@ class Welcome extends Component {
           this.props._onSettingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: true});
         },
         (err) => {
-          console.warn(err)
+          console.warn(err);
         });
   };
 
@@ -126,21 +114,6 @@ class Welcome extends Component {
     // todo: confirm new game!
     return (
       <View onLayout={this._rebuildStyles} style={styles.welcomeScreen}>
-        {
-          this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-            <View style={styles.googlePlayPanel}>
-              <GoogleButton onPress={() => PlayGames.showAchievements()}>
-                <Image style={styles.googlePlayIcon} source={{uri: 'games_achievements'}}/>
-              </GoogleButton>
-              <GoogleButton onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}>
-                <Image style={styles.googlePlayIcon} source={{uri: 'games_fastest_leaderboard'}}/>
-              </GoogleButton>
-              <GoogleButton onPress={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_STACK_ID)}>
-                <Image style={styles.googlePlayIcon} source={{uri: 'games_leaderboards'}}/>
-              </GoogleButton>
-            </View> :
-            null
-        }
         <View style={styles.buttonView}>
           <Button color={color} title={i18n.button.tr('new')} onPress={_onNewGame}/>
         </View>
@@ -177,9 +150,28 @@ class Welcome extends Component {
   }
 }
 
+const WelcomeHeader = connect(state => ({
+  settings: state.settings,
+}), dispatch => ({}))(class extends Header {
+
+  _renderContent = () => (
+    <View style={{flexDirection: 'row'}}>
+      {this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+        <ImageHeaderButton image='games_achievements'
+                           action={() => PlayGames.showAchievements()}/> : null}
+      {this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+        <ImageHeaderButton image='games_fastest_leaderboard'
+                           action={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}/> : null}
+      {this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+        <ImageHeaderButton image='games_leaderboards'
+                           action={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_STACK_ID)}/> : null}
+    </View>
+  );
+});
+
 export default connect(state => ({
     game: state.game,
-    settings: state.settings
+    settings: state.settings,
   }), dispatch => ({
     _onNewGame: () => {
       dispatch(navGame());
@@ -193,6 +185,10 @@ export default connect(state => ({
     _onHelp: () => dispatch(navHelp()),
     _onStat: () => dispatch(navStats()),
 
-    _onSettingsUpdate: (settings) => dispatch(settingsUpdate(settings))
-  })
+    _onSettingsUpdate: (settings) => dispatch(settingsUpdate(settings)),
+  }),
 )(Welcome);
+
+export {
+  WelcomeHeader,
+};

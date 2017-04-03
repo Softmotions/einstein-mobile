@@ -2,8 +2,8 @@
 
 import React, {Component} from 'react';
 import {AppState, DeviceEventEmitter} from 'react-native';
-import {createStore, applyMiddleware} from 'redux'
-import {Provider} from 'react-redux'
+import {createStore, applyMiddleware} from 'redux';
+import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 
 import SplashScreen from 'react-native-splash-screen';
@@ -35,7 +35,7 @@ export default class Einstein extends Component {
   };
 
   _handleGoogleSignOut = (event) => {
-    store.dispatch(settingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: false}))
+    store.dispatch(settingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: false}));
   };
 
   componentDidMount() {
@@ -48,23 +48,17 @@ export default class Einstein extends Component {
         (err) => {
           console.error(err);
           SplashScreen.hide();
-        }
-      );
+        });
+
+    const signIn = (signed) =>
+      PlayGames.signIn()
+        .then(() => !signed ? store.dispatch(settingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: true})) : Promise.resolve())
+        .then(() => loadGame(), err => loadGame());
+
+
     store.dispatch(settingsLoad())
-      .then((settings) => {
-        if (settings[PLAY_GAMES_LOGGED_IN_KEY]) {
-          PlayGames.signIn()
-            .then(() => {
-                loadGame()
-              },
-              (err) => {
-                loadGame();
-              }
-            )
-        } else {
-          loadGame();
-        }
-      });
+      .then(settings => signIn(settings[PLAY_GAMES_LOGGED_IN_KEY]),
+        err => signIn(false));
   }
 
   componentWillMount() {

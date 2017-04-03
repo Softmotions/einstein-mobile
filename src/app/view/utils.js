@@ -3,6 +3,8 @@
 import {StyleSheet} from 'react-native';
 import moment from 'moment';
 
+import {HEADER_SIZE} from './header/constants';
+
 const Dimensions = require('Dimensions');
 
 // todo: configure
@@ -18,12 +20,12 @@ class StyleConfig {
     // TODO: extract additional size calculations??
     this._size = size;
     this._width = width;
-    this._height = height;
+    this._height = height - HEADER_SIZE;
 
-    this._border = 0.5;
+    this._border = 1;
     this._space = 1;
 
-    const dimension = this.direction == 'row' ? this.height - this.statusHeight : this.width;
+    const dimension = this.direction === 'row' ? this.height - this.statusHeight : this.width;
     const box = dimension - this.border * 2;
     this._groupSize = Math.floor((box - this.border * 2 * this.size) / this.size) + this.border * 2;
     this._itemSize = Math.floor((this.groupSize - this.border * 2) / 3);
@@ -32,13 +34,13 @@ class StyleConfig {
     this._fieldRowWidth = this.groupSize * this.size + this.space * 2;
     this._fieldRowHeight = this.groupSize;
 
-    this._ruleBorder = 0.5;
+    this._ruleBorder = 1;
     this._ruleItemBorder = 0;
     this._ruleSpace = 1;
 
-    this._rule3Columns = this.direction == 'row' ? 3 : 5; // todo calculate
-    const rulesWidth = this.direction == 'row' ? this.width - box : this.width;
-    const rulesHeight = (this.direction == 'row' ? this.height : this.height - box) - this.statusHeight;
+    this._rule3Columns = this.direction === 'row' ? 3 : 5; // todo calculate
+    const rulesWidth = this.direction === 'row' ? this.width - box : this.width;
+    const rulesHeight = (this.direction === 'row' ? this.height : this.height - box) - this.statusHeight;
 
     const ruleBox = Math.floor((rulesWidth - this.ruleSpace * 2 * (this.rule3Columns - 1)) / this.rule3Columns);
     this._ruleItemSize = Math.floor((ruleBox - this.ruleSpace * 4 - this.ruleBorder * 4) / 3);
@@ -241,7 +243,7 @@ class StyleConfig {
         width: this.fieldRowWidth,
         flexDirection: 'row',
         justifyContent: 'center',
-        padding: 0
+        padding: 0,
       },
 
       groupItem: {
@@ -251,7 +253,7 @@ class StyleConfig {
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: this.border,
-        borderColor: '#dddddd'
+        borderColor: '#dddddd',
       },
 
       groupItemsRow: {
@@ -276,7 +278,7 @@ class StyleConfig {
       },
 
       rulesGroup: {
-        flexDirection: 'row'
+        flexDirection: 'row',
       },
 
       rule3: {
@@ -318,12 +320,12 @@ class StyleConfig {
         top: 0,
         bottom: 0,
         left: 0,
-        right: 0
+        right: 0,
       },
 
       modalContainerInner: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.15)'
+        backgroundColor: 'rgba(0, 0, 0, 0.15)',
       },
 
       groupItemPopup: {
@@ -361,11 +363,11 @@ class StyleConfig {
         padding: 5,
         bottom: 0,
         right: 0,
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
       },
 
       timeStatusText: {
-        marginLeft: 15
+        marginLeft: 15,
       },
 
       failedStatusText: {
@@ -373,8 +375,8 @@ class StyleConfig {
       },
 
       solvedStatusText: {
-        color: mainColor
-      }
+        color: mainColor,
+      },
     });
   }
 
@@ -392,7 +394,7 @@ class StyleConfig {
           top: Math.floor(top),
           left: Math.floor(left),
           position: 'absolute',
-        }
+        },
       }).popupPosition;
     } else {
       return StyleSheet.create({popupPosition: {}}).popupPosition;
@@ -413,5 +415,5 @@ const formatDate = (date) => date ? moment(date).format('HH:mm DD.MM.YYYY') : ''
 export {
   StyleConfig,
   formatTime,
-  formatDate
-}
+  formatDate,
+};

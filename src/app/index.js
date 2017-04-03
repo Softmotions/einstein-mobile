@@ -3,10 +3,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {
-  StyleSheet,
-} from 'react-native';
-
 import {NavigationExperimental, BackAndroid} from 'react-native';
 const {
   CardStack: NavigationCardStack,
@@ -19,10 +15,12 @@ import {
   STAT_SCREEN_KEY,
 } from './constants/navigation';
 
-import Welcome from './view/Welcome';
+import Welcome, {WelcomeHeader} from './view/Welcome';
 import Game from './view/Game';
 import Help from './view/Help';
 import Statistics from './view/Statistics';
+
+import {DefaultHeader} from './view/header/index';
 
 import {gamePause} from './actions/game';
 import {navBack} from './actions/navigation';
@@ -48,24 +46,40 @@ class Application extends Component {
       onNavigateBack={this.props._onNavigateBack}
       navigationState={this.props.navigationState}
       gestureResponseDistance={150}
-      renderScene={(scene) => {
-            switch (scene.scene.route.key) {
-              case GAME_SCREEN_KEY: return (<Game />);
-              case HELP_SCREEN_KEY: return (<Help />);
-              case STAT_SCREEN_KEY: return (<Statistics />);
-              default: return (<Welcome />);
-            }
-          }}/>
+      renderHeader={({scene}) => {
+        switch (scene.route.key) {
+          case GAME_SCREEN_KEY:
+            return (<DefaultHeader />);
+          case HELP_SCREEN_KEY:
+            return (<DefaultHeader />);
+          case WELCOME_SCREEN_KEY:
+            return (<WelcomeHeader />);
+          default:
+            return (<DefaultHeader />);
+        }
+      }}
+      renderScene={({scene}) => {
+        switch (scene.route.key) {
+          case GAME_SCREEN_KEY:
+            return (<Game />);
+          case HELP_SCREEN_KEY:
+            return (<Help />);
+          case STAT_SCREEN_KEY:
+            return (<Statistics />);
+          default:
+            return (<Welcome />);
+        }
+      }}/>
   );
 }
 
 export default connect(state => ({
-    navigationState: state.navigationState
+    navigationState: state.navigationState,
   }),
   dispatch => ({
     _onNavigateBack: () => {
       dispatch(gamePause());
       dispatch(navBack());
     },
-  })
+  }),
 )(Application);
