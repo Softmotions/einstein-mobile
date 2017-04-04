@@ -45,7 +45,7 @@ class Application extends Component {
     <NavigationCardStack
       onNavigateBack={this.props._onNavigateBack}
       navigationState={this.props.navigationState}
-      gestureResponseDistance={150}
+      enableGestures={false}
       renderHeader={({scene}) => {
         switch (scene.route.key) {
           case GAME_SCREEN_KEY:
