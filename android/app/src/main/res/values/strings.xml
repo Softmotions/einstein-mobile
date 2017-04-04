@@ -52,4 +52,6 @@
     <string name="help_rule_actions">
         Also touching rules you can switch rules visibility mode to hide rules you already satisfied.
     </string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_option_press_exclude">Use press for exclude tile</string>
 </resources>

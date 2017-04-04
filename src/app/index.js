@@ -3,27 +3,22 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {NavigationExperimental, BackAndroid} from 'react-native';
-const {
-  CardStack: NavigationCardStack,
-} = NavigationExperimental;
-
-import {
-  WELCOME_SCREEN_KEY,
-  GAME_SCREEN_KEY,
-  HELP_SCREEN_KEY,
-  STAT_SCREEN_KEY,
-} from './constants/navigation';
+import {BackAndroid, NavigationExperimental} from 'react-native';
+import {GAME_SCREEN_KEY, HELP_SCREEN_KEY, SETTINGS_SCREEN_KEY, STAT_SCREEN_KEY, WELCOME_SCREEN_KEY} from './constants/navigation';
 
 import Welcome, {WelcomeHeader} from './view/Welcome';
 import Game from './view/Game';
 import Help from './view/Help';
 import Statistics from './view/Statistics';
+import Settings from './view/Settings';
 
 import {DefaultHeader} from './view/header/index';
 
 import {gamePause} from './actions/game';
 import {navBack} from './actions/navigation';
+const {
+  CardStack: NavigationCardStack,
+} = NavigationExperimental;
 
 class Application extends Component {
   constructor(props) {
@@ -48,10 +43,6 @@ class Application extends Component {
       enableGestures={false}
       renderHeader={({scene}) => {
         switch (scene.route.key) {
-          case GAME_SCREEN_KEY:
-            return (<DefaultHeader />);
-          case HELP_SCREEN_KEY:
-            return (<DefaultHeader />);
           case WELCOME_SCREEN_KEY:
             return (<WelcomeHeader />);
           default:
@@ -66,6 +57,8 @@ class Application extends Component {
             return (<Help />);
           case STAT_SCREEN_KEY:
             return (<Statistics />);
+          case SETTINGS_SCREEN_KEY:
+            return (<Settings />);
           default:
             return (<Welcome />);
         }

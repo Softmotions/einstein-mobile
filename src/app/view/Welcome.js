@@ -14,10 +14,12 @@ import {
   InteractionManager,
 } from 'react-native';
 
+import MIcon from 'react-native-vector-icons/MaterialIcons';
+
 import {connect} from 'react-redux';
 
 import {gameNew, gameResume, gameClear} from '../actions/game';
-import {navGame, navHelp, navStats} from '../actions/navigation';
+import {navGame, navHelp, navSettings, navStats} from '../actions/navigation';
 import {statsGameTry} from '../actions/statistics';
 import {settingsUpdate} from '../actions/settings';
 
@@ -33,7 +35,7 @@ import  {
 import {PlayGames} from '../modules/native';
 
 import {Header} from './header';
-import {ImageHeaderButton} from './header/buttons';
+import {IconHeaderButton, ImageHeaderButton} from './header/buttons';
 
 const color = '#013397ff';
 
@@ -152,10 +154,11 @@ class Welcome extends Component {
 
 const WelcomeHeader = connect(state => ({
   settings: state.settings,
-}), dispatch => ({}))(class extends Header {
-
+}), dispatch => ({
+  _onSettings: () => dispatch(navSettings()),
+}))(class extends Header {
   _renderContent = () => (
-    <View style={{flexDirection: 'row'}}>
+    <View style={{flexDirection: 'row', flex: 1}}>
       {this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
         <ImageHeaderButton image='games_achievements'
                            action={() => PlayGames.showAchievements()}/> : null}
@@ -165,6 +168,8 @@ const WelcomeHeader = connect(state => ({
       {this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
         <ImageHeaderButton image='games_leaderboards'
                            action={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_STACK_ID)}/> : null}
+      <View style={{flex: 1}}/>
+      <IconHeaderButton icon={MIcon} name='more-vert' action={this.props._onSettings}/>
     </View>
   );
 });

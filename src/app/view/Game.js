@@ -37,6 +37,7 @@ import {
 } from '../constants/playgames';
 
 import {GameActivity, PlayGames} from '../modules/native';
+import {OPTION_PRESS_EXCLUDE} from '../constants/settings';
 
 class ItemImage extends Component {
   static item = (row, value) => 'item' + (row + 1) + (value + 1);
@@ -55,7 +56,6 @@ class ItemImage extends Component {
 }
 
 class AGameField extends Component {
-
   constructor(props) {
     super(props);
     this.state = {popup: null};
@@ -163,45 +163,49 @@ class AGameField extends Component {
     );
   };
 
-  _onPressPopupItem = (i, j, k) => (() => {
-      if (!this.props.game.possible(i, j, k)) {
-        console.debug('element must be disabled');
-        return;
-      }
+  _selectItem = (i, j, k) => {
+    if (!this.props.game.possible(i, j, k)) {
+      console.debug('element must be disabled');
+      return;
+    }
 
-      this.props.game.set(i, j, k);
+    this.props.game.set(i, j, k);
+    this._hidePopup();
+    if (this.props.game.finished) {
+      this._onGameFinish();
+    }
+  };
+
+  _excludeItem = (i, j, k) => {
+    if (!this.props.game.possible(i, j, k)) {
+      console.debug('element must be disabled');
+      return;
+    }
+
+    if (__DEV__ && this.props.game.field.value(i, j) === k) {
+      this.props.game._count = 0;
+      this.props.game.stop();
       this._hidePopup();
-      if (this.props.game.finished) {
-        this._onGameFinish();
-      }
+      this._onGameFinish();
+      return;
     }
-  );
 
-  _onLongPressPopupItem = (i, j, k) => (() => {
-      if (!this.props.game.possible(i, j, k)) {
-        console.debug('element must be disabled');
-        return;
-      }
-
-      if (__DEV__ && this.props.game.field.value(i, j) == k) {
-        this.props.game._count = 0;
-        this.props.game.stop();
-        this._hidePopup();
-        this._onGameFinish();
-        return;
-      }
-
-      this.props.game.exclude(i, j, k);
-      this.forceUpdate();
-      if (this.props.game.finished) {
-        this._hidePopup();
-        this._onGameFinish();
-      }
-      if (this.props.game.isSet(i, j)) {
-        this._hidePopup();
-      }
+    this.props.game.exclude(i, j, k);
+    this.forceUpdate();
+    if (this.props.game.finished) {
+      this._hidePopup();
+      this._onGameFinish();
     }
-  );
+    if (this.props.game.isSet(i, j)) {
+      this._hidePopup();
+    }
+  };
+
+  _onPressPopupItem = (i, j, k) =>
+    () => this.props.settings[OPTION_PRESS_EXCLUDE] ? this._excludeItem(i, j, k) : this._selectItem(i, j, k);
+
+  _onLongPressPopupItem = (i, j, k) =>
+    () => this.props.settings[OPTION_PRESS_EXCLUDE] ? this._selectItem(i, j, k) : this._excludeItem(i, j, k);
 
   renderPopupItem(i, j, k) {
     let {game} = this.props;
@@ -272,6 +276,7 @@ class AGameField extends Component {
 
 const GameField = connect(state => ({
   game: state.game.game,
+  settings: state.settings,
 }), dispatch => ({
   _statFailed: () => dispatch(statsGameFailed()),
   _statSolved: (time) => dispatch(statsGameSolved(time)),

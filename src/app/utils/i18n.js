@@ -37,7 +37,8 @@ class I18N {
     this.tr('message');
     this.tr('help');
     this.tr('statistics');
-    this.tr('status')
+    this.tr('status');
+    this.tr('settings');
   }
 
   initSection(name) {
@@ -58,5 +59,5 @@ class I18N {
 const i18n = new I18N();
 
 export {
-  i18n
-}
+  i18n,
+};
