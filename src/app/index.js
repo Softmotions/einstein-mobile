@@ -20,6 +20,8 @@ const {
   CardStack: NavigationCardStack,
 } = NavigationExperimental;
 
+import {i18n} from './utils/i18n';
+
 class Application extends Component {
   constructor(props) {
     super(props);
@@ -48,7 +50,8 @@ class Application extends Component {
           case WELCOME_SCREEN_KEY:
             return (<WelcomeHeader />);
           default:
-            return (<DefaultHeader />);
+            const tr = i18n.tr(scene.route.key);
+            return (<DefaultHeader title={tr.has('title') ? tr.tr('title') : ''}/>);
         }
       }}
       renderScene={({scene}) => {

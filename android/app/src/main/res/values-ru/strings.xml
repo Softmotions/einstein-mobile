@@ -24,6 +24,7 @@
     <string name="statistics_total">Всего попыток:</string>
     <string name="statistics_current_stack">Текущая серия:</string>
     <string name="statistics_max_stack">Максимальная серия:</string>
+    <string name="help_title">Справка</string>
     <string name="help_goal_title">Цель игры</string>
     <string name="help_goal_text">
         открыть фишки в каждой клетке поля (всего 36). Все фишки уникальны.

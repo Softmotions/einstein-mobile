@@ -26,6 +26,7 @@
     <string name="statistics_current_stack">Current stack:</string>
     <string name="statistics_max_stack">Max stack:</string>
     <string name="statistics_best_times">Best times</string>
+    <string name="help_title">Help</string>
     <string name="help_goal_title">Game goal</string>
     <string name="help_goal_text">to discover tiles in each of 36 field positions.
         Tiles are different and rules shows how they placed one to each other.

@@ -7,7 +7,7 @@ import {
   Text,
   Image,
   Button,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -20,15 +20,15 @@ const ruleItemBorderColor = 'black';
 const styles = StyleSheet.create({
   separator: {
     flexDirection: 'row',
-    padding: 15
+    padding: 15,
   },
   separatorLine: {
     borderTopWidth: 1,
-    borderColor: mainColor
+    borderColor: mainColor,
   },
 
   container: {
-    padding: 10
+    paddingHorizontal: 10,
   },
 
   text: {
@@ -37,32 +37,32 @@ const styles = StyleSheet.create({
     color: mainColor,
   },
   caption: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 
   image: {
     width: 16,
     height: 16,
     borderWidth: 0.25,
-    borderColor: ruleItemBorderColor
+    borderColor: ruleItemBorderColor,
   },
 
   ruleGroup: {},
   ruleBox: {
     alignSelf: 'center',
-    marginBottom: 5
+    marginBottom: 5,
   },
   hrule: {
     flexDirection: 'row',
     padding: 1.5,
     borderWidth: 0.5,
-    borderColor: ruleItemBorderColor
+    borderColor: ruleItemBorderColor,
   },
   vrule: {
     flexDirection: 'column',
     padding: 1.5,
     borderWidth: 0.5,
-    borderColor: ruleItemBorderColor
+    borderColor: ruleItemBorderColor,
   },
   ruleImage: {
     width: 24,
@@ -71,12 +71,12 @@ const styles = StyleSheet.create({
   ruleItemImage: {
     width: 24,
     height: 24,
-  }
+  },
 });
 
 class Separator extends Component {
   get length() {
-    return 'long' == this.props.type ? 8 : 2;
+    return 'long' === this.props.type ? 8 : 2;
   }
 
   render = () => (
@@ -85,7 +85,7 @@ class Separator extends Component {
       <View style={[styles.separatorLine, {flex: this.length}]}/>
       <View style={{flex: 1}}/>
     </View>
-  )
+  );
 }
 
 class Help extends Component {
@@ -93,21 +93,20 @@ class Help extends Component {
     const key = arguments[0];
     const elements = Array.from(arguments).slice(1);
     return (<Text style={styles.text} key={key}>
-      {i18n.tr('help').tr(key)
+      {i18n.help.tr(key)
         .split(/{(\d+)}/)
         .map((item, i) => (
-          <Text key={key + '_' + i}>{typeof elements[item] != 'undefined' ? elements[item] : item}</Text>
+          <Text key={key + '_' + i}>{typeof elements[item] !== 'undefined' ? elements[item] : item}</Text>
         ))
       }
     </Text>);
   };
 
   render = () => {
-    const help = i18n.tr('help');
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.text}>
-          <Text style={styles.caption}>{help.tr('goal_title')}</Text>: {help.tr('goal_text')}
+          <Text style={styles.caption}>{i18n.help.tr('goal_title')}</Text>: {i18n.help.tr('goal_text')}
         </Text>
         {/*Between rule*/}
         <View style={[styles.ruleGroup, {marginTop: 15}]}>
@@ -119,7 +118,7 @@ class Help extends Component {
           {this.__trt('rules_between',
             <Image source={{uri: 'item21'}} style={styles.image}/>,
             <Image source={{uri: 'item31'}} style={styles.image}/>,
-            <Image source={{uri: 'item61'}} style={styles.image}/>
+            <Image source={{uri: 'item61'}} style={styles.image}/>,
           )}
         </View>
         <Separator/>
@@ -132,7 +131,7 @@ class Help extends Component {
           </View>
           {this.__trt('rules_near',
             <Image source={{uri: 'item21'}} style={styles.image}/>,
-            <Image source={{uri: 'item35'}} style={styles.image}/>
+            <Image source={{uri: 'item35'}} style={styles.image}/>,
           )}
         </View>
         <Separator/>
@@ -145,7 +144,7 @@ class Help extends Component {
           </View>
           {this.__trt('rules_direction',
             <Image source={{uri: 'item21'}} style={styles.image}/>,
-            <Image source={{uri: 'item61'}} style={styles.image}/>
+            <Image source={{uri: 'item61'}} style={styles.image}/>,
           )}
         </View>
         <Separator/>
@@ -161,12 +160,12 @@ class Help extends Component {
         </View>
         <Separator/>
         <Text style={styles.text}>
-          {help.tr('field_actions')}
+          {i18n.help.tr('field_actions')}
           {'\n'}
-          {help.tr('rule_actions')}
+          {i18n.help.tr('rule_actions')}
         </Text>
       </ScrollView>
-    )
+    );
   };
 }
 

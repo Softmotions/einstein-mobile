@@ -126,8 +126,6 @@ class Statistics extends Component {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.caption}>{i18n.statistics.tr('title')}</Text>
-
         <InfoRow title={i18n.statistics.tr('total')} text={statistics.tries}/>
         <InfoRow title={i18n.statistics.tr('solved')} text={statistics.successfully}/>
         <InfoRow title={i18n.statistics.tr('failed')} text={statistics.failed}/>

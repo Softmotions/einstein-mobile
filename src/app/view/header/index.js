@@ -3,14 +3,16 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
-import {IconHeaderButton} from './buttons';
+import {HeaderButton, IconHeaderButton} from './buttons';
 import {navBack} from '../../actions/navigation';
 
 import {HEADER_SIZE} from './constants';
+
+const mainColor = '#013397';
 
 class Header extends Component {
   render = () => (
@@ -27,7 +29,13 @@ const DefaultHeader = connect(state => ({}), dispatch => ({
 }))(
   class extends Header {
     _renderContent = () => (
-      <IconHeaderButton icon={MIcon} name='arrow-back' action={this.props._onNavigateBack}/>
+      <View style={{flex: 1, flexDirection: 'row'}}>
+        <IconHeaderButton icon={MIcon} name='arrow-back' action={this.props._onNavigateBack}/>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={{color: mainColor, fontSize: 16, fontWeight: 'bold'}}>{this.props.title || ''}</Text>
+        </View>
+        <HeaderButton/>
+      </View>
     );
   });
 

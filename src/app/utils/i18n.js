@@ -12,18 +12,23 @@ class Section {
   __getString(name) {
     const key = this.__section + '_' + arguments[0];
     const str = LocaleModule.getString(key);
-    if (!str) {
+    if (str === undefined) {
       console.warn('Undefined translation key:', key);
       return key;
     }
     return str;
   }
 
+  has(name) {
+    const key = this.__section + '_' + name;
+    return LocaleModule.getString(key) !== undefined;
+  }
+
   tr() {
     const str = this.__getString(arguments[0]);
     const args = Array.from(arguments).slice(1);
     return args.length > 0 ? str.replace(/{(\d+)}/g, function (match, number) {
-      return typeof args[number] != 'undefined' ? args[number] : match;
+      return typeof args[number] !== 'undefined' ? args[number] : match;
     }) : str;
   }
 }
