@@ -7,7 +7,7 @@ import {BackAndroid, NavigationExperimental} from 'react-native';
 import {GAME_SCREEN_KEY, HELP_SCREEN_KEY, SETTINGS_SCREEN_KEY, STAT_SCREEN_KEY, WELCOME_SCREEN_KEY} from './constants/navigation';
 
 import Welcome, {WelcomeHeader} from './view/Welcome';
-import Game from './view/Game';
+import Game, {GameHeader} from './view/Game';
 import Help from './view/Help';
 import Statistics from './view/Statistics';
 import Settings from './view/Settings';
@@ -43,6 +43,8 @@ class Application extends Component {
       enableGestures={false}
       renderHeader={({scene}) => {
         switch (scene.route.key) {
+          case GAME_SCREEN_KEY:
+            return (<GameHeader setRef={(ref) => this._header = ref}/>);
           case WELCOME_SCREEN_KEY:
             return (<WelcomeHeader />);
           default:
@@ -52,7 +54,7 @@ class Application extends Component {
       renderScene={({scene}) => {
         switch (scene.route.key) {
           case GAME_SCREEN_KEY:
-            return (<Game />);
+            return (<Game header={this._header}/>);
           case HELP_SCREEN_KEY:
             return (<Help />);
           case STAT_SCREEN_KEY:

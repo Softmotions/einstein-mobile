@@ -1,43 +1,75 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {
-  View,
-  ScrollView,
-  Image,
-  PanResponder,
-  TouchableWithoutFeedback,
-  TouchableHighlight,
-  TouchableOpacity,
-  Alert,
-  Text,
-  InteractionManager,
-} from 'react-native';
+import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 
-import {Loader} from './Loader';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {connect} from 'react-redux';
 
-import {StyleConfig, formatTime} from './utils';
+import {formatTime, StyleConfig} from './utils';
 
-import {gameRuleToggle, gameNew} from '../actions/game';
-import {navStats} from '../actions/navigation';
+import {gameNew, gameRuleToggle} from '../actions/game';
+import {navBack, navStats} from '../actions/navigation';
 import {statsGameFailed, statsGameSolved} from '../actions/statistics';
+import {settingsUpdate} from '../actions/settings';
 
 import {i18n} from '../utils/i18n';
 
 import {
+  PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED,
+  PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM,
+  PLAYGAMES_ACHIEVEMENT_SOLVED_10,
+  PLAYGAMES_ACHIEVEMENT_SPRINTER,
+  PLAYGAMES_ACHIEVEMENT_STRONG_SOLVER,
   PLAYGAMES_LEADERBOARD_ID,
   PLAYGAMES_LEADERBOARD_STACK_ID,
-  PLAYGAMES_ACHIEVEMENT_SOLVED_10,
-  PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM,
-  PLAYGAMES_ACHIEVEMENT_SPRINTER,
-  PLAYGAMES_ACHIEVEMENT_FIRST_SOLVED,
-  PLAYGAMES_ACHIEVEMENT_STRONG_SOLVER,
 } from '../constants/playgames';
+import {OPTION_PRESS_EXCLUDE} from '../constants/settings';
 
 import {GameActivity, PlayGames} from '../modules/native';
-import {OPTION_PRESS_EXCLUDE} from '../constants/settings';
+
+import {Loader} from './Loader';
+import {Header} from './header';
+import {IconHeaderButton} from './header/buttons';
+
+const GameHeader = connect(state => ({
+  settings: state.settings,
+}), dispatch => ({
+  _onNavigateBack: () => dispatch(navBack()),
+  _optionUpdate: (update) => dispatch(settingsUpdate(update)),
+}))(class extends Header {
+  constructor(props) {
+    super(props);
+    this.state = {
+      popup: false,
+    };
+  }
+
+  componentDidMount = () => this.props.setRef && this.props.setRef({
+    popupShown: this.popupShown,
+  });
+
+  componentWillUnmount = () => this.props.setRef && this.props.setRef(null);
+
+  popupShown = (value) => this.setState({popup: value});
+
+  _renderContent = () => (
+    <View style={{flexDirection: 'row', flex: 1}}>
+      <IconHeaderButton icon={MIcon} name='arrow-back' action={this.props._onNavigateBack}/>
+      <View style={{flexDirection: 'row', flex: 1, justifyContent: 'center', opacity: this.state.popup ? 1 : 0}}>
+        <TouchableOpacity disabled={!this.state.popup}
+                          onPress={() => this.props._optionUpdate({[OPTION_PRESS_EXCLUDE]: !this.props.settings[OPTION_PRESS_EXCLUDE]})}>
+          <View style={{paddingHorizontal: 10, justifyContent: 'center', flex: 1}}>
+            <Text style={{fontSize: 16, fontWeight: 'bold'}}>
+              {this.props.settings[OPTION_PRESS_EXCLUDE] ? i18n.tr('option').tr('exclude') : i18n.tr('option').tr('select')}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+});
 
 class ItemImage extends Component {
   static item = (row, value) => 'item' + (row + 1) + (value + 1);
@@ -88,9 +120,15 @@ class AGameField extends Component {
     return () => {
       if (!this.props.game.isSet(i, j)) {
         this.setState({popup: {i: i, j: j}});
+        this.props.onPopup && this.props.onPopup(true);
       }
     };
   }
+
+  _hidePopup = () => {
+    this.setState({popup: null});
+    this.props.onPopup && this.props.onPopup(false);
+  };
 
   renderGroupItem = (i, j) => (
     <TouchableWithoutFeedback key={'group_' + i + '_' + j}
@@ -204,9 +242,6 @@ class AGameField extends Component {
   _onPressPopupItem = (i, j, k) =>
     () => this.props.settings[OPTION_PRESS_EXCLUDE] ? this._excludeItem(i, j, k) : this._selectItem(i, j, k);
 
-  _onLongPressPopupItem = (i, j, k) =>
-    () => this.props.settings[OPTION_PRESS_EXCLUDE] ? this._selectItem(i, j, k) : this._excludeItem(i, j, k);
-
   renderPopupItem(i, j, k) {
     let {game} = this.props;
     const key = 'popup_item_' + i + '_' + j + '_' + k;
@@ -222,9 +257,8 @@ class AGameField extends Component {
     return (
       <View key={key} style={[this.styles.popupItemBox, {opacity: game.possible(i, j, k) ? 1 : 0}]}>
         <TouchableOpacity disabled={game.finished || !game.possible(i, j, k)}
-                          pressRetentionOffset={{top: 0, left: 0, right: 0, bottom: 0}}
-                          onPress={this._onPressPopupItem(i, j, k)}
-                          onLongPress={this._onLongPressPopupItem(i, j, k)}>
+                          pressRetentionOffset={{top: 0, left: 0, right: 0, bottom: o}}
+                          onPress={this._onPressPopupItem(i, j, k)}>
           <ItemImage style={[this.styles.popupItem, devStyle]} row={i} value={k}/>
         </TouchableOpacity>
       </View>
@@ -248,8 +282,6 @@ class AGameField extends Component {
       </View>
     </TouchableWithoutFeedback>
   );
-
-  _hidePopup = () => this.setState({popup: null});
 
   render = () => (
     <View style={this.styles.fieldContainer}>
@@ -546,6 +578,8 @@ class Game extends Component {
     </View>
   );
 
+  _onPopup = (value) => this.props.header && this.props.header.popupShown(value);
+
   render() {
     let {ready, styles} = this.state;
     let {game} = this.props;
@@ -561,7 +595,7 @@ class Game extends Component {
     return (
       <View onLayout={this._updateStyles} style={this.styles.container}>
         <StatusInfo styles={styles}/>
-        <GameField styles={styles}/>
+        <GameField styles={styles} onPopup={(value) => this._onPopup(value)}/>
         <Rules styles={styles}/>
       </View>
     );
@@ -569,3 +603,7 @@ class Game extends Component {
 }
 
 export default connect(state => ({game: state.game}), dispatch => ({}))(Game);
+
+export {
+  GameHeader,
+};

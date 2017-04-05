@@ -50,10 +50,15 @@ export default class Einstein extends Component {
           SplashScreen.hide();
         });
 
-    const signIn = (signed) =>
-      PlayGames.signIn()
-        .then(() => !signed ? store.dispatch(settingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: true})) : Promise.resolve())
-        .then(() => loadGame(), err => loadGame());
+    const signIn = (signed) => {
+      if (!__DEV__) {
+        PlayGames.signIn()
+          .then(() => !signed ? store.dispatch(settingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: true})) : Promise.resolve())
+          .then(() => loadGame(), err => loadGame());
+      } else {
+        loadGame();
+      }
+    };
 
 
     store.dispatch(settingsLoad())

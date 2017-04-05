@@ -52,5 +52,6 @@
         Чтобы спрятать правило нажмите на него и оно слегка затенится. Повторное нажатие делает его видимым снова.
     </string>
     <string name="settings_title">Настройки</string>
-    <string name="settings_option_press_exclude">Использовать нажатие для убирания фишки</string>
+    <string name="option_select">выбрать</string>
+    <string name="option_exclude">убрать</string>
 </resources>

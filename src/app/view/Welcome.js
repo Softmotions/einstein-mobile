@@ -169,7 +169,7 @@ const WelcomeHeader = connect(state => ({
         <ImageHeaderButton image='games_leaderboards'
                            action={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_STACK_ID)}/> : null}
       <View style={{flex: 1}}/>
-      <IconHeaderButton icon={MIcon} name='more-vert' action={this.props._onSettings}/>
+      {/*<IconHeaderButton icon={MIcon} name='more-vert' action={this.props._onSettings}/>*/}
     </View>
   );
 });
