@@ -257,7 +257,7 @@ class AGameField extends Component {
     return (
       <View key={key} style={[this.styles.popupItemBox, {opacity: game.possible(i, j, k) ? 1 : 0}]}>
         <TouchableOpacity disabled={game.finished || !game.possible(i, j, k)}
-                          pressRetentionOffset={{top: 0, left: 0, right: 0, bottom: o}}
+                          pressRetentionOffset={{top: 0, left: 0, right: 0, bottom: 0}}
                           onPress={this._onPressPopupItem(i, j, k)}>
           <ItemImage style={[this.styles.popupItem, devStyle]} row={i} value={k}/>
         </TouchableOpacity>
