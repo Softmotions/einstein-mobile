@@ -31,7 +31,7 @@ import {GameActivity, PlayGames} from '../modules/native';
 
 import {Loader} from './Loader';
 import {Header} from './header';
-import {IconHeaderButton} from './header/buttons';
+import {HeaderButton, IconHeaderButton} from './header/buttons';
 
 const GameHeader = connect(state => ({
   settings: state.settings,
@@ -57,16 +57,16 @@ const GameHeader = connect(state => ({
   _renderContent = () => (
     <View style={{flexDirection: 'row', flex: 1}}>
       <IconHeaderButton icon={MIcon} name='arrow-back' action={this.props._onNavigateBack}/>
-      <View style={{flexDirection: 'row', flex: 1, justifyContent: 'center', opacity: this.state.popup ? 1 : 0}}>
-        <TouchableOpacity disabled={!this.state.popup}
-                          onPress={() => this.props._optionUpdate({[OPTION_PRESS_EXCLUDE]: !this.props.settings[OPTION_PRESS_EXCLUDE]})}>
-          <View style={{paddingHorizontal: 10, justifyContent: 'center', flex: 1}}>
-            <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-              {this.props.settings[OPTION_PRESS_EXCLUDE] ? i18n.tr('option').tr('exclude') : i18n.tr('option').tr('select')}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity disabled={!this.state.popup}
+                        style={{flex: 1}}
+                        onPress={() => this.props._optionUpdate({[OPTION_PRESS_EXCLUDE]: !this.props.settings[OPTION_PRESS_EXCLUDE]})}>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', opacity: this.state.popup ? 1 : 0}}>
+          <Text style={{fontSize: 16, fontWeight: 'bold'}}>
+            {this.props.settings[OPTION_PRESS_EXCLUDE] ? i18n.tr('option').tr('exclude') : i18n.tr('option').tr('select')}
+          </Text>
+        </View>
+      </TouchableOpacity>
+      <HeaderButton />
     </View>
   );
 });

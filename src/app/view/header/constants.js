@@ -1,6 +1,6 @@
 'use strict';
 
-const HEADER_SIZE = 32;
+const HEADER_SIZE = 40;
 
 export {
   HEADER_SIZE,
