@@ -172,7 +172,7 @@ class GameController {
 
     this.checkSingle(row, col);
 
-    if (this.solved) {
+    if (!this.hasHidden) {
       this.stop();
     }
   }
@@ -277,12 +277,12 @@ class GameController {
     return !this._started;
   }
 
-  get solved() {
-    return this._solved;
+  get hasHidden() {
+    return this._count !== 0;
   }
 
-  get hidden() {
-    return this._count;
+  get solved() {
+    return !this.hasHidden && !this.restored;
   }
 
   get failed() {

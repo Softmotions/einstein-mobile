@@ -197,6 +197,9 @@ class AGameField extends Component {
       PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM);
       this.props._statFailed();
     }
+    if (!this.props.game.hasHidden) {
+      return;
+    }
     Alert.alert(
       i18n.message.tr('fail_title'),
       i18n.message.tr('fail_text'),
@@ -243,14 +246,15 @@ class AGameField extends Component {
     }
 
     this.props.game.exclude(i, j, k);
-    this.forceUpdate();
+    this._hidePopup();
+    // this.forceUpdate();
     if (this.props.game.finished && !this.props.game.restoredActive) {
-      this._hidePopup();
+      // this._hidePopup();
       this._onGameFinish();
     }
-    if (this.props.game.isSet(i, j)) {
-      this._hidePopup();
-    }
+    // if (this.props.game.isSet(i, j)) {
+    //   this._hidePopup();
+    // }
   };
 
   _onPressPopupItem = (i, j, k) =>
