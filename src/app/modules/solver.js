@@ -8,7 +8,7 @@ export class Solver {
   }
 
   get solved() {
-    return this._game.solved;
+    return this._game.hidden === 0;
   }
 
   get rules() {

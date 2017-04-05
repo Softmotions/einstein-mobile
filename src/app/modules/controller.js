@@ -47,7 +47,10 @@ class GameController {
 
   _active;
   _started;
+
   _restored;
+  _restoredActive;
+
   _solved;
 
   _time;
@@ -86,18 +89,18 @@ class GameController {
     for (let i = 0; i < this.size; ++i) {
       this._data[i] = {
         cols: [],
-        values: []
+        values: [],
       };
       for (let j = 0; j < this.size; ++j) {
         let cols, values;
         this._data[i].values[j] = {
           possible: this.size,
-          cols: cols = {}
+          cols: cols = {},
         };
         this._data[i].cols[j] = {
           possible: this.size,
           values: values = {},
-          defined: null
+          defined: null,
         };
         for (let k = 0; k < this.size; ++k) {
           cols[k] = true;
@@ -116,6 +119,7 @@ class GameController {
     this._time = data.time;
     this._started = data.started;
     this._restored = data.restored;
+    this._restoredActive = data.restoredActive;
     this._solved = data.solved;
     this._active = false;
   };
@@ -130,8 +134,9 @@ class GameController {
     time: this.mstime,
     started: this._started,
     restored: this._restored,
+    restoredActive: this._restoredActive,
     solved: this._solved,
-    active: false
+    active: false,
   });
 
   possible = (row, col, val) => (!this.isSet(row, col) && this._data[row].cols[col].values[val]) || this.is(row, col, val);
@@ -222,11 +227,11 @@ class GameController {
     this._start = new Date().getTime();
   }
 
-  restoreStopped() {
-    this._restored = true;
-  }
-
   stop() {
+    if (this._restored) {
+      this._restoredActive = false;
+      return;
+    }
     if (!this._started) {
       return;
     }
@@ -251,6 +256,11 @@ class GameController {
     this._start = new Date().getTime();
   }
 
+  restoreStopped() {
+    this._restored = true;
+    this._restoredActive = true;
+  }
+
   get mstime() {
     return !this.active ? this._time : this._time + (new Date().getTime() - this._start);
   }
@@ -267,20 +277,24 @@ class GameController {
     return !this._started;
   }
 
-  get restored() {
-    return this._restored;
-  }
-
   get solved() {
     return this._solved;
+  }
+
+  get hidden() {
+    return this._count;
   }
 
   get failed() {
     return !this.solved;
   }
 
-  get success() {
-    return this.solved;
+  get restored() {
+    return this._restored;
+  }
+
+  get restoredActive() {
+    return this._restored && this._restoredActive;
   }
 }
 
@@ -326,5 +340,5 @@ class GameFactory {
 }
 
 export {
-  GameFactory
-}
+  GameFactory,
+};

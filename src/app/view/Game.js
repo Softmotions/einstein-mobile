@@ -132,7 +132,7 @@ class AGameField extends Component {
 
   renderGroupItem = (i, j) => (
     <TouchableWithoutFeedback key={'group_' + i + '_' + j}
-                              disabled={this.props.game.finished && !this.props.game.restored}
+                              disabled={this.props.game.finished && !this.props.game.restoredActive}
                               onPress={this._openPopup(i, j)}>
       <View>
         {!this.props.game.isSet(i, j) ?
@@ -160,6 +160,11 @@ class AGameField extends Component {
   // TODO: extract play games achievements handlers & config
   _onGameSolved = () => {
     GameActivity.stop();
+    if (this.props.game.restored) {
+      // never be reached
+      console.warn('never be reached (restored & solved)');
+      return;
+    }
     let t = this.props.game.time;
     this.props._statSolved({time: t, date: new Date()})
       .then((stats) => {
@@ -188,11 +193,13 @@ class AGameField extends Component {
 
   _onGameFailed = () => {
     GameActivity.stop();
-    PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM);
-    this.props._statFailed();
+    if (!this.props.game.restored) {
+      PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM);
+      this.props._statFailed();
+    }
     Alert.alert(
       i18n.message.tr('fail_title'),
-      i18n.message.tr('fail_text', formatTime(this.props.game.time, true)),
+      i18n.message.tr('fail_text'),
       [
         {text: i18n.button.tr('continue'), onPress: this._restore},
         {text: i18n.button.tr('statistics_short'), onPress: this.props._toStats},
@@ -216,7 +223,7 @@ class AGameField extends Component {
 
     this.props.game.set(i, j, k);
     this._hidePopup();
-    if (this.props.game.finished && !this.props.game.restored) {
+    if (this.props.game.finished && !this.props.game.restoredActive) {
       this._onGameFinish();
     }
   };
@@ -237,7 +244,7 @@ class AGameField extends Component {
 
     this.props.game.exclude(i, j, k);
     this.forceUpdate();
-    if (this.props.game.finished && !this.props.game.restored) {
+    if (this.props.game.finished && !this.props.game.restoredActive) {
       this._hidePopup();
       this._onGameFinish();
     }
@@ -454,7 +461,7 @@ class ARule extends Component {
 
     return RuleComponent ?
       (<RuleComponent rule={rule.rule}
-                      disabled={game.game.finished && !game.game.restored}
+                      disabled={game.game.finished && !game.game.restoredActive}
                       toggle={toggle}
                       visible={rule.visible}
                       styles={this.props.styles}/>) :
@@ -543,7 +550,7 @@ class AStatusInfo extends Component {
 
   render = () => (
     <View style={[this.styles.statusInfoBox, {zIndex: 5}]}>
-      {this.props.game.game.finished ? this.renderGameStatus() : null}
+      {this.props.game.game.finished ? this.renderGameStatus() : <Text />}
       <Text style={this.styles.timeStatusText}>{this._formatTime()}</Text>
     </View>
   );

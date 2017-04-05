@@ -51,7 +51,10 @@
         Tiles are in the same column
     </string>
     <string name="help_field_actions">
-        To open a tile touch the position and select the tile. Short press to select tile. Long press to disable tile.
+        When you click on a field, a window with tiles pops, and header start to show current game mode.
+        Depending on a mode, a click on a tile either selects it (\"select\" mode in the header) or
+        remove it from the list (\"exclude\" mode).
+        To change a mode click on it.
     </string>
     <string name="help_rule_actions">
         Also touching rules you can switch rules visibility mode to hide rules you already satisfied.
