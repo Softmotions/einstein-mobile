@@ -132,7 +132,7 @@ class AGameField extends Component {
 
   renderGroupItem = (i, j) => (
     <TouchableWithoutFeedback key={'group_' + i + '_' + j}
-                              disabled={this.props.game.finished}
+                              disabled={this.props.game.finished && !this.props.game.restored}
                               onPress={this._openPopup(i, j)}>
       <View>
         {!this.props.game.isSet(i, j) ?
@@ -194,11 +194,18 @@ class AGameField extends Component {
       i18n.message.tr('fail_title'),
       i18n.message.tr('fail_text', formatTime(this.props.game.time, true)),
       [
+        {text: i18n.button.tr('continue'), onPress: this._restore},
         {text: i18n.button.tr('statistics_short'), onPress: this.props._toStats},
         {text: i18n.button.tr('ok')},
       ],
       {},
     );
+  };
+
+  _restore = () => {
+    this.props.game.restoreStopped();
+    GameActivity.start();
+    this.forceUpdate();
   };
 
   _selectItem = (i, j, k) => {
@@ -209,7 +216,7 @@ class AGameField extends Component {
 
     this.props.game.set(i, j, k);
     this._hidePopup();
-    if (this.props.game.finished) {
+    if (this.props.game.finished && !this.props.game.restored) {
       this._onGameFinish();
     }
   };
@@ -230,7 +237,7 @@ class AGameField extends Component {
 
     this.props.game.exclude(i, j, k);
     this.forceUpdate();
-    if (this.props.game.finished) {
+    if (this.props.game.finished && !this.props.game.restored) {
       this._hidePopup();
       this._onGameFinish();
     }
@@ -247,7 +254,7 @@ class AGameField extends Component {
     const key = 'popup_item_' + i + '_' + j + '_' + k;
 
     let devStyle = null;
-    if (__DEV__ && game.field.value(i, j) == k) {
+    if (__DEV__ && game.field.value(i, j) === k) {
       devStyle = {
         borderWidth: 2,
         borderColor: 'red',
@@ -256,7 +263,7 @@ class AGameField extends Component {
 
     return (
       <View key={key} style={[this.styles.popupItemBox, {opacity: game.possible(i, j, k) ? 1 : 0}]}>
-        <TouchableOpacity disabled={game.finished || !game.possible(i, j, k)}
+        <TouchableOpacity disabled={(game.finished && !game.restored) || !game.possible(i, j, k)}
                           pressRetentionOffset={{top: 0, left: 0, right: 0, bottom: 0}}
                           onPress={this._onPressPopupItem(i, j, k)}>
           <ItemImage style={[this.styles.popupItem, devStyle]} row={i} value={k}/>
@@ -447,7 +454,7 @@ class ARule extends Component {
 
     return RuleComponent ?
       (<RuleComponent rule={rule.rule}
-                      disabled={!game.game.active}
+                      disabled={game.game.finished && !game.game.restored}
                       toggle={toggle}
                       visible={rule.visible}
                       styles={this.props.styles}/>) :
@@ -476,8 +483,8 @@ class ARules extends Component {
     let {styles, game} = this.props;
     const rules = Object.keys(game.rules).map((k) => game.rules[k]);
 
-    const hrules = rules.filter((r) => 'row' == r.rule.viewType);
-    const vrules = rules.filter((r) => 'column' == r.rule.viewType);
+    const hrules = rules.filter((r) => 'row' === r.rule.viewType);
+    const vrules = rules.filter((r) => 'column' === r.rule.viewType);
 
     // TODO: extract to utility method
     const rr = vrules.length > 0 ? styles.rule3Rows : styles.rule3Rows + 2;

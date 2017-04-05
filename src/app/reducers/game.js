@@ -2,13 +2,7 @@
 
 import {handleActions} from 'redux-actions';
 
-import {
-  GAME_SET,
-  GAME_CLEAR,
-  GAME_PAUSE,
-  GAME_RESUME,
-  GAME_TOGGLE_RULE
-} from '../constants/game';
+import {GAME_CLEAR, GAME_PAUSE, GAME_RESUME, GAME_SET, GAME_TOGGLE_RULE} from '../constants/game';
 
 const initialGameState = {
   game: null,
@@ -24,7 +18,7 @@ const initialRuleState = {
 const clearGame = (state = initialGameState) => ({
   ...state,
   game: null,
-  rules: {}
+  rules: {},
 });
 
 const pauseGame = (state = initialGameState) => {
@@ -56,8 +50,8 @@ const setGame = (state = initialGameState, action) => (action.game ? {
     }))
     .reduce((acc, item) => ({
       ...acc,
-      [item.id]: item
-    }), {})
+      [item.id]: item,
+    }), {}),
 } : clearGame(state));
 
 const toggleRule = (state = initialGameState, action) => {
@@ -70,9 +64,9 @@ const toggleRule = (state = initialGameState, action) => {
       [id]: {
         ...rule,
         visible: !rule.visible,
-      }
-    }
-  }
+      },
+    },
+  };
 };
 
 export default handleActions({

@@ -11,7 +11,10 @@
     <string name="button_statistics_short">Статистика</string>
     <string name="button_yes">Да</string>
     <string name="message_confirm_title">Вы уверены?</string>
-    <string name="message_fail_text">Головоломка провалена.</string>
+    <string name="message_fail_text">
+        Головоломка провалена.
+        \n\nВы можете продолжить решение головоломки, но в статистику результат добавлен не будет.
+    </string>
     <string name="message_fail_title">Не та фишка!</string>
     <string name="message_solve_text">Вы решили головомку. \nВремя: {0}</string>
     <string name="message_solve_title">Молодец!</string>

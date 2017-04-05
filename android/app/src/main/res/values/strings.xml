@@ -15,7 +15,10 @@
     <string name="message_solve_title">Congratulations!</string>
     <string name="message_solve_text">You solved the puzzle.\nTime: {0}</string>
     <string name="message_fail_title">Wrong tile!</string>
-    <string name="message_fail_text">Puzzle failed.</string>
+    <string name="message_fail_text">
+        Puzzle failed.
+        \n\nYou can undo last action and continue solving puzzle but result will not be saved into statistics.
+    </string>
     <string name="message_confirm_title">Are you sure?</string>
     <string name="status_solved">Solved</string>
     <string name="status_failed">Failed</string>

@@ -47,6 +47,8 @@ class GameController {
 
   _active;
   _started;
+  _restored;
+  _solved;
 
   _time;
   _start;
@@ -113,6 +115,8 @@ class GameController {
 
     this._time = data.time;
     this._started = data.started;
+    this._restored = data.restored;
+    this._solved = data.solved;
     this._active = false;
   };
 
@@ -125,14 +129,16 @@ class GameController {
 
     time: this.mstime,
     started: this._started,
+    restored: this._restored,
+    solved: this._solved,
     active: false
   });
 
   possible = (row, col, val) => (!this.isSet(row, col) && this._data[row].cols[col].values[val]) || this.is(row, col, val);
 
-  isSet = (row, col) => this.get(row, col) != null;
+  isSet = (row, col) => this.get(row, col) !== null;
 
-  is = (row, col, val) => this.isSet(row, col) && this.get(row, col) == val;
+  is = (row, col, val) => this.isSet(row, col) && this.get(row, col) === val;
 
   get = (row, col) => this._data[row].cols[col].defined;
 
@@ -141,7 +147,7 @@ class GameController {
       return;
     }
 
-    if (this._field.value(row, col) != val) {
+    if (this._field.value(row, col) !== val) {
       this.stop();
       return;
     }
@@ -185,7 +191,7 @@ class GameController {
   }
 
   checkSingle(row, col) {
-    if (this._data[row].cols[col].possible == 1) {
+    if (this._data[row].cols[col].possible === 1) {
       for (let h = 0; h < this.size; ++h) {
         if (this._data[row].cols[col].values[h]) {
           this.set(row, col, h);
@@ -195,7 +201,7 @@ class GameController {
     }
 
     for (let t = 0; t < this.size; ++t) {
-      if (this._data[row].values[t].possible == 1) {
+      if (this._data[row].values[t].possible === 1) {
         for (let n = 0; n < this.size; ++n) {
           if (this._data[row].values[t].cols[n]) {
             this.set(row, n, t);
@@ -216,12 +222,17 @@ class GameController {
     this._start = new Date().getTime();
   }
 
+  restoreStopped() {
+    this._restored = true;
+  }
+
   stop() {
     if (!this._started) {
       return;
     }
     this._started = false;
     this._time += (new Date().getTime() - this._start);
+    this._solved = this._count === 0;
   }
 
   pause() {
@@ -256,16 +267,20 @@ class GameController {
     return !this._started;
   }
 
+  get restored() {
+    return this._restored;
+  }
+
   get solved() {
-    return this._count == 0;
+    return this._solved;
   }
 
   get failed() {
-    return this.finished && !this.solved;
+    return !this.solved;
   }
 
   get success() {
-    return this.finished && this.solved;
+    return this.solved;
   }
 }
 
