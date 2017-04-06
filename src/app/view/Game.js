@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import {Alert, Image, InteractionManager, ScrollView, Switch, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -43,6 +43,7 @@ const GameHeader = connect(state => ({
     super(props);
     this.state = {
       popup: false,
+      exclude: !!this.props.settings[OPTION_PRESS_EXCLUDE],
     };
   }
 
@@ -52,20 +53,29 @@ const GameHeader = connect(state => ({
 
   componentWillUnmount = () => this.props.setRef && this.props.setRef(null);
 
-  popupShown = (value) => this.setState({popup: value});
+  popupShown = value => this.setState({popup: value});
+
+  _onSwitch = value => {
+    this.setState({exclude: value});
+    this.props._optionUpdate({[OPTION_PRESS_EXCLUDE]: value})
+      .then(() => this.setState({exclude: !!this.props.settings[OPTION_PRESS_EXCLUDE]}),
+        () => this.setState({exclude: !!this.props.settings[OPTION_PRESS_EXCLUDE]}));
+  };
 
   _renderContent = () => (
     <View style={{flexDirection: 'row', flex: 1}}>
       <IconHeaderButton icon={MIcon} name='arrow-back' action={this.props._onNavigateBack}/>
-      <TouchableOpacity disabled={!this.state.popup}
-                        style={{flex: 1}}
-                        onPress={() => this.props._optionUpdate({[OPTION_PRESS_EXCLUDE]: !this.props.settings[OPTION_PRESS_EXCLUDE]})}>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', opacity: this.state.popup ? 1 : 0}}>
-          <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-            {this.props.settings[OPTION_PRESS_EXCLUDE] ? i18n.tr('option').tr('exclude') : i18n.tr('option').tr('select')}
+      <TouchableWithoutFeedback style={{flex: 1}} onPress={() => this._onSwitch(!this.props.settings[OPTION_PRESS_EXCLUDE])}>
+        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', opacity: this.state.popup ? 1 : 0.5}}>
+          <Text style={{fontSize: 16, fontWeight: 'bold', opacity: this.state.exclude ? 0.5 : 1}}>
+            {i18n.tr('option').tr('select')}
+          </Text>
+          <Switch value={this.state.exclude} onValueChange={this._onSwitch} style={{marginHorizontal: 5}}/>
+          <Text style={{fontSize: 16, fontWeight: 'bold', opacity: this.state.exclude ? 1 : 0.5}}>
+            {i18n.tr('option').tr('exclude')}
           </Text>
         </View>
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
       <HeaderButton />
     </View>
   );
@@ -197,6 +207,9 @@ class AGameField extends Component {
       PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM);
       this.props._statFailed();
     }
+    if (!this.props.game.hasHidden) {
+      return;
+    }
     Alert.alert(
       i18n.message.tr('fail_title'),
       i18n.message.tr('fail_text'),
@@ -243,14 +256,15 @@ class AGameField extends Component {
     }
 
     this.props.game.exclude(i, j, k);
-    this.forceUpdate();
+    this._hidePopup();
+    // this.forceUpdate();
     if (this.props.game.finished && !this.props.game.restoredActive) {
-      this._hidePopup();
+      // this._hidePopup();
       this._onGameFinish();
     }
-    if (this.props.game.isSet(i, j)) {
-      this._hidePopup();
-    }
+    // if (this.props.game.isSet(i, j)) {
+    //   this._hidePopup();
+    // }
   };
 
   _onPressPopupItem = (i, j, k) =>

@@ -2,23 +2,21 @@
 
 import React, {Component} from 'react';
 import {
-  View,
   Button,
+  Dimensions,
+  Image,
+  InteractionManager,
   Platform,
+  StyleSheet,
+  Text,
   TouchableHighlight,
   TouchableNativeFeedback,
-  Image,
-  Text,
-  StyleSheet,
-  Dimensions,
-  InteractionManager,
+  View,
 } from 'react-native';
-
-import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {connect} from 'react-redux';
 
-import {gameNew, gameResume, gameClear} from '../actions/game';
+import {gameClear, gameNew, gameResume} from '../actions/game';
 import {navGame, navHelp, navSettings, navStats} from '../actions/navigation';
 import {statsGameTry} from '../actions/statistics';
 import {settingsUpdate} from '../actions/settings';
@@ -27,15 +25,12 @@ import {i18n} from '../utils/i18n';
 
 import {PLAY_GAMES_LOGGED_IN_KEY} from '../constants/settings';
 
-import  {
-  PLAYGAMES_LEADERBOARD_ID,
-  PLAYGAMES_LEADERBOARD_STACK_ID,
-} from '../constants/playgames';
+import {PLAYGAMES_LEADERBOARD_ID, PLAYGAMES_LEADERBOARD_STACK_ID} from '../constants/playgames';
 
 import {PlayGames} from '../modules/native';
 
 import {Header} from './header';
-import {IconHeaderButton, ImageHeaderButton} from './header/buttons';
+import {ImageHeaderButton} from './header/buttons';
 
 const color = '#013397ff';
 
