@@ -1,8 +1,6 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorAccent">#e1e1e1</item>
-        <item name="android:colorForeground">#e1e1e1</item>
     </style>
 
 </resources>

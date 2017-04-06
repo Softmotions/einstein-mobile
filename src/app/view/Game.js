@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Alert, Image, InteractionManager, ScrollView, Switch, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -32,6 +32,15 @@ import {GameActivity, PlayGames} from '../modules/native';
 import {Loader} from './Loader';
 import {Header} from './header';
 import {HeaderButton, IconHeaderButton} from './header/buttons';
+
+class Selector extends Component {
+  render = () => (
+    <View style={{marginLeft: this.props.value ? 15 : 0, marginRight: this.props.value ? 0 : 15, justifyContent: 'center'}}>
+      <MIcon name={!this.props.value ? 'navigate-before' : 'navigate-next'} size={32}/>
+    </View>
+  );
+}
+
 
 const GameHeader = connect(state => ({
   settings: state.settings,
@@ -66,12 +75,12 @@ const GameHeader = connect(state => ({
     <View style={{flexDirection: 'row', flex: 1}}>
       <IconHeaderButton icon={MIcon} name='arrow-back' action={this.props._onNavigateBack}/>
       <TouchableWithoutFeedback style={{flex: 1}} onPress={() => this._onSwitch(!this.props.settings[OPTION_PRESS_EXCLUDE])}>
-        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', opacity: this.state.popup ? 1 : 0.5}}>
-          <Text style={{fontSize: 16, fontWeight: 'bold', opacity: this.state.exclude ? 0.5 : 1}}>
+        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', opacity: this.state.popup ? 1 : 0.3}}>
+          <Text style={{fontSize: 16, fontWeight: 'bold', opacity: this.state.exclude ? 0.3 : 1}}>
             {i18n.tr('option').tr('select')}
           </Text>
-          <Switch value={this.state.exclude} onValueChange={this._onSwitch} style={{marginHorizontal: 5}}/>
-          <Text style={{fontSize: 16, fontWeight: 'bold', opacity: this.state.exclude ? 1 : 0.5}}>
+          <Selector value={this.state.exclude}/>
+          <Text style={{fontSize: 16, fontWeight: 'bold', opacity: this.state.exclude ? 1 : 0.3}}>
             {i18n.tr('option').tr('exclude')}
           </Text>
         </View>
