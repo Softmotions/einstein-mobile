@@ -1,10 +1,6 @@
 'use strict';
 
-import {
-  SETTINGS_STORAGE_KEY,
-
-  SETTINGS_SET
-} from '../constants/settings';
+import {SETTINGS_SET, SETTINGS_STORAGE_KEY} from '../constants/settings';
 
 import {AsyncStorage} from 'react-native';
 
@@ -21,7 +17,7 @@ const settingsLoad = () => dispatch =>
     });
 
 
-const settingsUpdate = (update) => dispatch => {
+const settingsUpdate = (update) => dispatch =>
   AsyncStorage.getItem(SETTINGS_STORAGE_KEY)
     .then(settings => settings ? JSON.parse(settings) : {})
     .then(settings => ({
@@ -44,9 +40,8 @@ const settingsUpdate = (update) => dispatch => {
       console.error('Error loading settings', err);
       return Promise.resolve({});
     });
-};
 
 export {
   settingsLoad,
-  settingsUpdate
-}
+  settingsUpdate,
+};
