@@ -130,6 +130,7 @@ class Statistics extends Component {
         <InfoRow title={i18n.statistics.tr('solved')} text={statistics.successfully}/>
         <InfoRow title={i18n.statistics.tr('failed')} text={statistics.failed}/>
         <InfoRow title={i18n.statistics.tr('current_stack')} text={statistics.currentStack || 0}/>
+        <InfoRow title={i18n.statistics.tr('previous_stack')} text={statistics.previousStack || '?'}/>
         <InfoRow title={i18n.statistics.tr('max_stack')} text={statistics.maxStack || 0}/>
 
         <View style={{flex: 1}}>

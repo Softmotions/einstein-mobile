@@ -8,7 +8,7 @@ import {
 
 import {AsyncStorage} from 'react-native';
 
-const STATISTICS_ITEMS_COUNT = 50;
+const STATISTICS_ITEMS_COUNT = 250;
 
 const statsLoad = () => dispatch =>
   AsyncStorage.getItem(STATISTICS_STORAGE_KEY)
@@ -75,6 +75,7 @@ const updateStats = (update) => dispatch =>
 const statsGameTry = () => updateStats({
   tries: 1, stack: (stats) => {
     if (!stats.trySolved) {
+      stats.previousStack = stats.currentStack > 0 ? stats.currentStack : stats.previousStack;
       stats.currentStack = 0;
     }
     stats.trySolved = false;
@@ -82,6 +83,7 @@ const statsGameTry = () => updateStats({
 });
 const statsGameFailed = () => updateStats({
   failed: 1, stack: (stats) => {
+    stats.previousStack = stats.currentStack;
     stats.currentStack = 0;
   }
 });

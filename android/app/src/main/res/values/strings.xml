@@ -27,6 +27,7 @@
     <string name="statistics_solved">Solved:</string>
     <string name="statistics_failed">Failed:</string>
     <string name="statistics_current_stack">Current stack:</string>
+    <string name="statistics_previous_stack">Previous stack:</string>
     <string name="statistics_max_stack">Max stack:</string>
     <string name="statistics_best_times">Best times</string>
     <string name="help_title">Help</string>

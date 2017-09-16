@@ -26,6 +26,7 @@
     <string name="statistics_title">Статистика</string>
     <string name="statistics_total">Всего попыток:</string>
     <string name="statistics_current_stack">Текущая серия:</string>
+    <string name="statistics_previous_stack">Предыдущая серия:</string>
     <string name="statistics_max_stack">Максимальная серия:</string>
     <string name="help_title">Справка</string>
     <string name="help_goal_title">Цель игры</string>
