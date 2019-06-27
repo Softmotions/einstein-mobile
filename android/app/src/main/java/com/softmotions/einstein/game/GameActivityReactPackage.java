@@ -19,7 +19,6 @@ public class GameActivityReactPackage implements ReactPackage {
         return Collections.<NativeModule>singletonList(new GameActivityModule(reactContext));
     }
 
-    @Override
     public List<Class<? extends JavaScriptModule>> createJSModules() {
         return Collections.emptyList();
     }

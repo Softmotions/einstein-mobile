@@ -2,7 +2,7 @@ package com.softmotions.einstein;
 
 import android.os.Bundle;
 import android.view.WindowManager;
-import com.cboy.rn.splashscreen.SplashScreen;
+import org.devio.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;
 
 /**
