@@ -121,6 +121,7 @@ class Statistics extends Component {
       return this.renderPlaceholder();
     }
 
+    statistics.times = statistics.times.map((item, key) => ({...item, key: item.date}));
     console.debug(statistics);
 
     return (
