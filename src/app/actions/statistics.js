@@ -6,7 +6,7 @@ import {
   CLEAN_STATISTICS
 } from '../constants/statistics';
 
-import {AsyncStorage} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const STATISTICS_ITEMS_COUNT = 250;
 
