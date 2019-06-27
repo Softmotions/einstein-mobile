@@ -16,7 +16,7 @@ import {
   WELCOME_SCREEN_KEY,
 } from '../constants/navigation';
 
-import {NavigationExperimental} from 'react-native';
+import NavigationExperimental from 'react-native-navigation-experimental-compat';
 const {
   StateUtils: NavigationStateUtils,
 } = NavigationExperimental;

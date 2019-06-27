@@ -3,7 +3,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {BackAndroid, NavigationExperimental} from 'react-native';
+import {BackAndroid} from 'react-native';
+import NavigationExperimental from 'react-native-navigation-experimental-compat';
 import {GAME_SCREEN_KEY, HELP_SCREEN_KEY, SETTINGS_SCREEN_KEY, STAT_SCREEN_KEY, WELCOME_SCREEN_KEY} from './constants/navigation';
 
 import Welcome, {WelcomeHeader} from './view/Welcome';
