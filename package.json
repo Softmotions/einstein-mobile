@@ -23,7 +23,8 @@
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",
     "redux-actions": "^2.6.5",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "softmotions-einstein-native": "file:./native_module/"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

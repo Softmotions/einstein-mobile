@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name" translatable="false">Einstein</string>
+    <string name="app_id" translatable="false">837179539906</string>
+    <string name="company" translatable="false">Softmotions</string>
+    <string name="button_new">New game</string>
+    <string name="button_continue">Continue</string>
+    <string name="button_help">Help</string>
+    <string name="button_statistics">Statistics</string>
+    <string name="button_sign_in_google">Sign in with Google</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_statistics_short">Stats</string>
+    <string name="message_solve_title">Congratulations!</string>
+    <string name="message_solve_text">You solved the puzzle.\nTime: {0}</string>
+    <string name="message_fail_title">Wrong tile!</string>
+    <string name="message_fail_text">
+        Puzzle failed.
+        \n\nYou can undo last action and continue solving puzzle but result will not be saved into statistics.
+    </string>
+    <string name="message_confirm_title">Are you sure?</string>
+    <string name="status_solved">Solved</string>
+    <string name="status_failed">Failed</string>
+    <string name="statistics_title">Statistics</string>
+    <string name="statistics_total">Total tries:</string>
+    <string name="statistics_solved">Solved:</string>
+    <string name="statistics_failed">Failed:</string>
+    <string name="statistics_current_stack">Current stack:</string>
+    <string name="statistics_previous_stack">Previous stack:</string>
+    <string name="statistics_max_stack">Max stack:</string>
+    <string name="statistics_best_times">Best times</string>
+    <string name="help_title">Help</string>
+    <string name="help_goal_title">Game goal</string>
+    <string name="help_goal_text">to discover tiles in each of 36 field positions.
+        Tiles are different and rules shows how they placed one to each other.
+        There are 4 types of rules:
+    </string>
+    <string name="help_rules_between">
+        Means 3 tiles are in columns next to each other -
+        column with {0} is next to column with {1} and column with {1} next to column with {2}
+    </string>
+    <string name="help_rules_near">
+        Means 2 tiles are in columns next to each other –
+        column with {0} is next to column with {1}
+    </string>
+    <string name="help_rules_direction">
+        Means left tile is in a column left to column with right tile –
+        column with {0} is left to column with {1}
+    </string>
+    <string name="help_rules_under">
+        Tiles are in the same column
+    </string>
+    <string name="help_field_actions">
+        When you click on a field, a window with tiles pops, and header start to show current game mode.
+        Depending on a mode, a click on a tile either selects it (\"select\" mode in the header) or
+        remove it from the list (\"exclude\" mode).
+        To change a mode click on it.
+    </string>
+    <string name="help_rule_actions">
+        Also touching rules you can switch rules visibility mode to hide rules you already satisfied.
+    </string>
+    <string name="settings_title">Settings</string>
+    <string name="option_select">select</string>
+    <string name="option_exclude">exclude</string>
+</resources>
