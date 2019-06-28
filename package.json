@@ -1,8 +1,15 @@
 {
-  "name": "einstein",
+  "name": "Einstein",
   "version": "1.0.3",
   "private": true,
   "scripts": {
+    "native:_renametmp": "react-native-rename TempName",
+    "native:_clean": "rm -rf android ios",
+    "native:_eject": "node node_modules/react-native/local-cli/cli.js eject",
+    "native:_link": "node node_modules/react-native/local-cli/cli.js link",
+    "native:_rename": "react-native-rename Einstein -b com.softmotions.einstein",
+    "native:gen": "npm run native:_renametmp && npm run native:_clean && npm run native:_eject && npm run native:_link && npm run native:_rename",
+    "start": "node node_modules/react-native/local-cli/cli.js start --reset-cache",
     "test": "jest"
   },
   "dependencies": {
@@ -19,15 +26,15 @@
     "redux-thunk": "^2.1.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/runtime": "^7.4.5",
     "babel-jest": "24.8.0",
     "jest": "24.8.0",
     "metro-react-native-babel-preset": "0.54.1",
+    "react-native-rename": "^2.4.1",
     "react-test-renderer": "16.8.6"
   },
   "jest": {
-    "preset": "react-native",
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
-    }
+    "preset": "react-native"
   }
 }

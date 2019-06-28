@@ -1,12 +1,19 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext {
+        buildToolsVersion = "28.0.3"
+        minSdkVersion = 16
+        compileSdkVersion = 28
+        targetSdkVersion = 28
+        supportLibVersion = "28.0.0"
+    }
     repositories {
-        jcenter()
         google()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath("com.android.tools.build:gradle:3.4.0")
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -16,25 +23,11 @@ buildscript {
 allprojects {
     repositories {
         mavenLocal()
+        google()
         jcenter()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
         }
-        google()
-    }
-
-    ext {
-        android_compile_version = 28
-        android_version = '28.0.3'
-        android_target_sdk_version = 23
-        android_min_sdk_version = 19
-
-        appcompat_library_version = '23.0.1'
-        support_library_version = '23.0.1'
-        gms_library_version = '10.0.1'
-
-        version_code = 26
-        version_name = '1.0.26'
     }
 }
