@@ -359,7 +359,7 @@ const GameField = connect(state => ({
   _statSolved: (time) => dispatch(statsGameSolved(time)),
   _toStats: () => dispatch(navStats()),
   _newGame: () => dispatch(gameNew()),
-}))(AGameField);
+}), null, {forwardRef: true})(AGameField);
 
 class AbstractRule extends Component {
   constructor(props) {
@@ -596,6 +596,8 @@ class Game extends Component {
       ready: false,
       styles: null,
     };
+    this._onPress = this._onPress.bind(this);
+    this.game = React.createRef();
   }
 
   componentWillMount() {
@@ -623,7 +625,17 @@ class Game extends Component {
     </View>
   );
 
-  _onPopup = (value) => this.props.header && this.props.header.popupShown(value);
+  _onPopup = (value) => {
+    this.setState({popup: value});
+    this.props.header && this.props.header.popupShown(value);
+  }
+
+  _onPress = (e) => {
+    if (!this.state.popup)
+      return false;
+    
+    this.game.current._hidePopup();
+  }
 
   render() {
     let {ready, styles} = this.state;
@@ -638,11 +650,13 @@ class Game extends Component {
     }
 
     return (
-      <View onLayout={this._updateStyles} style={this.styles.container}>
-        <StatusInfo styles={styles}/>
-        <GameField styles={styles} onPopup={(value) => this._onPopup(value)}/>
-        <Rules styles={styles}/>
-      </View>
+      <TouchableWithoutFeedback onPress={e => this._onPress(e)}>
+        <View  onLayout={this._updateStyles} style={this.styles.container}>
+          <StatusInfo styles={styles}/>
+          <GameField styles={styles} ref={this.game} onPopup={(value) => this._onPopup(value)}/>
+          <Rules styles={styles}/>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
