@@ -25,11 +25,12 @@ const store = createStoreWithMiddleware(reducers);
 export default class Einstein extends Component {
 
   _handleAppStateChange = (currentAppState) => {
-    let {game: {game}} = store.getState();
+    let {game: {game, rules}} = store.getState();
+    console.log(rules);
     if ('background' == currentAppState || 'inactive' == currentAppState) {
       store.dispatch(navToIndex());
       store.dispatch(gamePause());
-      store.dispatch(gameSave(game));
+      store.dispatch(gameSave(game, rules));
     } else if ('active' == currentAppState) {
     }
   };

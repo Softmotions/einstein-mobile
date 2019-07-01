@@ -20,7 +20,7 @@ import {GameFactory} from '../modules/controller';
 
 const gameClear = () => dispatch => Promise.resolve().then(() => dispatch({type: GAME_CLEAR}));
 
-const gameSet = (game) => ({type: GAME_SET, game: game});
+const gameSet = (game, rules) => ({type: GAME_SET, game, rules});
 
 const gameNew = () => dispatch =>
   dispatch(gameClear())
@@ -37,8 +37,8 @@ const gameResume = () => ({type: GAME_RESUME});
 
 const gameRuleToggle = (id) => ({type: GAME_TOGGLE_RULE, rule: {id: id}});
 
-const gameSave = (game) => dispatch => game ?
-  AsyncStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(GameFactory.saveGame(game)))
+const gameSave = (game, rules) => dispatch => game ?
+  AsyncStorage.setItem(GAME_STORAGE_KEY, JSON.stringify({game: GameFactory.saveGame(game), rules}))
     .catch((err) => {
       console.error('Error saving game', err);
       return Promise.resolve();
@@ -51,9 +51,12 @@ const gameSave = (game) => dispatch => game ?
 
 const gameLoad = () => dispatch =>
   AsyncStorage.getItem(GAME_STORAGE_KEY)
-    .then(game => {
-      if (game) {
-        dispatch(gameSet(GameFactory.loadGame(JSON.parse(game))))
+    .then(data => {
+      if (data) {
+        let {game, rules} = JSON.parse(data) || {};
+        console.log(game);
+        console.log(rules);
+        dispatch(gameSet(GameFactory.loadGame(game), rules))
       } else {
         dispatch(gameClear())
       }
