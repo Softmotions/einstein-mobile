@@ -25,7 +25,7 @@ import {
   PLAYGAMES_LEADERBOARD_ID,
   PLAYGAMES_LEADERBOARD_STACK_ID,
 } from '../constants/playgames';
-import {OPTION_PRESS_EXCLUDE} from '../constants/settings';
+import {OPTION_PRESS_EXCLUDE, DONT_HIDE_POPUP, LONG_PRESS_SECOND_ACTION} from '../constants/settings';
 
 import {GameActivity, PlayGames} from '../modules/native';
 
@@ -265,7 +265,9 @@ class AGameField extends Component {
     }
 
     this.props.game.exclude(i, j, k);
-    this._hidePopup();
+    if (!this.props.settings[DONT_HIDE_POPUP] || this.props.game.isSet(i, j))
+      this._hidePopup();
+    else this.setState({});
     // this.forceUpdate();
     if (this.props.game.finished && !this.props.game.restoredActive) {
       // this._hidePopup();
@@ -278,6 +280,11 @@ class AGameField extends Component {
 
   _onPressPopupItem = (i, j, k) =>
     () => this.props.settings[OPTION_PRESS_EXCLUDE] ? this._excludeItem(i, j, k) : this._selectItem(i, j, k);
+
+  _onLongPressPopupItem = (i, j, k) =>
+    () => this.props.settings[LONG_PRESS_SECOND_ACTION] ? 
+      (this.props.settings[OPTION_PRESS_EXCLUDE] ? this._selectItem(i, j, k) : this._excludeItem(i, j, k))
+      : {};
 
   renderPopupItem(i, j, k) {
     let {game} = this.props;
@@ -295,7 +302,8 @@ class AGameField extends Component {
       <View key={key} style={[this.styles.popupItemBox, {opacity: game.possible(i, j, k) ? 1 : 0}]}>
         <TouchableOpacity disabled={(game.finished && !game.restored) || !game.possible(i, j, k)}
                           pressRetentionOffset={{top: 0, left: 0, right: 0, bottom: 0}}
-                          onPress={this._onPressPopupItem(i, j, k)}>
+                          onPress={this._onPressPopupItem(i, j, k)}
+                          onLongPress={this._onLongPressPopupItem(i, j, k)}>
           <ItemImage style={[this.styles.popupItem, devStyle]} row={i} value={k}/>
         </TouchableOpacity>
       </View>
