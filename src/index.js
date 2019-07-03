@@ -26,11 +26,11 @@ export default class Einstein extends Component {
 
   _handleAppStateChange = (currentAppState) => {
     let {game: {game, rules}} = store.getState();
-    console.log(rules);
-    if ('background' == currentAppState || 'inactive' == currentAppState) {
+    if (game && ('background' == currentAppState || 'inactive' == currentAppState)) {
       store.dispatch(navToIndex());
       store.dispatch(gamePause());
-      store.dispatch(gameSave(game, rules));
+      store.dispatch(gameSave(game));
+      console.log('saved');
     } else if ('active' == currentAppState) {
     }
   };
@@ -49,15 +49,14 @@ export default class Einstein extends Component {
         (err) => {
           console.error(err);
           SplashScreen.hide();
-        });
+        })
+      .finally(() => console.log('loaded'));
 
     const signIn = (signed) => {
+      loadGame();
       if (!__DEV__) {
         PlayGames.signIn()
-          .then(() => !signed ? store.dispatch(settingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: true})) : Promise.resolve())
-          .then(() => loadGame(), err => loadGame());
-      } else {
-        loadGame();
+          .then(() => !signed ? store.dispatch(settingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: true})) : Promise.resolve());
       }
     };
 
