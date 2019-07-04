@@ -7,6 +7,9 @@ Now native apps can be regenerated (for future RN updates) with:
 ! Dont forget to install splash screen
 https://github.com/crazycodeboy/react-native-splash-screen
 
+! Dont forget to install gif support
+https://facebook.github.io/react-native/docs/image.html#gif-and-webp-support-on-android
+
 ! Dont forget to update AndroidManifest, like this:
 ```
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"

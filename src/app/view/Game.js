@@ -691,7 +691,9 @@ class Game extends Component {
 
   componentWillMount() {
     GameActivity.start();
-    InteractionManager.runAfterInteractions(() => this.setState({ready: true}));
+    setTimeout(() => {
+      InteractionManager.runAfterInteractions(() => this.setState({ready: true}));
+    }, 0);
   }
 
   componentWillUnmount() {
@@ -746,7 +748,9 @@ class Game extends Component {
     }
 
     if (!styles) {
-      InteractionManager.runAfterInteractions(() => this._updateStyles());
+      setTimeout(() => {
+        InteractionManager.runAfterInteractions(() => this._updateStyles());
+      }, 0);
       return this.renderPlaceholder();
     }
 
