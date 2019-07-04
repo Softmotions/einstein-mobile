@@ -12,6 +12,7 @@
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_statistics_short">Stats</string>
+    <string name="button_share">Share</string>
     <string name="message_solve_title">Congratulations!</string>
     <string name="message_solve_text">You solved the puzzle.\nTime: {0}</string>
     <string name="message_fail_title">Wrong tile!</string>

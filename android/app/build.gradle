@@ -138,6 +138,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-share')
+    implementation project(':react-native-view-shot')
     implementation project(':softmotions-einstein-native')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-splash-screen')

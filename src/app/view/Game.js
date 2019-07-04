@@ -7,6 +7,9 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {connect} from 'react-redux';
 
+import {captureRef} from "react-native-view-shot";
+import Share from 'react-native-share';
+
 import {formatTime, StyleConfig} from './utils';
 
 import {gameNew, gameRuleToggle} from '../actions/game';
@@ -203,6 +206,7 @@ class AGameField extends Component {
       i18n.message.tr('solve_title'),
       i18n.message.tr('solve_text', formatTime(this.props.game.time, true)),
       [
+        {text: i18n.button.tr('share'), onPress: this.props.onShare},
         {text: i18n.button.tr('statistics_short'), onPress: this.props._toStats},
         {text: i18n.button.tr('ok')},
       ],
@@ -597,7 +601,10 @@ class Game extends Component {
       styles: null,
     };
     this._onPress = this._onPress.bind(this);
+    this._onPopup = this._onPopup.bind(this);
+    this._onShare = this._onShare.bind(this);
     this.game = React.createRef();
+    this.shot = React.createRef();
   }
 
   componentWillMount() {
@@ -637,6 +644,18 @@ class Game extends Component {
     this.game.current._hidePopup();
   }
 
+  _onShare = () => {
+    captureRef(this.shot, {
+      format: 'jpeg',
+      result: 'base64',
+    }).then(data => {
+      Share.open({
+        message: 'Check my Einstein Puzzle',
+        url: 'data:image/jpeg;base64,' + data,
+      })
+    })
+  }
+
   render() {
     let {ready, styles} = this.state;
     let {game} = this.props;
@@ -651,9 +670,9 @@ class Game extends Component {
 
     return (
       <TouchableWithoutFeedback onPress={e => this._onPress(e)}>
-        <View  onLayout={this._updateStyles} style={this.styles.container}>
+        <View onLayout={this._updateStyles} style={this.styles.container} ref={this.shot} collapsab={false}>
           <StatusInfo styles={styles}/>
-          <GameField styles={styles} ref={this.game} onPopup={(value) => this._onPopup(value)}/>
+          <GameField styles={styles} ref={this.game} onPopup={this._onPopup} onShare={this._onShare}/>
           <Rules styles={styles}/>
         </View>
       </TouchableWithoutFeedback>
