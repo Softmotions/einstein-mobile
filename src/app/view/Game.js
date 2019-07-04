@@ -25,6 +25,7 @@ import {
   PLAYGAMES_ACHIEVEMENT_SOLVED_10,
   PLAYGAMES_ACHIEVEMENT_SPRINTER,
   PLAYGAMES_ACHIEVEMENT_STRONG_SOLVER,
+  PLAYGAMES_ACHIEVEMENT_HARDCORE_SOLVER,
   PLAYGAMES_LEADERBOARD_ID,
   PLAYGAMES_LEADERBOARD_STACK_ID,
 } from '../constants/playgames';
@@ -190,6 +191,9 @@ class AGameField extends Component {
     let t = this.props.game.time;
     this.props._statSolved({time: t, date: new Date()})
       .then((stats) => {
+        if (stats.currentStack >= 150) {
+          PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_HARDCORE_SOLVER);
+        }
         if (stats.currentStack >= 10) {
           PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_STRONG_SOLVER);
         }
