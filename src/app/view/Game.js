@@ -593,6 +593,84 @@ class AStatusInfo extends Component {
 
 const StatusInfo = connect(state => ({game: state.game}), dispatch => ({}))(AStatusInfo);
 
+class AShareable extends Component {
+  _timer;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: 0,
+      textW: 0,
+      textH: 0,
+    };
+  }
+
+  componentWillMount() {
+    this._timer = setInterval(() => this.setState({time: this.props.game.game.time}), 500);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._timer);
+  }
+
+  _formatTime = () => formatTime(this.state.time);
+
+  _onLayout = event => {
+    const { width, height } = event.nativeEvent.layout;
+    this.setState({ textW: width, textH: height });
+  };
+
+  render = () => (
+  <View collapsable={false} style={{
+    position: 'absolute',
+    left: 0,
+    right: -200,
+    top: 0,
+    bottom: 0,
+    backgroundColor: 'white', // TODO: Expose to styles
+  }}>
+    <View style={{
+      position: 'absolute',
+      left: 0,
+      right: 200,
+      top: 0,
+      bottom: 0,
+    }}>
+      {this.props.children}
+    </View>
+    <Image source={require('./qr.png')} style={{
+      position: 'absolute',
+      right: 10,
+      top: 10,
+      width: 180,
+      height: 180,
+    }} />
+    <View style={{
+      position: 'absolute',
+      right: -400,
+      top: 190,
+      width: 1000,
+      bottom: 0,
+    }}>
+      <Text style={{
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        transform: [
+          {translateX: -this.state.textW / 2},
+          {translateY: -this.state.textH / 2},
+          {rotateZ: '90deg'},
+        ],
+        fontSize: 100,
+      }} onLayout={this._onLayout}>{this._formatTime()}</Text>
+    </View>
+  </View>
+  );
+}
+
+const Sharaeble = connect(state => ({game: state.game}), dispatch => ({}),
+  null, {forwardRef: true})(AShareable);
+
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -646,7 +724,7 @@ class Game extends Component {
 
   _onShare = () => {
     captureRef(this.shot, {
-      format: 'jpeg',
+      format: 'jpg',
       result: 'base64',
     }).then(data => {
       Share.open({
@@ -670,10 +748,15 @@ class Game extends Component {
 
     return (
       <TouchableWithoutFeedback onPress={e => this._onPress(e)}>
-        <View onLayout={this._updateStyles} style={this.styles.container} ref={this.shot} collapsab={false}>
-          <StatusInfo styles={styles}/>
-          <GameField styles={styles} ref={this.game} onPopup={this._onPopup} onShare={this._onShare}/>
-          <Rules styles={styles}/>
+        <View onLayout={this._updateStyles} style={{
+          ...this.styles.container,
+          position: 'relative'
+        }}>
+          <Sharaeble ref={this.shot} >
+            <StatusInfo styles={styles}/>
+            <GameField styles={styles} ref={this.game} onPopup={this._onPopup} onShare={this._onShare}/>
+            <Rules styles={styles}/>
+          </Sharaeble>
         </View>
       </TouchableWithoutFeedback>
     );

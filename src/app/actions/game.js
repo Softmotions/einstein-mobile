@@ -54,8 +54,6 @@ const gameLoad = () => dispatch =>
     .then(data => {
       if (data) {
         let {game, rules} = JSON.parse(data) || {};
-        console.log(game);
-        console.log(rules);
         dispatch(gameSet(GameFactory.loadGame(game), rules))
       } else {
         dispatch(gameClear())
