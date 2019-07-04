@@ -12,7 +12,7 @@ import Share from 'react-native-share';
 
 import {formatTime, StyleConfig} from './utils';
 
-import {gameNew, gameRuleToggle} from '../actions/game';
+import {gameNew, gameRuleToggle, gamePause} from '../actions/game';
 import {navBack, navStats} from '../actions/navigation';
 import {statsGameFailed, statsGameSolved} from '../actions/statistics';
 import {settingsUpdate} from '../actions/settings';
@@ -52,7 +52,10 @@ class Selector extends Component {
 const GameHeader = connect(state => ({
   settings: state.settings,
 }), dispatch => ({
-  _onNavigateBack: () => dispatch(navBack()),
+  _onNavigateBack: () => {
+    dispatch(gamePause());
+    dispatch(navBack());
+  },
   _optionUpdate: (update) => dispatch(settingsUpdate(update)),
 }))(class extends Header {
   constructor(props) {
