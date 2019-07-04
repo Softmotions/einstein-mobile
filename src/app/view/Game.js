@@ -37,6 +37,9 @@ import {Loader} from './Loader';
 import {Header} from './header';
 import {HeaderButton, IconHeaderButton} from './header/buttons';
 
+import {LocaleModule} from '../modules/native'
+const moment = require('moment');
+
 class Selector extends Component {
   render = () => (
     <View style={{marginLeft: this.props.value ? 15 : 0, marginRight: this.props.value ? 0 : 15, justifyContent: 'center'}}>
@@ -604,8 +607,6 @@ class AShareable extends Component {
     super(props);
     this.state = {
       time: 0,
-      textW: 0,
-      textH: 0,
     };
   }
 
@@ -617,56 +618,50 @@ class AShareable extends Component {
     clearInterval(this._timer);
   }
 
-  _formatTime = () => formatTime(this.state.time);
+  _formatTime = () => moment.duration(this.state.time, 'seconds')
+    .locale(LocaleModule.getString('locale')).humanize();
 
-  _onLayout = event => {
-    const { width, height } = event.nativeEvent.layout;
-    this.setState({ textW: width, textH: height });
-  };
+  height = 150; 
 
   render = () => (
   <View collapsable={false} style={{
     position: 'absolute',
     left: 0,
-    right: -200,
+    right: 0,
     top: 0,
-    bottom: 0,
+    bottom: -this.height,
     backgroundColor: 'white', // TODO: Expose to styles
   }}>
     <View style={{
       position: 'absolute',
       left: 0,
-      right: 200,
+      right: 0,
       top: 0,
-      bottom: 0,
+      bottom: this.height,
     }}>
       {this.props.children}
     </View>
     <Image source={require('./qr.png')} style={{
       position: 'absolute',
-      right: 10,
-      top: 10,
-      width: 180,
-      height: 180,
+      left: 10,
+      bottom: 10,
+      width: this.height - 20,
+      height: this.height - 20,
     }} />
     <View style={{
       position: 'absolute',
-      right: -400,
-      top: 190,
-      width: 1000,
+      left: this.height - 10,
+      right: 0,
+      height: this.height,
       bottom: 0,
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     }}>
       <Text style={{
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
-        transform: [
-          {translateX: -this.state.textW / 2},
-          {translateY: -this.state.textH / 2},
-          {rotateZ: '90deg'},
-        ],
-        fontSize: 100,
-      }} onLayout={this._onLayout}>{this._formatTime()}</Text>
+        fontSize: 50,
+        textAlign: 'center',
+      }}>{this._formatTime()}</Text>
     </View>
   </View>
   );
