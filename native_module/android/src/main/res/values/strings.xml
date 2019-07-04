@@ -62,7 +62,7 @@
         Also touching rules you can switch rules visibility mode to hide rules you already satisfied.
     </string>
     <string name="settings_title">Settings</string>
-    <string name="settings_dont_hide">Don\'t hide cell after excluding</string>
+    <string name="settings_dont_hide">Do not close a cell after excluding</string>
     <string name="settings_long_press">Long press to use second (not active) action</string>
     <string name="option_select">select</string>
     <string name="option_exclude">exclude</string>
