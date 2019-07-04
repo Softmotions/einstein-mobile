@@ -53,7 +53,9 @@ const gameLoad = () => dispatch =>
   AsyncStorage.getItem(GAME_STORAGE_KEY)
     .then(data => {
       if (data) {
-        let {game, rules} = JSON.parse(data) || {};
+        let loaded = JSON.parse(data) || {};
+        let {game, rules} = loaded;
+        game = game || loaded; // When updating from old version
         dispatch(gameSet(GameFactory.loadGame(game), rules))
       } else {
         dispatch(gameClear())
