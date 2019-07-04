@@ -621,7 +621,7 @@ class AShareable extends Component {
   _formatTime = () => moment.duration(this.state.time, 'seconds')
     .locale(LocaleModule.getString('locale')).humanize();
 
-  height = 150; 
+  height = 145 + 20; 
 
   render = () => (
   <View collapsable={false} style={{
@@ -641,7 +641,7 @@ class AShareable extends Component {
     }}>
       {this.props.children}
     </View>
-    <Image source={require('./qr.png')} style={{
+    <Image source={require('../../../images/get.png')} style={{
       position: 'absolute',
       left: 10,
       bottom: 10,
