@@ -4,6 +4,9 @@ Created native module with:
 Now native apps can be regenerated (for future RN updates) with:
 `npm run native:gen`
 
+! Dont forget to install splash screen
+https://github.com/crazycodeboy/react-native-splash-screen
+
 ! Dont forget to update AndroidManifest, like this:
 ```
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
