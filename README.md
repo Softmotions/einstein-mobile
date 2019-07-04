@@ -4,6 +4,9 @@ Created native module with:
 Now native apps can be regenerated (for future RN updates) with:
 `npm run native:gen`
 
+! Dont forget to install gif support
+https://facebook.github.io/react-native/docs/image.html#gif-and-webp-support-on-android
+
 ! Dont forget to update AndroidManifest, like this:
 ```
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"

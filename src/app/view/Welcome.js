@@ -175,11 +175,15 @@ export default connect(state => ({
   }), dispatch => ({
     _onNewGame: () => {
       dispatch(navGame());
-      InteractionManager.runAfterInteractions(() => dispatch(gameNew()).then(() => dispatch(statsGameTry())));
+      setTimeout(() => {
+        InteractionManager.runAfterInteractions(() => dispatch(gameNew()).then(() => dispatch(statsGameTry())));
+      }, 0);
     },
     _onContinueGame: () => {
       dispatch(navGame());
-      InteractionManager.runAfterInteractions(() => dispatch(gameResume()));
+      setTimeout(() => {
+        InteractionManager.runAfterInteractions(() => dispatch(gameResume()));
+      }, 0);
     },
     _onClearGame: () => dispatch(gameClear()),
     _onHelp: () => dispatch(navHelp()),
