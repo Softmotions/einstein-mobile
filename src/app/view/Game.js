@@ -37,8 +37,8 @@ import {Loader} from './Loader';
 import {Header} from './header';
 import {HeaderButton, IconHeaderButton} from './header/buttons';
 
-import {LocaleModule} from '../modules/native'
-const moment = require('moment');
+import {LocaleModule} from '../modules/native';
+const moment = require('moment/min/moment-with-locales');
 
 class Selector extends Component {
   render = () => (
@@ -619,7 +619,7 @@ class AShareable extends Component {
   }
 
   _formatTime = () => moment.duration(this.state.time, 'seconds')
-    .locale(LocaleModule.getString('locale')).humanize();
+    .locale([LocaleModule.getString('locale'), 'en-us']).humanize();
 
   height = 135 + 20; 
 
