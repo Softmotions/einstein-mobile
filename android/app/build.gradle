@@ -101,12 +101,24 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    signingConfigs {
+        release {
+            if (project.hasProperty('EINSTEIN_RELEASE_STORE_FILE')) {
+                storeFile file(EINSTEIN_RELEASE_STORE_FILE)
+                storePassword EINSTEIN_RELEASE_STORE_PASSWORD
+                keyAlias EINSTEIN_RELEASE_KEY_ALIAS
+                keyPassword EINSTEIN_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
+
+
     defaultConfig {
         applicationId "com.softmotions.einstein"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode version_code
+        versionName version_name
     }
     splits {
         abi {
@@ -120,6 +132,9 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            if (project.hasProperty('EINSTEIN_RELEASE_STORE_FILE')) {
+                signingConfig signingConfigs.release
+            }
         }
     }
     // applicationVariants are e.g. debug, release

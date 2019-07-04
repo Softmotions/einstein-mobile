@@ -47,5 +47,7 @@ https://facebook.github.io/react-native/docs/image.html#gif-and-webp-support-on-
 </manifest>
 ```
 
+! Dont forget to update version code and name
+
 And use this guide to sign app for GP, reduce file size and etc:
 https://facebook.github.io/react-native/docs/signed-apk-android
