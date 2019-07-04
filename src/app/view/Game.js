@@ -621,7 +621,7 @@ class AShareable extends Component {
   _formatTime = () => moment.duration(this.state.time, 'seconds')
     .locale(LocaleModule.getString('locale')).humanize();
 
-  height = 145 + 20; 
+  height = 135 + 20; 
 
   render = () => (
   <View collapsable={false} style={{
