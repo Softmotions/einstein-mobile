@@ -633,7 +633,7 @@ class AShareable extends Component {
     right: 0,
     top: 0,
     bottom: -this.height,
-    backgroundColor: 'white', // TODO: Expose to styles
+    backgroundColor: '#eaeaee', // TODO: Expose to styles
   }}>
     <View style={{
       position: 'absolute',

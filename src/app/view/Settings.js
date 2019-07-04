@@ -32,12 +32,23 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontWeight: 'bold',
     color: mainColor,
+    marginRight: 8,
+  },
+
+  titleCaption: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    color: mainColor,
+    marginBottom: 10,
   },
 
   settingsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderColor: '#0000001a',
+    borderWidth: 1,
+    marginBottom: -1,
   },
 });
 
@@ -54,7 +65,7 @@ class Settings extends Component {
   };
 
   option = (option, name) => (
-    <View style={{ flexDirection: 'row' }}>
+    <View style={styles.settingsRow}>
       <CheckBox
         value={this.state[option]}
         onValueChange={this._onToggle(option)}
@@ -65,7 +76,7 @@ class Settings extends Component {
 
   render = () => (
     <View style={styles.container}>
-      <Text style={styles.caption}>{i18n.settings.tr('title')}</Text>
+      <Text style={styles.titleCaption}>{i18n.settings.tr('title')}</Text>
       {this.option(DONT_HIDE_POPUP, 'dont_hide')}
       {this.option(LONG_PRESS_SECOND_ACTION, 'long_press')}
     </View>
