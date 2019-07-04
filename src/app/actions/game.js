@@ -38,7 +38,11 @@ const gameResume = () => ({type: GAME_RESUME});
 const gameRuleToggle = (id) => ({type: GAME_TOGGLE_RULE, rule: {id: id}});
 
 const gameSave = (game, rules) => dispatch => game ?
-  AsyncStorage.setItem(GAME_STORAGE_KEY, JSON.stringify({game: GameFactory.saveGame(game), rules}))
+  AsyncStorage.setItem(GAME_STORAGE_KEY, JSON.stringify({
+    game: GameFactory.saveGame(game),
+    rules,
+    formatVer: 1,
+  }))
     .catch((err) => {
       console.error('Error saving game', err);
       return Promise.resolve();
@@ -56,6 +60,7 @@ const gameLoad = () => dispatch =>
         let loaded = JSON.parse(data) || {};
         let {game, rules} = loaded;
         game = game || loaded; // When updating from old version
+        // TODO: Implement data updating when loading with old loaded.formatVer
         dispatch(gameSet(GameFactory.loadGame(game), rules))
       } else {
         dispatch(gameClear())
