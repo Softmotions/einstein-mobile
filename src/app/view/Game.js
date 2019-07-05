@@ -385,7 +385,7 @@ class AbstractRule extends Component {
 
   // todo: extract styles
   get visibilityStyle() {
-    return {opacity: this.props.visible ? 1 : 0.15};
+    return {opacity: this.props.visible ? 1 : 0.4};
   }
 }
 
