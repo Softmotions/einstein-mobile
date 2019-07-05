@@ -40,7 +40,10 @@ const gameRuleToggle = (id) => ({type: GAME_TOGGLE_RULE, rule: {id: id}});
 const gameSave = (game, rules) => dispatch => game ?
   AsyncStorage.setItem(GAME_STORAGE_KEY, JSON.stringify({
     game: GameFactory.saveGame(game),
-    rules,
+    rules: {
+      ...rules,
+      _order: Object.keys(rules),
+    },
     formatVer: 1,
   }))
     .catch((err) => {

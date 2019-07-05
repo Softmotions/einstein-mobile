@@ -29,7 +29,7 @@ export default class Einstein extends Component {
     if (game && ('background' == currentAppState || 'inactive' == currentAppState)) {
       store.dispatch(navToIndex());
       store.dispatch(gamePause());
-      store.dispatch(gameSave(game));
+      store.dispatch(gameSave(game, rules));
       console.log('saved');
     } else if ('active' == currentAppState) {
     }

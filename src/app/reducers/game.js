@@ -50,8 +50,7 @@ const setGame = (state = initialGameState, action) => (action.game ? {
       rule: rule,
     }))
     .sort((order => (a, b) => (order.indexOf(a.id) - order.indexOf(b.id))
-      (action.rules ? Object.keys(action.rules)
-        : action.game.rules.map((_, index) => 'rule_' + index))))
+      (action.rules && action.rules._order || action.rules && Object.keys(action.rules) || {})))
     .reduce((acc, item) => ({
       ...acc,
       [item.id]: item,
