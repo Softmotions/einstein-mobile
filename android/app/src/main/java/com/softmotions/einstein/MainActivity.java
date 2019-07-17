@@ -1,13 +1,7 @@
 package com.softmotions.einstein;
 
-import android.os.Bundle;
-import android.view.WindowManager;
-import com.cboy.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;
 
-/**
- * @author Vyacheslav Tyutyunkov (tve@softmotions.com)
- */
 public class MainActivity extends ReactActivity {
 
     /**
@@ -17,17 +11,5 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "Einstein";
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            }
-        });
-        SplashScreen.show(this);
     }
 }

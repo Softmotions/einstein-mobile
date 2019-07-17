@@ -2,7 +2,7 @@
 
 import {SETTINGS_SET, SETTINGS_STORAGE_KEY} from '../constants/settings';
 
-import {AsyncStorage} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const settingsLoad = () => dispatch =>
   AsyncStorage.getItem(SETTINGS_STORAGE_KEY)

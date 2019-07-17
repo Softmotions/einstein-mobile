@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import {
   View,
   ScrollView,
-  ListView,
+  FlatList,
   Text,
   Image,
   Button,
@@ -101,7 +101,6 @@ class Statistics extends Component {
     this.state = {
       ready: false,
     };
-    this._ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   }
 
   componentDidMount = () => this.props._loadStat().then(() => this.setState({ready: true}));
@@ -122,6 +121,7 @@ class Statistics extends Component {
       return this.renderPlaceholder();
     }
 
+    statistics.times = statistics.times.map((item, key) => ({...item, key: item.date}));
     console.debug(statistics);
 
     return (
@@ -138,9 +138,9 @@ class Statistics extends Component {
             <View style={{flex: 1}}>
               <Separator type='long'/>
               <Text style={styles.caption}>{i18n.statistics.tr('best_times')}</Text>
-              <ListView dataSource={this._ds.cloneWithRows(statistics.times)}
-                        renderRow={(data) => (<InfoTimesRow data={data}/>)}>
-              </ListView>
+              <FlatList data={statistics.times}
+                        renderItem={(item) => (<InfoTimesRow data={item.item}/>)}>
+              </FlatList>
             </View> :
             null
           }

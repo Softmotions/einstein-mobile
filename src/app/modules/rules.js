@@ -25,7 +25,10 @@ class Rule {
   }
 
   _load(rule) {
-    Object.assign(this, rule);
+    let data = {};
+    for (let i in rule)
+      if (rule.hasOwnProperty(i) && i.startsWith('_'))
+        this[i] = rule[i];
   }
 
   save() {

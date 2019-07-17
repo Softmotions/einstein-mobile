@@ -1,13 +1,12 @@
 'use strict';
 
-import {NativeModules} from 'react-native';
+import NativeModule from 'softmotions-einstein-native';
 
-//noinspection JSUnresolvedVariable
-const GameActivity = NativeModules.GameActivity;
-//noinspection JSUnresolvedVariable
-const PlayGames = NativeModules.PlayGames;
-//noinspection JSUnresolvedVariable
-const Locale = NativeModules.Locale;
+const {
+  GameActivity,
+  PlayGames,
+  Locale
+} = NativeModule;
 
 class LocaleModule {
   static getString(name) {
