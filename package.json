@@ -1,6 +1,6 @@
 {
   "name": "Einstein",
-  "version": "1.0.3",
+  "version": "1",
   "private": true,
   "scripts": {
     "native:_renametmp": "react-native-rename TempName",
