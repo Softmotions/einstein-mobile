@@ -1,4 +1,8 @@
 rootProject.name = 'Einstein'
+include ':react-native-share'
+project(':react-native-share').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-share/android')
+include ':react-native-view-shot'
+project(':react-native-view-shot').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-view-shot/android')
 include ':softmotions-einstein-native'
 project(':softmotions-einstein-native').projectDir = new File(rootProject.projectDir, '../node_modules/softmotions-einstein-native/android')
 include ':react-native-vector-icons'

@@ -7,11 +7,14 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {connect} from 'react-redux';
 
+import {captureRef} from "react-native-view-shot";
+import Share from 'react-native-share';
+
 import {formatTime, StyleConfig} from './utils';
 
-import {gameNew, gameRuleToggle} from '../actions/game';
+import {gameNew, gameClear, gameRuleToggle, gamePause} from '../actions/game';
 import {navBack, navStats} from '../actions/navigation';
-import {statsGameFailed, statsGameSolved} from '../actions/statistics';
+import {statsGameFailed, statsGameSolved, statsGameTry} from '../actions/statistics';
 import {settingsUpdate} from '../actions/settings';
 
 import {i18n} from '../utils/i18n';
@@ -22,16 +25,19 @@ import {
   PLAYGAMES_ACHIEVEMENT_SOLVED_10,
   PLAYGAMES_ACHIEVEMENT_SPRINTER,
   PLAYGAMES_ACHIEVEMENT_STRONG_SOLVER,
+  PLAYGAMES_ACHIEVEMENT_HARDCORE_SOLVER,
   PLAYGAMES_LEADERBOARD_ID,
   PLAYGAMES_LEADERBOARD_STACK_ID,
 } from '../constants/playgames';
-import {OPTION_PRESS_EXCLUDE} from '../constants/settings';
+import {OPTION_PRESS_EXCLUDE, DONT_HIDE_POPUP, LONG_PRESS_SECOND_ACTION} from '../constants/settings';
 
 import {GameActivity, PlayGames} from '../modules/native';
 
 import {Loader} from './Loader';
 import {Header} from './header';
 import {HeaderButton, IconHeaderButton} from './header/buttons';
+
+import moment from '../utils/moment';
 
 class Selector extends Component {
   render = () => (
@@ -45,7 +51,10 @@ class Selector extends Component {
 const GameHeader = connect(state => ({
   settings: state.settings,
 }), dispatch => ({
-  _onNavigateBack: () => dispatch(navBack()),
+  _onNavigateBack: () => {
+    dispatch(gamePause());
+    dispatch(navBack());
+  },
   _optionUpdate: (update) => dispatch(settingsUpdate(update)),
 }))(class extends Header {
   constructor(props) {
@@ -187,6 +196,9 @@ class AGameField extends Component {
     let t = this.props.game.time;
     this.props._statSolved({time: t, date: new Date()})
       .then((stats) => {
+        if (stats.currentStack >= 150) {
+          PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_HARDCORE_SOLVER);
+        }
         if (stats.currentStack >= 10) {
           PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_STRONG_SOLVER);
         }
@@ -203,8 +215,9 @@ class AGameField extends Component {
       i18n.message.tr('solve_title'),
       i18n.message.tr('solve_text', formatTime(this.props.game.time, true)),
       [
-        {text: i18n.button.tr('statistics_short'), onPress: this.props._toStats},
-        {text: i18n.button.tr('ok')},
+        {text: i18n.button.tr('share'), onPress: this.props.onShare},
+        {text: i18n.button.tr('new'), onPress: this.props._newGame},
+        {text: i18n.button.tr('ok'), onPress: this.props._onNavigateBack},
       ],
       {},
     );
@@ -224,8 +237,8 @@ class AGameField extends Component {
       i18n.message.tr('fail_text'),
       [
         {text: i18n.button.tr('continue'), onPress: this._restore},
-        {text: i18n.button.tr('statistics_short'), onPress: this.props._toStats},
-        {text: i18n.button.tr('ok')},
+        {text: i18n.button.tr('new'), onPress: this.props._newGame},
+        {text: i18n.button.tr('ok'), onPress: this._restore},
       ],
       {},
     );
@@ -265,7 +278,9 @@ class AGameField extends Component {
     }
 
     this.props.game.exclude(i, j, k);
-    this._hidePopup();
+    if (!this.props.settings[DONT_HIDE_POPUP] || this.props.game.isSet(i, j))
+      this._hidePopup();
+    else this.setState({});
     // this.forceUpdate();
     if (this.props.game.finished && !this.props.game.restoredActive) {
       // this._hidePopup();
@@ -278,6 +293,11 @@ class AGameField extends Component {
 
   _onPressPopupItem = (i, j, k) =>
     () => this.props.settings[OPTION_PRESS_EXCLUDE] ? this._excludeItem(i, j, k) : this._selectItem(i, j, k);
+
+  _onLongPressPopupItem = (i, j, k) =>
+    () => this.props.settings[LONG_PRESS_SECOND_ACTION] ? 
+      (this.props.settings[OPTION_PRESS_EXCLUDE] ? this._selectItem(i, j, k) : this._excludeItem(i, j, k))
+      : {};
 
   renderPopupItem(i, j, k) {
     let {game} = this.props;
@@ -295,7 +315,8 @@ class AGameField extends Component {
       <View key={key} style={[this.styles.popupItemBox, {opacity: game.possible(i, j, k) ? 1 : 0}]}>
         <TouchableOpacity disabled={(game.finished && !game.restored) || !game.possible(i, j, k)}
                           pressRetentionOffset={{top: 0, left: 0, right: 0, bottom: 0}}
-                          onPress={this._onPressPopupItem(i, j, k)}>
+                          onPress={this._onPressPopupItem(i, j, k)}
+                          onLongPress={this._onLongPressPopupItem(i, j, k)}>
           <ItemImage style={[this.styles.popupItem, devStyle]} row={i} value={k}/>
         </TouchableOpacity>
       </View>
@@ -349,9 +370,23 @@ const GameField = connect(state => ({
 }), dispatch => ({
   _statFailed: () => dispatch(statsGameFailed()),
   _statSolved: (time) => dispatch(statsGameSolved(time)),
-  _toStats: () => dispatch(navStats()),
-  _newGame: () => dispatch(gameNew()),
-}))(AGameField);
+  _toStats: () => {
+    dispatch(navBack());
+    setTimeout(() => {
+      dispatch(navStats());
+    }, 0);
+  },
+  _newGame: () => {
+    dispatch(gameClear());
+    setTimeout(() => {
+      InteractionManager.runAfterInteractions(() => dispatch(gameNew()).then(() => dispatch(statsGameTry())));
+    }, 0);
+  },
+  _onNavigateBack: () => {
+    dispatch(gamePause());
+    dispatch(navBack());
+  },
+}), null, {forwardRef: true})(AGameField);
 
 class AbstractRule extends Component {
   constructor(props) {
@@ -364,7 +399,7 @@ class AbstractRule extends Component {
 
   // todo: extract styles
   get visibilityStyle() {
-    return {opacity: this.props.visible ? 1 : 0.15};
+    return {opacity: this.props.visible ? 1 : 0.4};
   }
 }
 
@@ -581,6 +616,75 @@ class AStatusInfo extends Component {
 
 const StatusInfo = connect(state => ({game: state.game}), dispatch => ({}))(AStatusInfo);
 
+class AShareable extends Component {
+  _timer;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: 0,
+    };
+  }
+
+  componentWillMount() {
+    this._timer = setInterval(() => this.setState({time: this.props.game.game.time}), 500);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._timer);
+  }
+
+  _formatTime = () => moment.duration(this.state.time, 'seconds').humanize();
+
+  height = 135 + 20; 
+
+  render = () => (
+  <View collapsable={false} style={{
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: -this.height,
+    backgroundColor: '#eaeaee', // TODO: Expose to styles
+  }}>
+    <View style={{
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: this.height,
+    }}>
+      {this.props.children}
+    </View>
+    <Image source={require('../../../images/get.png')} style={{
+      position: 'absolute',
+      left: 10,
+      bottom: 10,
+      width: this.height - 20,
+      height: this.height - 20,
+    }} />
+    <View style={{
+      position: 'absolute',
+      left: this.height - 10,
+      right: 0,
+      height: this.height,
+      bottom: 0,
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}>
+      <Text style={{
+        fontSize: 50,
+        textAlign: 'center',
+      }}>{this._formatTime()}</Text>
+    </View>
+  </View>
+  );
+}
+
+const Sharaeble = connect(state => ({game: state.game}), dispatch => ({}),
+  null, {forwardRef: true})(AShareable);
+
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -588,6 +692,11 @@ class Game extends Component {
       ready: false,
       styles: null,
     };
+    this._onPress = this._onPress.bind(this);
+    this._onPopup = this._onPopup.bind(this);
+    this._onShare = this._onShare.bind(this);
+    this.game = React.createRef();
+    this.shot = React.createRef();
   }
 
   componentWillMount() {
@@ -617,7 +726,29 @@ class Game extends Component {
     </View>
   );
 
-  _onPopup = (value) => this.props.header && this.props.header.popupShown(value);
+  _onPopup = (value) => {
+    this.setState({popup: value});
+    this.props.header && this.props.header.popupShown(value);
+  }
+
+  _onPress = (e) => {
+    if (!this.state.popup)
+      return false;
+    
+    this.game.current._hidePopup();
+  }
+
+  _onShare = () => {
+    captureRef(this.shot, {
+      format: 'jpg',
+      result: 'base64',
+    }).then(data => {
+      Share.open({
+        message: 'Check my Einstein Puzzle',
+        url: 'data:image/jpeg;base64,' + data,
+      })
+    })
+  }
 
   render() {
     let {ready, styles} = this.state;
@@ -634,11 +765,18 @@ class Game extends Component {
     }
 
     return (
-      <View onLayout={this._updateStyles} style={this.styles.container}>
-        <StatusInfo styles={styles}/>
-        <GameField styles={styles} onPopup={(value) => this._onPopup(value)}/>
-        <Rules styles={styles}/>
-      </View>
+      <TouchableWithoutFeedback onPress={e => this._onPress(e)}>
+        <View onLayout={this._updateStyles} style={{
+          ...this.styles.container,
+          position: 'relative'
+        }}>
+          <Sharaeble ref={this.shot} >
+            <StatusInfo styles={styles}/>
+            <GameField styles={styles} ref={this.game} onPopup={this._onPopup} onShare={this._onShare}/>
+            <Rules styles={styles}/>
+          </Sharaeble>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

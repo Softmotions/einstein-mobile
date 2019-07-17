@@ -16,6 +16,8 @@ import {
 
 import {connect} from 'react-redux';
 
+import MIcon from 'react-native-vector-icons/MaterialIcons';
+
 import {gameClear, gameNew, gameResume} from '../actions/game';
 import {navGame, navHelp, navSettings, navStats} from '../actions/navigation';
 import {statsGameTry} from '../actions/statistics';
@@ -30,7 +32,7 @@ import {PLAYGAMES_LEADERBOARD_ID, PLAYGAMES_LEADERBOARD_STACK_ID} from '../const
 import {PlayGames} from '../modules/native';
 
 import {Header} from './header';
-import {ImageHeaderButton} from './header/buttons';
+import {ImageHeaderButton, IconHeaderButton} from './header/buttons';
 
 const color = '#013397ff';
 
@@ -164,7 +166,7 @@ const WelcomeHeader = connect(state => ({
         <ImageHeaderButton image='games_leaderboards'
                            action={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_STACK_ID)}/> : null}
       <View style={{flex: 1}}/>
-      {/*<IconHeaderButton icon={MIcon} name='more-vert' action={this.props._onSettings}/>*/}
+      <IconHeaderButton icon={MIcon} name='settings' action={this.props._onSettings}/>
     </View>
   );
 });

@@ -2,4 +2,4 @@
 
 echo Build APK release
 
-cd android && ./gradlew assembleRelease && cd ../
+cd android && ./gradlew bundleRelease && cd ../

@@ -9,6 +9,7 @@
     <string name="button_statistics">Статистика</string>
     <string name="button_sign_in_google">Войти в Play Games</string>
     <string name="button_statistics_short">Статистика</string>
+    <string name="button_share">Поделиться</string>
     <string name="button_yes">Да</string>
     <string name="message_confirm_title">Вы уверены?</string>
     <string name="message_fail_text">
@@ -59,6 +60,8 @@
         Чтобы спрятать правило нажмите на него и оно слегка затенится. Повторное нажатие делает его видимым снова.
     </string>
     <string name="settings_title">Настройки</string>
+    <string name="settings_dont_hide">Не закрывать меню клетки автоматически</string>
+    <string name="settings_long_press">Использовать длинное нажатие для второго (неактивного) режима</string>
     <string name="option_select">выбрать</string>
     <string name="option_exclude">убрать</string>
 </resources>

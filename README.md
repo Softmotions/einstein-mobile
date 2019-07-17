@@ -4,6 +4,9 @@ Created native module with:
 Now native apps can be regenerated (for future RN updates) with:
 `npm run native:gen`
 
+! Dont forget to install splash screen
+https://github.com/crazycodeboy/react-native-splash-screen
+
 ! Dont forget to install gif support
 https://facebook.github.io/react-native/docs/image.html#gif-and-webp-support-on-android
 
@@ -44,5 +47,7 @@ https://facebook.github.io/react-native/docs/image.html#gif-and-webp-support-on-
 </manifest>
 ```
 
-And use this guide to sign app for GP:
+! Dont forget to update version code and name
+
+And use this guide to sign app for GP, reduce file size and etc:
 https://facebook.github.io/react-native/docs/signed-apk-android
