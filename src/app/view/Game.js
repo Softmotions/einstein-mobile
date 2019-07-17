@@ -12,9 +12,9 @@ import Share from 'react-native-share';
 
 import {formatTime, StyleConfig} from './utils';
 
-import {gameNew, gameRuleToggle, gamePause} from '../actions/game';
+import {gameNew, gameClear, gameRuleToggle, gamePause} from '../actions/game';
 import {navBack, navStats} from '../actions/navigation';
-import {statsGameFailed, statsGameSolved} from '../actions/statistics';
+import {statsGameFailed, statsGameSolved, statsGameTry} from '../actions/statistics';
 import {settingsUpdate} from '../actions/settings';
 
 import {i18n} from '../utils/i18n';
@@ -216,8 +216,8 @@ class AGameField extends Component {
       i18n.message.tr('solve_text', formatTime(this.props.game.time, true)),
       [
         {text: i18n.button.tr('share'), onPress: this.props.onShare},
-        {text: i18n.button.tr('statistics_short'), onPress: this.props._toStats},
-        {text: i18n.button.tr('ok')},
+        {text: i18n.button.tr('new'), onPress: this.props._newGame},
+        {text: i18n.button.tr('ok'), onPress: this.props._onNavigateBack},
       ],
       {},
     );
@@ -237,8 +237,8 @@ class AGameField extends Component {
       i18n.message.tr('fail_text'),
       [
         {text: i18n.button.tr('continue'), onPress: this._restore},
-        {text: i18n.button.tr('statistics_short'), onPress: this.props._toStats},
-        {text: i18n.button.tr('ok')},
+        {text: i18n.button.tr('new'), onPress: this.props._newGame},
+        {text: i18n.button.tr('ok'), onPress: this._restore},
       ],
       {},
     );
@@ -370,8 +370,22 @@ const GameField = connect(state => ({
 }), dispatch => ({
   _statFailed: () => dispatch(statsGameFailed()),
   _statSolved: (time) => dispatch(statsGameSolved(time)),
-  _toStats: () => dispatch(navStats()),
-  _newGame: () => dispatch(gameNew()),
+  _toStats: () => {
+    dispatch(navBack());
+    setTimeout(() => {
+      dispatch(navStats());
+    }, 0);
+  },
+  _newGame: () => {
+    dispatch(gameClear());
+    setTimeout(() => {
+      InteractionManager.runAfterInteractions(() => dispatch(gameNew()).then(() => dispatch(statsGameTry())));
+    }, 0);
+  },
+  _onNavigateBack: () => {
+    dispatch(gamePause());
+    dispatch(navBack());
+  },
 }), null, {forwardRef: true})(AGameField);
 
 class AbstractRule extends Component {
