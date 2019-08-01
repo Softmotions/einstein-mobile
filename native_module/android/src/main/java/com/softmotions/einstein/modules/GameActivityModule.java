@@ -1,7 +1,10 @@
 
 package com.softmotions.einstein.modules;
 
+import android.app.Activity;
 import android.view.WindowManager;
+
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -23,22 +26,34 @@ public class GameActivityModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void start() {
-    getCurrentActivity().runOnUiThread(new Runnable() {
+  public void start(Promise promise) {
+    final Activity activity = getCurrentActivity();
+    if (activity == null) {
+      promise.reject("Current activity is null");
+      return;
+    }
+    activity.runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        getCurrentActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
       }
     });
+    promise.resolve(null);
   }
 
   @ReactMethod
-  public void stop() {
-    getCurrentActivity().runOnUiThread(new Runnable() {
+  public void stop(Promise promise) {
+    final Activity activity = getCurrentActivity();
+    if (activity == null) {
+      promise.reject("Current activity is null");
+      return;
+    }
+    activity.runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        getCurrentActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
       }
     });
+    promise.resolve(null);
   }
 }
