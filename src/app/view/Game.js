@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View, StatusBar} from 'react-native';
 
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -700,6 +700,7 @@ class Game extends Component {
   }
 
   componentWillMount() {
+    StatusBar.setHidden(true);
     GameActivity.start();
     setTimeout(() => {
       InteractionManager.runAfterInteractions(() => this.setState({ready: true}));
@@ -708,6 +709,7 @@ class Game extends Component {
 
   componentWillUnmount() {
     GameActivity.stop();
+    StatusBar.setHidden(false);
   }
 
   get styles() {
@@ -765,18 +767,18 @@ class Game extends Component {
     }
 
     return (
-      <TouchableWithoutFeedback onPress={e => this._onPress(e)}>
-        <View onLayout={this._updateStyles} style={{
-          ...this.styles.container,
-          position: 'relative'
-        }}>
-          <Sharaeble ref={this.shot} >
+      <Sharaeble ref={this.shot} >
+        <TouchableWithoutFeedback onPress={e => this._onPress(e)}>
+          <View onLayout={this._updateStyles} style={{
+            ...this.styles.container,
+            position: 'relative'
+          }}>
             <StatusInfo styles={styles}/>
             <GameField styles={styles} ref={this.game} onPopup={this._onPopup} onShare={this._onShare}/>
             <Rules styles={styles}/>
-          </Sharaeble>
-        </View>
-      </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Sharaeble>
     );
   }
 }
