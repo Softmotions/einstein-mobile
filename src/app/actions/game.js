@@ -29,6 +29,7 @@ const gameNew = () => dispatch =>
       game.start();
       PlayGames.achievementIncrement(PLAYGAMES_ACHIEVEMENT_PUZZLE_LOVER, 1);
 
+      dispatch(gameSave(game, game.rules));
       resolve(game);
     }).then(game => dispatch(gameSet(game))));
 

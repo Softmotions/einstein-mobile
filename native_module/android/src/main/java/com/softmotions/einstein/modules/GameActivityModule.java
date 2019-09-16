@@ -1,7 +1,9 @@
 
 package com.softmotions.einstein.modules;
 
+import android.app.Activity;
 import android.view.WindowManager;
+
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -24,20 +26,40 @@ public class GameActivityModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void start() {
-    getCurrentActivity().runOnUiThread(new Runnable() {
+    Activity activity = getCurrentActivity();
+    if (activity == null) {
+      return;
+    }
+    activity.runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        getCurrentActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Activity activity = getCurrentActivity();
+        if (activity == null) {
+          return;
+        }
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
       }
     });
   }
 
   @ReactMethod
   public void stop() {
-    getCurrentActivity().runOnUiThread(new Runnable() {
+    Activity activity = getCurrentActivity();
+    // в методе getCurrentActivity есть возможность получения null, если Activity еще не была RN-ом подключина(была отключена) к модулю
+    // так как RN и android потоки не синхронизированы.
+    // для устранения Exception добавлена проверка на null перед использованием activity
+    if (activity == null) {
+      return;
+    }
+    activity.runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        getCurrentActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Activity activity = getCurrentActivity();
+        // повторно проверяем наличие Activity перед снятием флагов
+        if (activity == null) {
+          return;
+        }
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
       }
     });
   }
