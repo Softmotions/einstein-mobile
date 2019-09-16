@@ -10,6 +10,31 @@ https://github.com/crazycodeboy/react-native-splash-screen
 ! Dont forget to install gif support
 https://facebook.github.io/react-native/docs/image.html#gif-and-webp-support-on-android
 
+! Dont forget to enable fullscreen mode, insert this to com.softmotions.einstein.MainActivity:
+```
+...
+
+import android.view.WindowManager;
+
+...
+
+public class MainActivity extends ReactActivity {
+  ...
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+      ...
+      runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+              getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+          }
+      });
+      ...
+  }
+  ...
+}
+```
+
 ! Dont forget to update AndroidManifest, like this:
 ```
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"

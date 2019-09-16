@@ -700,7 +700,6 @@ class Game extends Component {
   }
 
   componentWillMount() {
-    StatusBar.setHidden(true);
     GameActivity.start();
     setTimeout(() => {
       InteractionManager.runAfterInteractions(() => this.setState({ready: true}));
@@ -709,7 +708,6 @@ class Game extends Component {
 
   componentWillUnmount() {
     GameActivity.stop();
-    StatusBar.setHidden(false);
   }
 
   get styles() {

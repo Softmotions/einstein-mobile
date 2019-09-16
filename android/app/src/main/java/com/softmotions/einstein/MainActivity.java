@@ -4,6 +4,7 @@ import com.facebook.react.ReactActivity;
 
 import android.os.Bundle;
 
+import android.view.WindowManager;
 import org.devio.rn.splashscreen.SplashScreen;
 
 public class MainActivity extends ReactActivity {
@@ -20,6 +21,12 @@ public class MainActivity extends ReactActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen.show(this);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            }
+        });
         super.onCreate(savedInstanceState);
     }
 }
