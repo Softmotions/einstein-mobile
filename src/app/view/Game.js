@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View, StatusBar} from 'react-native';
+import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View, StatusBar, Vibration} from 'react-native';
 
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -78,6 +78,9 @@ const GameHeader = connect(state => ({
     this.props._optionUpdate({[OPTION_PRESS_EXCLUDE]: value})
       .then(() => this.setState({exclude: !!this.props.settings[OPTION_PRESS_EXCLUDE]}),
         () => this.setState({exclude: !!this.props.settings[OPTION_PRESS_EXCLUDE]}));
+    //The vibration duration in iOS is not configurable, by default duration 500ms
+    //
+    Vibration.vibrate(200);
   };
 
   _renderContent = () => (
