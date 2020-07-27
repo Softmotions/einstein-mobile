@@ -1,10 +1,12 @@
 # Einstein mobile
 
-Its cross-platform mobile version of einstein game for IOS and Android based on react-native.
+Its a cross-platform mobile version of einstein game. For IOS and Android, based on react-native.
 
 Use your brain to discover tiles. Based on the famous puzzle game contains nothing extra, pure logic - only symbols and rules. One wrong move and you fail, get smart and solve the puzzle.
 
-[![get on google play](https://dev.softmotions.com/gitlab/softmotions/einstein-mobile/blob/master/readme_assets/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.softmotions.einstein&hl=en)
+[![get on google play](./readme_assets/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.softmotions.einstein&hl=en)
+
+[![download from app store](./readme_assets/download-from-app-store.svg)](https://apps.apple.com/us/app/id1335910358)
 
 Created native module with:
 `react-native-create-library --prefix '' --module-prefix softmotions-einstein --package-identifier com.softmotions.einstein.modules --platforms ios,android native_module`
