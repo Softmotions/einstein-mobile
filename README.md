@@ -2,11 +2,17 @@
 
 Its a cross-platform mobile version of einstein game. For IOS and Android, based on react-native.
 
+![screenshot](./readme_assets/screenshot.webp | width=100) ![screenshot](./readme_assets/screenshot_1.webp | width=100) ![screenshot](./readme_assets/screenshot_2.webp | width=100) ![screenshot](./readme_assets/screenshot_3.webp | width=100)
+
 Use your brain to discover tiles. Based on the famous puzzle game contains nothing extra, pure logic - only symbols and rules. One wrong move and you fail, get smart and solve the puzzle.
 
-[![get on google play](./readme_assets/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.softmotions.einstein&hl=en)
+[![get on google play](./readme_assets/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.softmotions.einstein&hl=en)  [![download from app store](./readme_assets/download-from-app-store.svg)](https://apps.apple.com/us/app/id1335910358)
 
-[![download from app store](./readme_assets/download-from-app-store.svg)](https://apps.apple.com/us/app/id1335910358)
+## Building and install
+
+* Install packages `yarn` or `npm install`
+* Start react dev server `react-native start`
+* Run on device or emulator `react-native run-android` or `react-native run-ios`
 
 Created native module with:
 `react-native-create-library --prefix '' --module-prefix softmotions-einstein --package-identifier com.softmotions.einstein.modules --platforms ios,android native_module`
@@ -21,7 +27,8 @@ https://github.com/crazycodeboy/react-native-splash-screen
 https://facebook.github.io/react-native/docs/image.html#gif-and-webp-support-on-android
 
 ! Dont forget to enable fullscreen mode, insert this to com.softmotions.einstein.MainActivity:
-```
+
+```java
 ...
 
 import android.view.WindowManager;
@@ -46,7 +53,8 @@ public class MainActivity extends ReactActivity {
 ```
 
 ! Dont forget to update AndroidManifest, like this:
-```
+
+```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   package="com.softmotions.einstein_test">
