@@ -194,7 +194,7 @@ class AGameField extends Component {
       return;
     }
     let t = this.props.game.time;
-    this.props._statSolved({time: t, date: new Date()})
+    this.props._statSolved(this.props.game.hash, {time: t, date: new Date()})
       .then((stats) => {
         if (stats.currentStack >= 150) {
           PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_HARDCORE_SOLVER);
@@ -227,7 +227,7 @@ class AGameField extends Component {
     GameActivity.stop();
     if (!this.props.game.restored) {
       PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM);
-      this.props._statFailed();
+      this.props._statFailed(this.props.game.hash);
     }
     if (!this.props.game.hasHidden) {
       return;
@@ -368,8 +368,8 @@ const GameField = connect(state => ({
   game: state.game.game,
   settings: state.settings,
 }), dispatch => ({
-  _statFailed: () => dispatch(statsGameFailed()),
-  _statSolved: (time) => dispatch(statsGameSolved(time)),
+  _statFailed: (hash) => dispatch(statsGameFailed(hash)),
+  _statSolved: (hash, time) => dispatch(statsGameSolved(hash, time)),
   _toStats: () => {
     dispatch(navBack());
     setTimeout(() => {

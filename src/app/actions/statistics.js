@@ -81,17 +81,23 @@ const statsGameTry = () => updateStats({
     stats.trySolved = false;
   }
 });
-const statsGameFailed = () => updateStats({
+const statsGameFailed = (hash) => updateStats({
   failed: 1, stack: (stats) => {
-    stats.previousStack = stats.currentStack;
-    stats.currentStack = 0;
+    if (stats.lastHash !== hash) {
+      stats.previousStack = stats.currentStack;
+      stats.currentStack = 0;
+    }
+    stats.lastHash = hash;
   }
 });
-const statsGameSolved = (time) => updateStats({
+const statsGameSolved = (hash, time) => updateStats({
   successfully: 1, times: [time], solvedDates: [time.date], stack: (stats) => {
-    stats.trySolved = true;
-    stats.currentStack++;
-    stats.maxStack = Math.max(stats.currentStack, stats.maxStack);
+    if (stats.lastHash !== hash) {
+      stats.trySolved = true;
+      stats.currentStack++;
+      stats.maxStack = Math.max(stats.currentStack, stats.maxStack);
+    }
+    stats.lastHash = hash;
   }
 });
 

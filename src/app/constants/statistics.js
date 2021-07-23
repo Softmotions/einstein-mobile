@@ -8,7 +8,8 @@ const CLEAN_STATISTICS = {
   maxStack: 0,
   currentStack: 0,
   times: [],
-  solvedDates: []
+  solvedDates: [],
+  lastHash: null
 };
 
 const STATISTICS_STORAGE_KEY = '@Einstein:statistics';
