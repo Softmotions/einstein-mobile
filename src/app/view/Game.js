@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View, StatusBar} from 'react-native';
+import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -12,7 +12,7 @@ import Share from 'react-native-share';
 
 import {formatTime, StyleConfig} from './utils';
 
-import {gameNew, gameClear, gameRuleToggle, gamePause} from '../actions/game';
+import {gameNew, gameClear, gameRuleToggle, gamePause, gameSave} from '../actions/game';
 import {navBack, navStats} from '../actions/navigation';
 import {statsGameFailed, statsGameSolved, statsGameTry} from '../actions/statistics';
 import {settingsUpdate} from '../actions/settings';
@@ -180,10 +180,12 @@ class AGameField extends Component {
     </View>
   );
 
-  _onGameFinish = () =>
+  _onGameFinish = () => {
+    this.props._saveGame(this.props.game, this.props.game.rules);
     this.props.game.solved ?
       this._onGameSolved() :
       this._onGameFailed();
+  };
 
   // TODO: extract play games achievements handlers & config
   _onGameSolved = () => {
@@ -295,7 +297,7 @@ class AGameField extends Component {
     () => this.props.settings[OPTION_PRESS_EXCLUDE] ? this._excludeItem(i, j, k) : this._selectItem(i, j, k);
 
   _onLongPressPopupItem = (i, j, k) =>
-    () => this.props.settings[LONG_PRESS_SECOND_ACTION] ? 
+    () => this.props.settings[LONG_PRESS_SECOND_ACTION] ?
       (this.props.settings[OPTION_PRESS_EXCLUDE] ? this._selectItem(i, j, k) : this._excludeItem(i, j, k))
       : {};
 
@@ -376,6 +378,7 @@ const GameField = connect(state => ({
       dispatch(navStats());
     }, 0);
   },
+  _saveGame: (game, rules) => dispatch(gameSave(game, rules)),
   _newGame: () => {
     dispatch(gameClear());
     setTimeout(() => {
@@ -636,7 +639,7 @@ class AShareable extends Component {
 
   _formatTime = () => moment.duration(this.state.time, 'seconds').humanize();
 
-  height = 135 + 20; 
+  height = 135 + 20;
 
   render = () => (
   <View collapsable={false} style={{
@@ -729,14 +732,14 @@ class Game extends Component {
   _onPopup = (value) => {
     this.setState({popup: value});
     this.props.header && this.props.header.popupShown(value);
-  }
+  };
 
   _onPress = (e) => {
     if (!this.state.popup)
       return false;
-    
+
     this.game.current._hidePopup();
-  }
+  };
 
   _onShare = () => {
     captureRef(this.shot, {
@@ -748,7 +751,7 @@ class Game extends Component {
         url: 'data:image/jpeg;base64,' + data,
       })
     })
-  }
+  };
 
   render() {
     let {ready, styles} = this.state;
