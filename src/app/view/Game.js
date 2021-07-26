@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View, StatusBar} from 'react-native';
+import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View, Vibration} from 'react-native';
 
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -12,7 +12,7 @@ import Share from 'react-native-share';
 
 import {formatTime, StyleConfig} from './utils';
 
-import {gameNew, gameClear, gameRuleToggle, gamePause} from '../actions/game';
+import {gameNew, gameClear, gameRuleToggle, gamePause, gameSave} from '../actions/game';
 import {navBack, navStats} from '../actions/navigation';
 import {statsGameFailed, statsGameSolved, statsGameTry} from '../actions/statistics';
 import {settingsUpdate} from '../actions/settings';
@@ -78,6 +78,9 @@ const GameHeader = connect(state => ({
     this.props._optionUpdate({[OPTION_PRESS_EXCLUDE]: value})
       .then(() => this.setState({exclude: !!this.props.settings[OPTION_PRESS_EXCLUDE]}),
         () => this.setState({exclude: !!this.props.settings[OPTION_PRESS_EXCLUDE]}));
+    //The vibration duration in iOS is not configurable, by default duration 500ms
+    //
+    Vibration.vibrate(200);
   };
 
   _renderContent = () => (
@@ -180,10 +183,12 @@ class AGameField extends Component {
     </View>
   );
 
-  _onGameFinish = () =>
+  _onGameFinish = () => {
+    this.props._saveGame(this.props.game, this.props.game.rules);
     this.props.game.solved ?
       this._onGameSolved() :
       this._onGameFailed();
+  };
 
   // TODO: extract play games achievements handlers & config
   _onGameSolved = () => {
@@ -194,7 +199,7 @@ class AGameField extends Component {
       return;
     }
     let t = this.props.game.time;
-    this.props._statSolved({time: t, date: new Date()})
+    this.props._statSolved(this.props.game.hash, {time: t, date: new Date()})
       .then((stats) => {
         if (stats.currentStack >= 150) {
           PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_HARDCORE_SOLVER);
@@ -227,7 +232,7 @@ class AGameField extends Component {
     GameActivity.stop();
     if (!this.props.game.restored) {
       PlayGames.achievementUnlock(PLAYGAMES_ACHIEVEMENT_MISTAKE_IS_NOT_A_PROBLEM);
-      this.props._statFailed();
+      this.props._statFailed(this.props.game.hash);
     }
     if (!this.props.game.hasHidden) {
       return;
@@ -295,7 +300,7 @@ class AGameField extends Component {
     () => this.props.settings[OPTION_PRESS_EXCLUDE] ? this._excludeItem(i, j, k) : this._selectItem(i, j, k);
 
   _onLongPressPopupItem = (i, j, k) =>
-    () => this.props.settings[LONG_PRESS_SECOND_ACTION] ? 
+    () => this.props.settings[LONG_PRESS_SECOND_ACTION] ?
       (this.props.settings[OPTION_PRESS_EXCLUDE] ? this._selectItem(i, j, k) : this._excludeItem(i, j, k))
       : {};
 
@@ -368,14 +373,15 @@ const GameField = connect(state => ({
   game: state.game.game,
   settings: state.settings,
 }), dispatch => ({
-  _statFailed: () => dispatch(statsGameFailed()),
-  _statSolved: (time) => dispatch(statsGameSolved(time)),
+  _statFailed: (hash) => dispatch(statsGameFailed(hash)),
+  _statSolved: (hash, time) => dispatch(statsGameSolved(hash, time)),
   _toStats: () => {
     dispatch(navBack());
     setTimeout(() => {
       dispatch(navStats());
     }, 0);
   },
+  _saveGame: (game, rules) => dispatch(gameSave(game, rules)),
   _newGame: () => {
     dispatch(gameClear());
     setTimeout(() => {
@@ -636,7 +642,7 @@ class AShareable extends Component {
 
   _formatTime = () => moment.duration(this.state.time, 'seconds').humanize();
 
-  height = 135 + 20; 
+  height = 135 + 20;
 
   render = () => (
   <View collapsable={false} style={{
@@ -729,14 +735,14 @@ class Game extends Component {
   _onPopup = (value) => {
     this.setState({popup: value});
     this.props.header && this.props.header.popupShown(value);
-  }
+  };
 
   _onPress = (e) => {
     if (!this.state.popup)
       return false;
-    
+
     this.game.current._hidePopup();
-  }
+  };
 
   _onShare = () => {
     captureRef(this.shot, {
@@ -748,7 +754,7 @@ class Game extends Component {
         url: 'data:image/jpeg;base64,' + data,
       })
     })
-  }
+  };
 
   render() {
     let {ready, styles} = this.state;

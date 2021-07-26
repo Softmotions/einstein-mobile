@@ -20,6 +20,14 @@ class Field {
     return this._size;
   }
 
+  get hash() {
+    return Array.from({length: this.size},
+      (v, row) => Array.from({length: this.size},
+        (v, col) => this.value(row, col)
+      ).join('')
+    ).join('-');
+  }
+
   value = (row, col) => this._data[row][col];
 
   _generate = () => {
@@ -295,6 +303,10 @@ class GameController {
 
   get restoredActive() {
     return this._restored && this._restoredActive;
+  }
+
+  get hash() {
+    return this._field.hash;
   }
 }
 
