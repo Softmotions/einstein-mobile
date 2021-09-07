@@ -29,7 +29,7 @@ import {
   PLAYGAMES_LEADERBOARD_ID,
   PLAYGAMES_LEADERBOARD_STACK_ID,
 } from '../constants/playgames';
-import {OPTION_PRESS_EXCLUDE, DONT_HIDE_POPUP, LONG_PRESS_SECOND_ACTION} from '../constants/settings';
+import {OPTION_PRESS_EXCLUDE, DONT_HIDE_POPUP, LONG_PRESS_SECOND_ACTION, VIBRATE_ACTION_CHANGE} from '../constants/settings';
 
 import {GameActivity, PlayGames} from '../modules/native';
 
@@ -78,9 +78,11 @@ const GameHeader = connect(state => ({
     this.props._optionUpdate({[OPTION_PRESS_EXCLUDE]: value})
       .then(() => this.setState({exclude: !!this.props.settings[OPTION_PRESS_EXCLUDE]}),
         () => this.setState({exclude: !!this.props.settings[OPTION_PRESS_EXCLUDE]}));
-    //The vibration duration in iOS is not configurable, by default duration 500ms
-    //
-    Vibration.vibrate(200);
+
+    if (!!this.props.settings[VIBRATE_ACTION_CHANGE]) {
+      // The vibration duration in iOS is not configurable, by default duration 500ms
+      Vibration.vibrate(200);
+    }
   };
 
   _renderContent = () => (

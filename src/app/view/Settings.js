@@ -14,7 +14,8 @@ import {settingsUpdate} from '../actions/settings';
 
 import {
   DONT_HIDE_POPUP,
-  LONG_PRESS_SECOND_ACTION
+  LONG_PRESS_SECOND_ACTION,
+  VIBRATE_ACTION_CHANGE,
 } from '../constants/settings';
 
 const mainColor = '#013397';
@@ -79,6 +80,7 @@ class Settings extends Component {
       <Text style={styles.titleCaption}>{i18n.settings.tr('title')}</Text>
       {this.option(DONT_HIDE_POPUP, 'dont_hide')}
       {this.option(LONG_PRESS_SECOND_ACTION, 'long_press')}
+      {this.option(VIBRATE_ACTION_CHANGE, 'vibrate_action_change')}
     </View>
   );
 }
