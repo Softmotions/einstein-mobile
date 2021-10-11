@@ -246,7 +246,7 @@ class StyleConfig {
         padding: 0,
       },
 
-      groupItem: {
+      groupItemBox: {
         height: this.groupSize,
         width: this.groupSize,
         flexDirection: 'column',
@@ -254,6 +254,11 @@ class StyleConfig {
         alignItems: 'center',
         borderWidth: this.border,
         borderColor: '#dddddd',
+      },
+
+      groupItem: {
+        height: this.groupSize,
+        width: this.groupSize,
       },
 
       groupItemsRow: {

@@ -115,7 +115,7 @@ class ItemImage extends Component {
           ItemImage.item(this.props.row, this.props.value)
       );
     return (
-      <Image style={this.props.style} source={{uri: src}}/>
+      <Image style={this.props.style} resizeMode='stretch' source={{uri: src}}/>
     );
   }
 }
@@ -169,7 +169,7 @@ class AGameField extends Component {
                               onPress={this._openPopup(i, j)}>
       <View>
         {!this.props.game.isSet(i, j) ?
-          <View style={this.styles.groupItem}>
+          <View style={this.styles.groupItemBox}>
             {this.renderGroupItemsLine(i, j, 0)}
             {this.renderGroupItemsLine(i, j, 1)}
           </View> :
