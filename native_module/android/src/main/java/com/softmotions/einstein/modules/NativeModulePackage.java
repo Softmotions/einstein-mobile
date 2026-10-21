@@ -1,4 +1,3 @@
-
 package com.softmotions.einstein.modules;
 
 import java.util.Arrays;
@@ -9,7 +8,6 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.facebook.react.bridge.JavaScriptModule;
 
 public class NativeModulePackage implements ReactPackage {
   @Override
@@ -19,11 +17,6 @@ public class NativeModulePackage implements ReactPackage {
       new PlayGamesModule(reactContext),
       new LocaleModule(reactContext)
     );
-  }
-
-  // Deprecated from RN 0.47
-  public List<Class<? extends JavaScriptModule>> createJSModules() {
-    return Collections.emptyList();
   }
 
   @Override

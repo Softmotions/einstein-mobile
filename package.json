@@ -1,41 +1,37 @@
 {
   "name": "Einstein",
-  "version": "1",
+  "version": "1.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "native:_renametmp": "react-native-rename TempName",
-    "native:_clean": "rm -rf android ios",
-    "native:_eject": "node node_modules/react-native/local-cli/cli.js eject",
-    "native:_link": "node node_modules/react-native/local-cli/cli.js link",
-    "native:_rename": "react-native-rename Einstein -b com.softmotions.einstein",
-    "native:gen": "npm run native:_renametmp && npm run native:_clean && npm run native:_eject && npm run native:_link && npm run native:_rename",
-    "start": "node node_modules/react-native/local-cli/cli.js start --reset-cache",
+    "android": "react-native run-android",
+    "start": "react-native start --reset-cache",
     "test": "jest"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.5.0",
-    "moment": "^2.24.0",
-    "react": "16.8.6",
-    "react-native": "0.59.9",
-    "react-native-navigation-experimental-compat": "^1.1.0",
-    "react-native-share": "^1.2.1",
-    "react-native-splash-screen": "^3.2.0",
-    "react-native-vector-icons": "^6.5.0",
-    "react-native-view-shot": "^2.6.0",
-    "react-redux": "^7.1.0",
-    "redux": "^4.0.1",
-    "redux-actions": "^2.6.5",
-    "redux-thunk": "^2.1.0",
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "moment": "^2.31.0",
+    "react": "19.1.4",
+    "react-native": "0.81.6",
+    "react-native-share": "^12.3.1",
+    "react-native-vector-icons": "^10.3.0",
+    "react-native-view-shot": "^6.1.1",
+    "react-redux": "^9.3.0",
+    "redux": "^5.0.1",
+    "redux-thunk": "^3.1.0",
     "softmotions-einstein-native": "file:./native_module/"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/runtime": "^7.4.5",
-    "babel-jest": "24.8.0",
-    "jest": "24.8.0",
-    "metro-react-native-babel-preset": "0.54.1",
-    "react-native-rename": "^2.9.0",
-    "react-test-renderer": "16.8.6"
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/runtime": "^7.25.0",
+    "@react-native-community/cli": "20.0.0",
+    "@react-native-community/cli-platform-android": "20.0.0",
+    "@react-native/babel-preset": "0.81.6",
+    "@react-native/metro-config": "0.81.6",
+    "jest": "^29.6.3"
   },
   "jest": {
     "preset": "react-native"

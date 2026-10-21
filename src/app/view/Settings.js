@@ -4,7 +4,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, CheckBox} from 'react-native';
+import {StyleSheet, Switch, Text, View} from 'react-native';
 
 import {connect} from 'react-redux';
 
@@ -67,8 +67,8 @@ class Settings extends Component {
 
   option = (option, name) => (
     <View style={styles.settingsRow}>
-      <CheckBox
-        value={this.state[option]}
+      <Switch
+        value={!!this.state[option]}
         onValueChange={this._onToggle(option)}
       />
       <Text style={styles.caption}>{i18n.settings.tr(name)}</Text>

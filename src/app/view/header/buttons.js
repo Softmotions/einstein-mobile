@@ -20,7 +20,10 @@ class HeaderButton extends Component {
   );
 
   _handlePress = null;
-  _renderIcon = () => (<View />);
+
+  _renderIcon() {
+    return (<View />);
+  }
 }
 
 class IconHeaderButton extends HeaderButton {
@@ -29,9 +32,11 @@ class IconHeaderButton extends HeaderButton {
     this._handlePress = this.props.action;
   }
 
-  _renderIcon = () => (
-    <this.props.icon name={this.props.name} size={ICON_SIZE}/>
-  );
+  _renderIcon() {
+    return (
+      <this.props.icon name={this.props.name} size={ICON_SIZE}/>
+    );
+  }
 }
 
 class ImageHeaderButton extends HeaderButton {
@@ -40,9 +45,11 @@ class ImageHeaderButton extends HeaderButton {
     this._handlePress = this.props.action;
   }
 
-  _renderIcon = () => (
-    <Image style={{height: IMAGE_SIZE, width: IMAGE_SIZE,}} source={{uri: this.props.image}}/>
-  );
+  _renderIcon() {
+    return (
+      <Image style={{height: IMAGE_SIZE, width: IMAGE_SIZE,}} source={{uri: this.props.image}}/>
+    );
+  }
 }
 
 export {

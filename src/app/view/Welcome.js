@@ -5,7 +5,6 @@ import {
   Button,
   Dimensions,
   Image,
-  InteractionManager,
   Platform,
   StyleSheet,
   Text,
@@ -154,21 +153,23 @@ const WelcomeHeader = connect(state => ({
 }), dispatch => ({
   _onSettings: () => dispatch(navSettings()),
 }))(class extends Header {
-  _renderContent = () => (
-    <View style={{flexDirection: 'row', flex: 1}}>
-      {this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-        <ImageHeaderButton image='games_achievements'
-                           action={() => PlayGames.showAchievements()}/> : null}
-      {this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-        <ImageHeaderButton image='games_fastest_leaderboard'
-                           action={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}/> : null}
-      {this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
-        <ImageHeaderButton image='games_leaderboards'
-                           action={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_STACK_ID)}/> : null}
-      <View style={{flex: 1}}/>
-      <IconHeaderButton icon={MIcon} name='settings' action={this.props._onSettings}/>
-    </View>
-  );
+  _renderContent() {
+    return (
+      <View style={{flexDirection: 'row', flex: 1}}>
+        {this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+          <ImageHeaderButton image='games_achievements'
+                             action={() => PlayGames.showAchievements()}/> : null}
+        {this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+          <ImageHeaderButton image='games_fastest_leaderboard'
+                             action={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_ID)}/> : null}
+        {this.props.settings[PLAY_GAMES_LOGGED_IN_KEY] ?
+          <ImageHeaderButton image='games_leaderboards'
+                             action={() => PlayGames.showLeaderboard(PLAYGAMES_LEADERBOARD_STACK_ID)}/> : null}
+        <View style={{flex: 1}}/>
+        <IconHeaderButton icon={MIcon} name='settings' action={this.props._onSettings}/>
+      </View>
+    );
+  }
 });
 
 export default connect(state => ({
@@ -177,15 +178,11 @@ export default connect(state => ({
   }), dispatch => ({
     _onNewGame: () => {
       dispatch(navGame());
-      setTimeout(() => {
-        InteractionManager.runAfterInteractions(() => dispatch(gameNew()).then(() => dispatch(statsGameTry())));
-      }, 0);
+      setTimeout(() => dispatch(gameNew()).then(() => dispatch(statsGameTry())), 0);
     },
     _onContinueGame: () => {
       dispatch(navGame());
-      setTimeout(() => {
-        InteractionManager.runAfterInteractions(() => dispatch(gameResume()));
-      }, 0);
+      setTimeout(() => dispatch(gameResume()), 0);
     },
     _onClearGame: () => dispatch(gameClear()),
     _onHelp: () => dispatch(navHelp()),

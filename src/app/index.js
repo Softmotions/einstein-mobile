@@ -3,8 +3,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {BackHandler} from 'react-native';
-import NavigationExperimental from 'react-native-navigation-experimental-compat';
+import {BackHandler, View} from 'react-native';
 import {GAME_SCREEN_KEY, HELP_SCREEN_KEY, SETTINGS_SCREEN_KEY, STAT_SCREEN_KEY, WELCOME_SCREEN_KEY} from './constants/navigation';
 
 import Welcome, {WelcomeHeader} from './view/Welcome';
@@ -17,59 +16,71 @@ import {DefaultHeader} from './view/header/index';
 
 import {gamePause} from './actions/game';
 import {navBack} from './actions/navigation';
-const {
-  CardStack: NavigationCardStack,
-} = NavigationExperimental;
 
 import {i18n} from './utils/i18n';
 
 class Application extends Component {
-  constructor(props) {
-    super(props);
-  }
 
-  _navigateBack = () => {
-    let {navigationState, _onNavigateBack} = this.props;
-    _onNavigateBack();
-    console.debug('Navigation back', navigationState);
-    return navigationState.index !== 0;
+  _currentRoute = () => {
+    const {navigationState} = this.props;
+    return navigationState.routes[navigationState.index];
   };
 
-  componentDidMount = () => BackHandler.addEventListener('hardwareBackPress', this._navigateBack);
+  _navigateBack = () => {
+    if (this.props.navigationState.index === 0) {
+      return false;
+    }
+    this.props._onNavigateBack();
+    return true;
+  };
 
-  componentWillUnmount = () => BackHandler.removeEventListener('hardwareBackPress', this._navigateBack);
+  componentDidMount = () => {
+    this._backHandler = BackHandler.addEventListener('hardwareBackPress', this._navigateBack);
+  };
 
-  render = () => (
-    <NavigationCardStack
-      onNavigateBack={this.props._onNavigateBack}
-      navigationState={this.props.navigationState}
-      enableGestures={false}
-      renderHeader={({scene}) => {
-        switch (scene.route.key) {
-          case GAME_SCREEN_KEY:
-            return (<GameHeader setRef={(ref) => this._header = ref}/>);
-          case WELCOME_SCREEN_KEY:
-            return (<WelcomeHeader />);
-          default:
-            const tr = i18n.tr(scene.route.key);
-            return (<DefaultHeader title={tr.has('title') ? tr.tr('title') : ''}/>);
-        }
-      }}
-      renderScene={({scene}) => {
-        switch (scene.route.key) {
-          case GAME_SCREEN_KEY:
-            return (<Game header={this._header}/>);
-          case HELP_SCREEN_KEY:
-            return (<Help />);
-          case STAT_SCREEN_KEY:
-            return (<Statistics />);
-          case SETTINGS_SCREEN_KEY:
-            return (<Settings />);
-          default:
-            return (<Welcome />);
-        }
-      }}/>
-  );
+  componentWillUnmount = () => {
+    this._backHandler && this._backHandler.remove();
+  };
+
+  _renderHeader = (route) => {
+    switch (route.key) {
+      case GAME_SCREEN_KEY:
+        return (<GameHeader setRef={(ref) => this._header = ref}/>);
+      case WELCOME_SCREEN_KEY:
+        return (<WelcomeHeader />);
+      default: {
+        const tr = i18n.tr(route.key);
+        return (<DefaultHeader title={tr.has('title') ? tr.tr('title') : ''}/>);
+      }
+    }
+  };
+
+  _renderScene = (route) => {
+    switch (route.key) {
+      case GAME_SCREEN_KEY:
+        return (<Game header={this._header}/>);
+      case HELP_SCREEN_KEY:
+        return (<Help />);
+      case STAT_SCREEN_KEY:
+        return (<Statistics />);
+      case SETTINGS_SCREEN_KEY:
+        return (<Settings />);
+      default:
+        return (<Welcome />);
+    }
+  };
+
+  render = () => {
+    const route = this._currentRoute();
+    return (
+      <View style={{flex: 1, backgroundColor: '#fff'}}>
+        {this._renderHeader(route)}
+        <View style={{flex: 1}}>
+          {this._renderScene(route)}
+        </View>
+      </View>
+    );
+  };
 }
 
 export default connect(state => ({

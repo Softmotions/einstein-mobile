@@ -1,6 +1,6 @@
 'use strict';
 
-import {handleActions} from 'redux-actions';
+import {handleActions} from '../utils/redux';
 
 import {
   CLEAN_STATISTICS,

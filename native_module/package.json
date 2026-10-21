@@ -1,8 +1,7 @@
-
 {
   "name": "softmotions-einstein-native-module",
   "version": "1.0.0",
-  "description": "",
+  "description": "Native Android modules for the Einstein puzzle game",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,6 +12,6 @@
   "author": "",
   "license": "",
   "peerDependencies": {
-    "react-native": "0.59.9"
+    "react-native": ">=0.81"
   }
 }

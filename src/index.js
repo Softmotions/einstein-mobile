@@ -2,11 +2,9 @@
 
 import React, {Component} from 'react';
 import {AppState, DeviceEventEmitter} from 'react-native';
-import {createStore, applyMiddleware} from 'redux';
+import {legacy_createStore as createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
-import thunk from 'redux-thunk';
-
-import SplashScreen from 'react-native-splash-screen';
+import {thunk} from 'redux-thunk';
 
 import reducers from './app/reducers';
 import Application from './app';
@@ -40,39 +38,30 @@ export default class Einstein extends Component {
   };
 
   componentDidMount() {
-    AppState.addEventListener('change', this._handleAppStateChange);
+    this._appStateSubscription = AppState.addEventListener('change', this._handleAppStateChange);
+    this._signOutSubscription = DeviceEventEmitter.addListener('googleSignOut', this._handleGoogleSignOut);
 
     const loadGame = () => store.dispatch(gameLoad())
-      .then(() => {
-          SplashScreen.hide();
-        },
-        (err) => {
-          console.error(err);
-          SplashScreen.hide();
-        })
-      .finally(() => console.log('loaded'));
+      .then(() => console.log('loaded'),
+        (err) => console.error(err));
 
     const signIn = (signed) => {
       loadGame();
       if (!__DEV__) {
         PlayGames.signIn()
-          .then(() => !signed ? store.dispatch(settingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: true})) : Promise.resolve());
+          .then(() => !signed ? store.dispatch(settingsUpdate({[PLAY_GAMES_LOGGED_IN_KEY]: true})) : Promise.resolve())
+          .catch(err => console.warn('Play Games sign in failed', err));
       }
     };
-
 
     store.dispatch(settingsLoad())
       .then(settings => signIn(settings[PLAY_GAMES_LOGGED_IN_KEY]),
         err => signIn(false));
   }
 
-  componentWillMount() {
-    DeviceEventEmitter.addListener('googleSignOut', this._handleGoogleSignOut);
-  }
-
   componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange);
-    DeviceEventEmitter.removeListener('googleSignOut', this._handleGoogleSignOut);
+    this._appStateSubscription && this._appStateSubscription.remove();
+    this._signOutSubscription && this._signOutSubscription.remove();
   }
 
   render = () => (

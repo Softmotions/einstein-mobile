@@ -1,45 +1,15 @@
-
 # softmotions-einstein-native-module
 
-## Getting started
+Android native modules used by the Einstein puzzle game:
 
-`$ npm install softmotions-einstein-native-module --save`
+* `GameActivity` — keeps the screen on while a puzzle is active.
+* `PlayGames` — Google Play Games Services (v1 SDK) sign-in, achievements and leaderboards.
+* `Locale` — localized strings and the current locale from Android resources.
 
-### Mostly automatic installation
+## Installation
 
-`$ react-native link softmotions-einstein-native-module`
+The module is a local npm dependency of the application (`file:./native_module`) and is
+autolinked by React Native. No manual linking is required.
 
-### Manual installation
-
-
-#### iOS
-
-1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `softmotions-einstein-native-module` and add `NativeModule.xcodeproj`
-3. In XCode, in the project navigator, select your project. Add `libNativeModule.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-4. Run your project (`Cmd+R`)<
-
-#### Android
-
-1. Open up `android/app/src/main/java/[...]/MainActivity.java`
-  - Add `import com.softmotion.einstein.NativeModulePackage;` to the imports at the top of the file
-  - Add `new NativeModulePackage()` to the list returned by the `getPackages()` method
-2. Append the following lines to `android/settings.gradle`:
-  	```
-  	include ':softmotions-einstein-native-module'
-  	project(':softmotions-einstein-native-module').projectDir = new File(rootProject.projectDir, 	'../node_modules/softmotions-einstein-native-module/android')
-  	```
-3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
-  	```
-      compile project(':softmotions-einstein-native-module')
-  	```
-
-
-## Usage
-```javascript
-import NativeModule from 'softmotions-einstein-native-module';
-
-// TODO: What to do with the module?
-NativeModule;
-```
-  
+The module resources (tile images, logo, translated strings) are merged into the application
+automatically when it is built.
