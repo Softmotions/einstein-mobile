@@ -21,22 +21,26 @@ class Header extends Component {
     </View>
   );
 
-  _renderContent = () => (<View/>);
+  _renderContent() {
+    return (<View/>);
+  }
 }
 
 const DefaultHeader = connect(state => ({}), dispatch => ({
   _onNavigateBack: () => dispatch(navBack()),
 }))(
   class extends Header {
-    _renderContent = () => (
-      <View style={{flex: 1, flexDirection: 'row'}}>
-        <IconHeaderButton icon={MIcon} name='arrow-back' action={this.props._onNavigateBack}/>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text style={{color: mainColor, fontSize: 16, fontWeight: 'bold'}}>{this.props.title || ''}</Text>
+    _renderContent() {
+      return (
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <IconHeaderButton icon={MIcon} name='arrow-back' action={this.props._onNavigateBack}/>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Text style={{color: mainColor, fontSize: 16, fontWeight: 'bold'}}>{this.props.title || ''}</Text>
+          </View>
+          <HeaderButton/>
         </View>
-        <HeaderButton/>
-      </View>
-    );
+      );
+    }
   });
 
 export {

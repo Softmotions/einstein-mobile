@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Alert, Image, InteractionManager, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View, Vibration} from 'react-native';
+import {Alert, Image, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View, Vibration} from 'react-native';
 
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -63,17 +63,24 @@ const GameHeader = connect(state => ({
       popup: false,
       exclude: !!this.props.settings[OPTION_PRESS_EXCLUDE],
     };
+    this.popupShown = this.popupShown.bind(this);
   }
 
-  componentDidMount = () => this.props.setRef && this.props.setRef({
-    popupShown: this.popupShown,
-  });
+  componentDidMount() {
+    this.props.setRef && this.props.setRef({
+      popupShown: this.popupShown,
+    });
+  }
 
-  componentWillUnmount = () => this.props.setRef && this.props.setRef(null);
+  componentWillUnmount() {
+    this.props.setRef && this.props.setRef(null);
+  }
 
-  popupShown = value => this.setState({popup: value});
+  popupShown(value) {
+    this.setState({popup: value});
+  }
 
-  _onSwitch = value => {
+  _onSwitch(value) {
     this.setState({exclude: value});
     this.props._optionUpdate({[OPTION_PRESS_EXCLUDE]: value})
       .then(() => this.setState({exclude: !!this.props.settings[OPTION_PRESS_EXCLUDE]}),
@@ -83,25 +90,27 @@ const GameHeader = connect(state => ({
       // The vibration duration in iOS is not configurable, by default duration 500ms
       Vibration.vibrate(200);
     }
-  };
+  }
 
-  _renderContent = () => (
-    <View style={{flexDirection: 'row', flex: 1}}>
-      <IconHeaderButton icon={MIcon} name='arrow-back' action={this.props._onNavigateBack}/>
-      <TouchableWithoutFeedback style={{flex: 1}} onPress={() => this._onSwitch(!this.props.settings[OPTION_PRESS_EXCLUDE])}>
-        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', opacity: this.state.popup ? 1 : 0.3}}>
-          <Text style={{fontSize: 16, fontWeight: 'bold', opacity: this.state.exclude ? 0.3 : 1}}>
-            {i18n.tr('option').tr('select')}
-          </Text>
-          <Selector value={this.state.exclude}/>
-          <Text style={{fontSize: 16, fontWeight: 'bold', opacity: this.state.exclude ? 1 : 0.3}}>
-            {i18n.tr('option').tr('exclude')}
-          </Text>
-        </View>
-      </TouchableWithoutFeedback>
-      <HeaderButton />
-    </View>
-  );
+  _renderContent() {
+    return (
+      <View style={{flexDirection: 'row', flex: 1}}>
+        <IconHeaderButton icon={MIcon} name='arrow-back' action={this.props._onNavigateBack}/>
+        <TouchableWithoutFeedback style={{flex: 1}} onPress={() => this._onSwitch(!this.props.settings[OPTION_PRESS_EXCLUDE])}>
+          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', opacity: this.state.popup ? 1 : 0.3}}>
+            <Text style={{fontSize: 16, fontWeight: 'bold', opacity: this.state.exclude ? 0.3 : 1}}>
+              {i18n.tr('option').tr('select')}
+            </Text>
+            <Selector value={this.state.exclude}/>
+            <Text style={{fontSize: 16, fontWeight: 'bold', opacity: this.state.exclude ? 1 : 0.3}}>
+              {i18n.tr('option').tr('exclude')}
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
+        <HeaderButton />
+      </View>
+    );
+  }
 });
 
 class ItemImage extends Component {
@@ -386,9 +395,7 @@ const GameField = connect(state => ({
   _saveGame: (game, rules) => dispatch(gameSave(game, rules)),
   _newGame: () => {
     dispatch(gameClear());
-    setTimeout(() => {
-      InteractionManager.runAfterInteractions(() => dispatch(gameNew()).then(() => dispatch(statsGameTry())));
-    }, 0);
+    setTimeout(() => dispatch(gameNew()).then(() => dispatch(statsGameTry())), 0);
   },
   _onNavigateBack: () => {
     dispatch(gamePause());
@@ -428,15 +435,17 @@ class Rule3 extends AbstractRule {
     return '';
   }
 
-  render = () => (
-    <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.props.toggle}>
-      <View style={[this.styles.rule3, this.visibilityStyle]}>
-        <ItemImage style={this.styles.ruleItem} type={this._type1}/>
-        <ItemImage style={this.styles.ruleItem} type={this._type2}/>
-        <ItemImage style={this.styles.ruleItem} type={this._type3}/>
-      </View>
-    </TouchableWithoutFeedback>
-  );
+  render() {
+    return (
+      <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.props.toggle}>
+        <View style={[this.styles.rule3, this.visibilityStyle]}>
+          <ItemImage style={this.styles.ruleItem} type={this._type1}/>
+          <ItemImage style={this.styles.ruleItem} type={this._type2}/>
+          <ItemImage style={this.styles.ruleItem} type={this._type3}/>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
 }
 
 class NearRule extends Rule3 {
@@ -490,14 +499,16 @@ class Rule2 extends AbstractRule {
     super(props);
   }
 
-  render = () => (
-    <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.props.toggle}>
-      <View style={[this.styles.rule2, this.visibilityStyle]}>
-        <ItemImage style={this.styles.ruleItem} row={this.props.rule.row1} value={this.props.rule.value1} hint={true}/>
-        <ItemImage style={this.styles.ruleItem} row={this.props.rule.row2} value={this.props.rule.value2} hint={true}/>
-      </View>
-    </TouchableWithoutFeedback>
-  );
+  render() {
+    return (
+      <TouchableWithoutFeedback disabled={this.props.disabled} onPress={this.props.toggle}>
+        <View style={[this.styles.rule2, this.visibilityStyle]}>
+          <ItemImage style={this.styles.ruleItem} row={this.props.rule.row1} value={this.props.rule.value1} hint={true}/>
+          <ItemImage style={this.styles.ruleItem} row={this.props.rule.row2} value={this.props.rule.value2} hint={true}/>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
 }
 
 class ARule extends Component {
@@ -598,7 +609,7 @@ class AStatusInfo extends Component {
     return this.props.styles.styles;
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this._timer = setInterval(() => this.setState({time: this.props.game.game.time}), 500);
   }
 
@@ -634,7 +645,7 @@ class AShareable extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this._timer = setInterval(() => this.setState({time: this.props.game.game.time}), 500);
   }
 
@@ -707,11 +718,9 @@ class Game extends Component {
     this.shot = React.createRef();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     GameActivity.start();
-    setTimeout(() => {
-      InteractionManager.runAfterInteractions(() => this.setState({ready: true}));
-    }, 0);
+    setTimeout(() => this.setState({ready: true}), 0);
   }
 
   componentWillUnmount() {
@@ -749,13 +758,20 @@ class Game extends Component {
   _onShare = () => {
     captureRef(this.shot, {
       format: 'jpg',
-      result: 'base64',
-    }).then(data => {
-      Share.open({
+      result: 'tmpfile',
+    }).then(path => {
+      const url = path.startsWith('file://') ? path : 'file://' + path;
+      return Share.open({
         message: 'Check my Einstein Puzzle',
-        url: 'data:image/jpeg;base64,' + data,
-      })
-    })
+        url: url,
+        type: 'image/jpeg',
+        // Cancel action should not be reported as an error.
+        failOnCancel: false,
+        // Write temporary share data into the internal cache directory,
+        // it is the only path covered by the react-native-share FileProvider.
+        useInternalStorage: true,
+      });
+    }).catch(err => console.warn('Unable to share the result', err));
   };
 
   render() {
@@ -766,9 +782,7 @@ class Game extends Component {
     }
 
     if (!styles) {
-      setTimeout(() => {
-        InteractionManager.runAfterInteractions(() => this._updateStyles());
-      }, 0);
+      setTimeout(() => this._updateStyles(), 0);
       return this.renderPlaceholder();
     }
 

@@ -106,20 +106,31 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
   @Override
   public void onConnectionFailed(ConnectionResult result) {
     Log.d(TAG, "onConnectionFailed: ");
+    Activity activity = getCurrentActivity();
+    if (activity == null) {
+      if (mActivityPromise != null) {
+        mActivityPromise.reject(TAG, "no activity");
+        mActivityPromise = null;
+      }
+      return;
+    }
     if (result.hasResolution()) {
       try {
-        result.startResolutionForResult(getCurrentActivity(), GOOGLE_SIGN_IN_REQUEST);
+        result.startResolutionForResult(activity, GOOGLE_SIGN_IN_REQUEST);
       } catch (IntentSender.SendIntentException e) {
         getGoogleApiClient().connect();
       }
     } else {
       Dialog dialog = GoogleApiAvailability.getInstance()
-        .getErrorDialog(getCurrentActivity(), result.getErrorCode(), GOOGLE_SIGN_IN_REQUEST);
+        .getErrorDialog(activity, result.getErrorCode(), GOOGLE_SIGN_IN_REQUEST);
       if (dialog != null) {
         dialog.show();
       }
       Log.w(TAG, "onConnectionFailed: failed resolve");
-      mActivityPromise.reject(TAG, "failed");
+      if (mActivityPromise != null) {
+        mActivityPromise.reject(TAG, "failed");
+        mActivityPromise = null;
+      }
     }
   }
 
@@ -133,6 +144,10 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
     if (getGoogleApiClient().isConnected()) {
       Log.d(TAG, "signIn: already connected");
       promise.resolve(null);
+      return;
+    }
+    if (getCurrentActivity() == null) {
+      promise.reject(TAG, "no activity");
       return;
     }
     mActivityPromise = promise;
@@ -199,8 +214,8 @@ public class PlayGamesModule extends ReactContextBaseJavaModule
 
   @Override
   public void onHostDestroy() {
-    if (getGoogleApiClient().isConnected()) {
-      getGoogleApiClient().disconnect();
+    if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+      mGoogleApiClient.disconnect();
     }
     mActivityPromise = null;
   }

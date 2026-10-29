@@ -1,11 +1,9 @@
 'use strict';
 
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import moment from 'moment';
 
 import {HEADER_SIZE} from './header/constants';
-
-const Dimensions = require('Dimensions');
 
 // todo: configure
 const mainColor = '#013397';

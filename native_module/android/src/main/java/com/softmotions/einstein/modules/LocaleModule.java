@@ -44,7 +44,7 @@ public class LocaleModule extends ReactContextBaseJavaModule {
         }
     }
 
-    Locale locale = getReactApplicationContext().getResources().getConfiguration().locale;
+    Locale locale = getReactApplicationContext().getResources().getConfiguration().getLocales().get(0);
     constants.put("locale", locale.getLanguage() + "_" + locale.getCountry());
 
     return constants;

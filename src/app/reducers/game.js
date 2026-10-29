@@ -1,6 +1,6 @@
 'use strict';
 
-import {handleActions} from 'redux-actions';
+import {handleActions} from '../utils/redux';
 
 import {GAME_CLEAR, GAME_PAUSE, GAME_RESUME, GAME_SET, GAME_TOGGLE_RULE} from '../constants/game';
 
